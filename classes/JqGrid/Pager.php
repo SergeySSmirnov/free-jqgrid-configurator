@@ -49,13 +49,13 @@
  	public function getConfig() {
  		$cfg = array();
  		// Формируем массив основной конфигурации
- 		if ($this->pager !== '') {
+ 		if (!empty($this->pager)) {
 	 		$cfg['pager'] = $this->pager;
 	 		$cfg['pagerpos'] = $this->pagerPos;
 	 		$cfg['pgbuttons'] = $this->pgButtons;
 	 		$cfg['pginput'] = $this->pgInput;
  		}
- 		if ($this->viewRecords) {
+ 		if ($this->viewRecords === TRUE) {
 	 		$cfg['viewrecords'] = TRUE;
  			$cfg['recordpos'] = $this->recordPos;
  		}

@@ -34,9 +34,9 @@
  	 */
  	public function getConfig($cfg) {
  		// Формируем массив основной конфигурации
- 		if ($this->delIcon != '')
+ 		if (!empty($this->delIcon))
  			$cfg['recButtons']['delicon'] = $this->delIcon;
- 		if ($this->delFunc)
+ 		if ($this->delFunc === TRUE)
  			$cfg['recButtons']['delFunctionName'] = $this->delFunctionName;
  		// Формируем массив дополнительной конфигурации
  		$cfg['recButtonsDel'] = array();

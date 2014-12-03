@@ -26,7 +26,7 @@
  	 */
  	public function getConfig($cfg) {
  		// Формируем массив основной конфигурации
- 		if ($this->viewIcon != '')
+ 		if (!empty($this->viewIcon))
  			$cfg['recButtons']['viewicon'] = $this->viewIcon;
  		// Формируем массив дополнительной конфигурации
  		$cfg['recButtonsView'] = array();

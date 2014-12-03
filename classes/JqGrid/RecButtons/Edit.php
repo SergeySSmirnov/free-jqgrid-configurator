@@ -34,9 +34,9 @@
  	 */
  	public function getConfig($cfg) {
  		// Формируем массив основной конфигурации
- 		if ($this->editIcon != '')
+ 		if (!empty($this->editIcon))
  			$cfg['recButtons']['editicon'] = $this-editIcon;
- 		if ($this->editFunc)
+ 		if ($this->editFunc === TRUE)
  			$cfg['recButtons']['editFunctionName'] = $this->editFunctionName;
  		// Формируем массив дополнительной конфигурации
  		$cfg['recButtonsEdit'] = array();

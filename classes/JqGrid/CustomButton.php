@@ -89,7 +89,7 @@
  		$cfg = array();
  		// Формируем массив основной конфигурации
  		$cfg['btn'] = $this->isButton;
- 		if ($this->isButton) {
+ 		if ($this->isButton === TRUE) {
 			$cfg['caption'] = $this->btnCaption; 			
 	 		if (!empty($this->btnIcon))
 	 			$cfg['buttonicon'] = $this->btnIcon; 			

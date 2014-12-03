@@ -34,9 +34,9 @@
  	 */
  	public function getConfig($cfg) {
  		// Формируем массив основной конфигурации
- 		if ($this->addIcon != '')
+ 		if (!empty($this->addIcon))
  			$cfg['recButtons']['addicon'] = $this->addIcon;
- 		if ($this->addFunc)
+ 		if ($this->addFunc === TRUE)
 	 		$cfg['recButtons']['addFunctionName'] = $this->addFunctionName;
  		// Формируем массив дополнительной конфигурации
  		$cfg['recButtonsAdd'] = array();

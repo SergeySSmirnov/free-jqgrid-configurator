@@ -54,7 +54,7 @@
  	 */
  	public function getConfig($cfg) {
  		// Формируем массив основной конфигурации
- 		if ($this->searchIcon != '')
+ 		if (!empty($this->searchIcon))
  			$cfg['recButtons']['searchicon'] = $this->searchIcon;
  		// Формируем массив дополнительной конфигурации
  		$cfg['recButtonsSearch'] = array();

@@ -118,57 +118,57 @@ class JqGrid_Column {
  	public function getConfig() {
  		$cfg = array();
  		// Формируем результирующую конфигурацию
- 		if ($this->align != '')
+ 		if (!empty($this->align))
  			$cfg['align'] = $this->align;
- 		if ($this->classes != '')
+ 		if (!empty($this->classes))
  			$cfg['classes'] = $this->classes;
- 		if ($this->defval != '')
+ 		if (!empty($this->defval))
  			$cfg['defval'] = $this->defval;
  		$cfg['editable'] = FALSE;
- 		if ($this->editType != '') {
+ 		if (!empty($this->editType)) {
  			$cfg['editable'] = TRUE;
  			$cfg['edittype'] = $this->editType;
  			if (count($this->editOptions) > 0)
  				$cfg['editoptions'] = $this->editOptions;
  		}
- 	 	if ($this->formatter != '') {
+ 	 	if (!empty($this->formatter)) {
  			$cfg['formatter'] = $this->formatter;
  			if (count($this->formatOptions) > 0)
  				$cfg['formatoptions'] = $this->formatOptions;
  		}
  		$cfg['search'] = $this->search;
- 		if ($this->search) {
+ 		if ($this->search === TRUE) {
  			$cfg['stype'] = $this->stype;
- 			if (strtolower($this->stype) == 'select')
+ 			if (strtolower($this->stype) === 'select')
  				$cfg['surl'] = $this->surl;
  			if (count($this->searchOptions) > 0)
 				$cfg['searchoptions'] = $this->searchOptions;
  			else
  				$cfg['searchoptions'] = jqGrid_Column::searchOptions();
  		}
- 		if ($this->fixed)
+ 		if ($this->fixed === TRUE)
  			$cfg['fixed'] = TRUE;
  		if (count($this->formOptions) > 0)
  			$cfg['formoptions'] = $this->formOptions;
- 		if ($this->frozen)
+ 		if ($this->frozen === TRUE)
  			$cfg['frozen'] = TRUE;
- 		if ($this->hiddenDlg)
+ 		if ($this->hiddenDlg === TRUE)
  			$cfg['hidedlg'] = TRUE;
- 		if ($this->hidden)
+ 		if ($this->hidden === TRUE)
  			$cfg['hidden'] = TRUE;
- 		if ($this->label != '')
+ 		if (!empty($this->label))
  			$cfg['label'] = $this->label;
- 		if ($this->name != '')
+ 		if (!empty($this->name))
  			$cfg['name'] = $this->name;
- 		if (!$this->resizable)
+ 		if ($this->resizable === FALSE)
  			$cfg['resizable'] = FALSE;
- 		if (!$this->sortable)
+ 		if ($this->sortable === FALSE)
  			$cfg['sortable'] = FALSE;
- 		if (!$this->title)	
+ 		if ($this->title === FALSE)	
  			$cfg['title'] = FALSE;
  		if ($this->width > 0)
  			$cfg['width'] = $this->width;
- 		if (!$this->viewable)
+ 		if ($this->viewable === FALSE)
  			$cfg['viewable'] = FALSE;
  		$cfg['is_primary_key'] = $this->is_primary_key;
  		// Возвращаем результат
@@ -189,9 +189,9 @@ class JqGrid_Column {
  		$cfg['size'] = $size;
  		if ($maxLength > 0)
  			$cfg['maxlength'] = $maxLength;
- 		if ($placeholder != '')
+ 		if (!empty($placeholder))
  			$cfg['placeholder'] = $placeholder;
- 		if ($pattern != '')
+ 		if (!empty($pattern))
  			$cfg['pattern'] = $pattern;
  		return $cfg;
  	}
@@ -209,7 +209,7 @@ class JqGrid_Column {
  		$cfg['cols'] = $cols;
  		if ($maxLength > 0)
  			$cfg['maxlength'] = $maxLength;
- 		if ($placeholder != '')
+ 		if (!empty($placeholder))
  			$cfg['placeholder'] = $placeholder;
  		return $cfg;
  	}
@@ -229,13 +229,13 @@ class JqGrid_Column {
  	 * @param number $size Высота отображаемой части поля в строках. Значение по умолчанию: 5.
  	 * @return array Массив дополнительных параметров, который может применяться для задания значения editOptions.
  	 */
- 	public static function editOptionsSelect($values, $multiselect = false, $size = 5) {
+ 	public static function editOptionsSelect($values, $multiselect = FALSE, $size = 5) {
 		$cfg = array();
 		if (is_string($values))
 			$cfg['dataUrl'] = $values;
 		else
 			$cfg['value'] = $values;
- 		if ($multiselect) {
+ 		if ($multiselect === TRUE) {
 			 $cfg['multiple'] = $multiselect;
 			 $cfg['size'] = $size;
  		}
@@ -283,11 +283,11 @@ class JqGrid_Column {
  			$cfg['rowpos'] = $rowpos;
  		if ($colpos > 0)
  			$cfg['colpos'] = $colpos;
- 		if ($label != '')
+ 		if (!empty($label))
  			$cfg['label'] = $label;
- 		if ($elmprefix != '')
+ 		if (!empty($elmprefix))
  			$cfg['elmprefix'] = $elmprefix;
- 		if ($elmsuffix != '')
+ 		if (!empty($elmsuffix))
  			$cfg['elmsuffix'] = $elmsuffix;
  		return $cfg;
  	}
@@ -303,11 +303,11 @@ class JqGrid_Column {
  	 */
  	public static function searchOptions($dataUrl = '', $sopt = array('eq','ne','lt','le','gt','ge','bw','bn','in','ni','ew','en','cn','nc','nu','nn'), $defaultValue = '', $value = array()) {
  		$cfg = array();
- 		if ($dataUrl != '')
+ 		if (!empty($dataUrl))
  			$cfg['dataUrl'] = $dataUrl;
  		if (count($sopt) > 0)
  			$cfg['sopt'] = $sopt;
- 		if ($defaultValue != '')
+ 		if (!empty($defaultValue))
  			$cfg['defaultValue'] = $defaultValue;
  		if (count($value) > 0)
  			$cfg['value'] = $value;
@@ -357,7 +357,7 @@ class JqGrid_Column {
  	 */
  	public static function formatDate($srcformat = 'Y-m-d H:i:s', $newformat = 'd.m.Y H:i:s', $parseRe = '') {
  		$arr = array('srcformat' => $srcformat, 'newformat' => $newformat);
- 		if ($parseRe != '')
+ 		if (!empty($parseRe))
  			$arr['parseRe'] = $parseRe;
  		return $arr;
  	}
@@ -374,7 +374,7 @@ class JqGrid_Column {
  	 * @return array Массив дополнительных параметров, который может применяться для задания значения formatOptions.
  	 */
  	public static function formatLink($target = '') {
- 		return $target != '' ? array('target' => $target) : array();
+ 		return !empty($target) ? array('target' => $target) : array();
  	}
  	/**
  	 * Помощник, представляющий возможность сформировать значение дополнительных параметров formatOptions для типа редактирования formatter = 'showlink'.
@@ -478,7 +478,7 @@ class JqGrid_Column {
  		$e->name = $name;
  		$e->label = $label;
  		$e->search = FALSE;
- 		if ($canEdit)
+ 		if ($canEdit === TRUE)
  			$e->editType = 'text';
  		$e->width = $width;
  		$e->align = $align;
@@ -536,9 +536,9 @@ class JqGrid_Column {
  	 */
  	public static function columnSelectValWithSearch($name, $label, $sval = NULL, $width = 250, $align = 'left', $val = NULL, $hidden = FALSE) {
  		$e = jqGrid_Column::columnSelectVal($name, $label, $val, $width, $align);
- 		$e->editOptions = jqGrid_Column::editOptionsSelect(($val != NULL) ? $val : $sval);
+ 		$e->editOptions = jqGrid_Column::editOptionsSelect((is_array($val) && (count($val) > 0)) ? $val : $sval);
  		$e->search = TRUE;
- 		if ($sval != NULL) {
+ 		if (!empty($sval)) {
 	 		$e->stype = 'select';
 	 		$e->searchOptions = jqGrid_Column::searchOptions($sval, array('eq','ne'));
  		}
@@ -562,7 +562,7 @@ class JqGrid_Column {
  		$e->align = $align;
  		$e->formatter = 'checkbox';
 		$e->formatOptions = jqGrid_Column::formatCheckbox('0');
- 		if ($canEdit) {
+ 		if ($canEdit === TRUE) {
 			$e->editType = 'checkbox';
 			$e->editOptions = jqGrid_Column::editOptionsCheckbox('1', '0');
  		}
@@ -619,7 +619,7 @@ class JqGrid_Column {
  		$e->name = $name;
  		$e->label = $label;
  		$e->search = FALSE;
- 		if ($canEdit)
+ 		if ($canEdit === TRUE)
  			$e->editType = 'text';
  		$e->formatter = 'date';
  		$e->formatOptions = jqGrid_Column::formatDate($srcformat, $newformat);
@@ -657,11 +657,11 @@ class JqGrid_Column {
  	 */
  	public static function createSelect($vals, $addNull = TRUE, $name = '', $id = '', $class = '') {
  		$_ts = '';
- 		if ($addNull && !in_array('-', $vals))
- 			$_ts = $addNull ? '<option value="-1"> - </option>' : '';
+ 		if (($addNull === TRUE) && !in_array('-', $vals))
+ 			$_ts = '<option value="-1"> - </option>';
  		foreach ($vals as $i => $key)
  			$_ts .= '<option value="'.$i.'">'.$key.'</option>';
- 		return '<select'.(($name != '') ? ' name="'.$id.'"' : '').(($id != '') ? ' id="'.$id.'"' : '').(($class != '') ? ' class="'.$class.'"' : '').'>'.$_ts.'</select>';
+ 		return '<select'.(!empty($name) ? ' name="'.$id.'"' : '').(!empty($id) ? ' id="'.$id.'"' : '').(!empty($class) ? ' class="'.$class.'"' : '').'>'.$_ts.'</select>';
  	} 	
  	
 }

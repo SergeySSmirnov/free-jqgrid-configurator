@@ -344,11 +344,11 @@
  	public function getConfig() {
  		$cfg = array();
  		// Формируем нужные кнопки
- 		if ($this->addButtonFreze || $this->addButtonSortColumns) {
+ 		if (($this->addButtonFreze === TRUE) || ($this->addButtonSortColumns === TRUE)) {
  			$this->customButtons[] = JqGrid_CustomButton::addSeparator();
- 			if ($this->addButtonSortColumns)
+ 			if ($this->addButtonSortColumns === TRUE)
  				$this->customButtons[] = JqGrid_CustomButton::addButton('columnChooser', '', 'ui-icon-arrowthick-2-e-w', 'Переупорядочивание и скрытие колонок');
- 			if ($this->addButtonFreze)
+ 			if ($this->addButtonFreze === TRUE)
  				$this->customButtons[] = JqGrid_CustomButton::addButton('columnFreze', '', 'ui-icon-unlocked', 'Заморозить/разморозить фиксированные столбцы');
  		}
 
@@ -363,16 +363,16 @@
  		$cfg['plugins'] = array();
  		$cfg['plugins']['js'] = $this->addonJS;
  		$cfg['plugins']['css'] = $this->addonCSS;
- 		if ($this->plugin_addons) $cfg['plugins']['js'][] = '/media/js/jqGrid/plugins/grid.addons.js';
- 		if ($this->plugin_postext) $cfg['plugins']['js'][] = '/media/js/jqGrid/plugins/grid.postext.js';
- 		if ($this->plugin_setcolumns) $cfg['plugins']['js'][] = '/media/js/jqGrid/plugins/grid.setcolumns.js';
- 		if ($this->plugin_contextmenu) $cfg['plugins']['js'][] = '/media/js/jqGrid/plugins/jquery.contextmenu.js';
- 		if ($this->plugin_searchFilter) {
+ 		if ($this->plugin_addons === TRUE) $cfg['plugins']['js'][] = '/media/js/jqGrid/plugins/grid.addons.js';
+ 		if ($this->plugin_postext === TRUE) $cfg['plugins']['js'][] = '/media/js/jqGrid/plugins/grid.postext.js';
+ 		if ($this->plugin_setcolumns === TRUE) $cfg['plugins']['js'][] = '/media/js/jqGrid/plugins/grid.setcolumns.js';
+ 		if ($this->plugin_contextmenu === TRUE) $cfg['plugins']['js'][] = '/media/js/jqGrid/plugins/jquery.contextmenu.js';
+ 		if ($this->plugin_searchFilter === TRUE) {
  			$cfg['plugins']['js'][] = '/media/js/jqGrid/plugins/jquery.searchFilter.js';
  			$cfg['plugins']['css'][] = '/media/js/jqGrid/plugins/jquery.searchFilter.css';
  		}
- 		if ($this->plugin_tablednd) $cfg['plugins']['js'][] = '/media/js/jqGrid/plugins/jquery.tablednd.js';
- 		if ($this->plugin_multiselect || $this->addButtonSortColumns) {
+ 		if ($this->plugin_tablednd === TRUE) $cfg['plugins']['js'][] = '/media/js/jqGrid/plugins/jquery.tablednd.js';
+ 		if (($this->plugin_multiselect === TRUE) || ($this->addButtonSortColumns === TRUE)) {
  			$cfg['plugins']['js'][] = '/media/js/jqGrid/plugins/ui.multiselect.js';
  			$cfg['plugins']['css'][] = '/media/js/jqGrid/plugins/ui.multiselect.css';
  		}
@@ -382,65 +382,65 @@
  		
  		// Формируем массив основной конфигурации
  		$cfg['config'] = array();
- 		if ($this->altRows) {
+ 		if ($this->altRows === TRUE) {
  			$cfg['config']['altRows'] = TRUE;
- 			if ($this->altClass !== '')
+ 			if (!empty($this->altClass))
  				$cfg['config']['altclass'] = $this->altClass;
  		}
  		$cfg['config']['autowidth'] = $this->autoWidth;
- 		if ($this->caption !== '') {
+ 		if (!empty($this->caption)) {
  			$cfg['config']['caption'] = $this->caption;
  			$cfg['config']['hiddengrid'] = $this->hiddenGrid;
  			$cfg['config']['hidegrid'] = $this->hideGrid;
  		}
  		if ($this->cellLayout !== -1)
  			$cfg['config']['cellLayout'] = $this->cellLayout;
- 		if ($this->cellEdit) {
+ 		if ($this->cellEdit === TRUE) {
  			$cfg['config']['cellEdit'] = TRUE;
  			$cfg['config']['cellsubmit'] = $this->cellSubmit;
  			$cfg['config']['cellurl'] = $this->cellUrl;
  		}
  		$cfg['config']['datatype'] = $this->dataType;
- 		if (($this->dataType == 'xmlstring') || ($this->dataType == 'jsonstring')) {
- 			if ($this->dataStr !== '')
+ 		if (($this->dataType === 'xmlstring') || ($this->dataType === 'jsonstring')) {
+ 			if (!empty($this->dataStr))
  				$cfg['config']['datastr'] = $this->dataStr;
  		} else {
  			if (count($this->data) > 0)
  				$cfg['config']['data'] = $this->data;
  		}
- 		if ($this->editUrl !== '')
+ 		if (!empty($this->editUrl))
  			$cfg['config']['editurl'] = $this->editUrl;
- 		if ($this->forceFit)
+ 		if ($this->forceFit === TRUE)
  			$cfg['config']['forceFit'] = TRUE;
- 		if ($this->grouping)
+ 		if ($this->grouping === TRUE)
  			$cfg['config']['grouping'] = TRUE;
- 		if ($this->headerTitles)
+ 		if ($this->headerTitles === TRUE)
  			$cfg['config']['headertitles'] = TRUE;
  		$cfg['config']['height'] = $this->height;
  		if ($this->hoverRows === FALSE)
  			$cfg['config']['hoverrows'] = $this->hoverRows;
- 		if ($this->idPrefix !== '')
+ 		if (!empty($this->idPrefix))
  			$cfg['config']['idPrefix'] = $this->idPrefix;
- 		if ($this->ignoreCase)
+ 		if ($this->ignoreCase === TRUE)
  			$cfg['config']['ignoreCase'] = TRUE;
- 		if ($this->loadOnce)
+ 		if ($this->loadOnce === TRUE)
  			$cfg['config']['loadonce'] = TRUE;
  		$cfg['config']['loadui'] = $this->loadui;
  		$cfg['config']['mtype'] = $this->mType;
- 		if ($this->multiSelect) {
+ 		if ($this->multiSelect === TRUE) {
  			$cfg['config']['multiselect'] = TRUE;
  			$cfg['config']['multiboxonly'] = $this->multiBoxOnly;
  			$cfg['config']['multiselectWidth'] = $this->multiSelectWidth;
  		}
- 		if ($this->multiSort)
+ 		if ($this->multiSort === TRUE)
  			$cfg['config']['multiSort'] = TRUE;
- 		if ($this->resizeClass !== '')
+ 		if (!empty($this->resizeClass))
  			$cfg['config']['resizeclass'] = $this->resizeClass;
- 		if ($this->rowNumbers) {
+ 		if ($this->rowNumbers === TRUE) {
  			$cfg['config']['rownumbers'] = TRUE;
  			$cfg['config']['rownumWidth'] = $this->rowNumWidth;
  		}
- 		if ($this->scroll) {
+ 		if ($this->scroll === TRUE) {
  			$cfg['config']['scroll'] = TRUE;
  			$cfg['config']['scrollOffset'] = $this->scrollOffset;
  			$cfg['config']['scrollTimeout'] = $this->scrollTimeout;
@@ -448,16 +448,16 @@
  		}
  		if ($this->shrinkToFit === FALSE)
  			$cfg['config']['shrinkToFit'] = FALSE;
- 		if ($this->sortable) {
+ 		if ($this->sortable === TRUE) {
  			$cfg['config']['sortable'] = TRUE;
  			if (!in_array('multiselect', $cfg['plugins']))
  				$cfg['plugins'][] = 'multiselect';
  		}
- 		if ($this->sortCol !== '') {
+ 		if (!empty($this->sortCol)) {
  			$cfg['config']['sortname'] = $this->sortCol;
  			$cfg['config']['sortorder'] = $this->sortOrder;
  		}
- 		if ($this->subGrid) {
+ 		if ($this->subGrid === TRUE) {
  			$cfg['config']['subGrid'] = TRUE;
  			$cfg['config']['subGridOptions'] = $this->subGridOptions;
  			$cfg['config']['subGridModel'] = $this->subGridModel;
@@ -465,11 +465,11 @@
  			$cfg['config']['subGridWidth'] = $this->subGridWidth;
  			$cfg['config']['subGridWidth'] = $this->subGridWidth;
  		}
- 		if ($this->toolbar[0])
+ 		if ($this->toolbar[0] === TRUE)
  			$cfg['config']['toolbar'] = $this->toolbar;
- 		if ($this->toppager)
+ 		if ($this->toppager === TRUE)
  			$cfg['config']['toppager'] = TRUE;
- 		if ($this->treeGrid) {
+ 		if ($this->treeGrid === TRUE) {
  			$cfg['config']['$treeGrid'] = TRUE;
  			$cfg['config']['treeGridModel'] = $this->treeGridModel;
  			if (count($this->treeIcons) > 0)
@@ -478,10 +478,10 @@
  				$cfg['config']['treeReader'] = $this->treeReader;
  			$cfg['config']['tree_root_level'] = $this->treeRootLevel;
  		}
- 		if ($this->url !== '')
+ 		if (!empty($this->url))
  			$cfg['config']['url'] = $this->url;
  		$cfg['config']['viewsortcols'] = array($this->viewSortColsVisibleIcons, 'vertical', $this->viewSortColsClickableHeaders);
- 		if ($this->width)
+ 		if ($this->width > 0)
  			$cfg['config']['width'] = $this->width;
  		
  		// Формируем дополнительные параметры
@@ -496,7 +496,7 @@
  		if (count($this->colModel) > 0) {
  			foreach ($this->colModel as $column)
  				$cfg['config']['colModel'][] = $column->getConfig();
- 			if (count($this->colModel) == count($this->colNames))
+ 			if (count($this->colModel) === count($this->colNames))
  				$cfg['config']['colNames'] = $this->colNames;
  		}
  		

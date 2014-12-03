@@ -87,19 +87,19 @@
  		$cfg['recButtons']['search'] = $this->search;
  		$cfg['recButtons']['refresh'] = $this->refresh;
  		$cfg['recButtons']['del'] = $this->del;
- 		if ($this->view)
+ 		if ($this->view === TRUE)
  			$cfg = $this->viewConfig->getConfig($cfg);
- 		if ($this->edit)
+ 		if ($this->edit === TRUE)
  			$cfg = $this->editConfig->getConfig($cfg);
- 		if ($this->add)
+ 		if ($this->add === TRUE)
  			$cfg = $this->addConfig->getConfig($cfg);
- 		if ($this->search)
+ 		if ($this->search === TRUE)
  			$cfg = $this->searchConfig->getConfig($cfg);
- 		if ($this->del)
+ 		if ($this->del === TRUE)
  			$cfg = $this->delConfig->getConfig($cfg);
- 		if ($this->refresh)
+ 		if ($this->refresh === TRUE)
  			$cfg = $this->refreshConfig->getConfig($cfg);
- 		if ($this->cloneToTop)
+ 		if ($this->cloneToTop === TRUE)
  			$cfg['recButtons']['cloneToTop'] = TRUE;
  			
  		// Возвращаем результат

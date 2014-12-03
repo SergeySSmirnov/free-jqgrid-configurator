@@ -34,13 +34,13 @@
  	 */
  	public function getConfig($cfg) {
  		// Формируем массив основной конфигурации
- 		if ($this->refreshIcon != '')
+ 		if (!empty($this->refreshIcon))
  			$cfg['recButtons']['refreshicon'] = $this->refreshIcon;
- 		if ($this->afterRefreshFunction != '')
+ 		if (!empty($this->afterRefreshFunction))
  			$cfg['recButtons']['afterRefreshFunction'] = $this->afterRefreshFunction;
- 		if ($this->beforeRefreshFunction != '')
+ 		if (!empty($this->beforeRefreshFunction))
  			$cfg['recButtons']['beforeRefreshFunction'] = $this->beforeRefreshFunction;
- 		if ($this->refreshState != '')
+ 		if (!empty($this->refreshState))
  			$cfg['recButtons']['refreshstate'] = $this->refreshState;
  		// Возвращаем результат
  		return $cfg;
