@@ -231,10 +231,23 @@ class JqGrid_Column {
  	 */
  	public static function editOptionsSelect($values, $multiselect = FALSE, $size = 5) {
 		$cfg = array();
-		if (is_string($values))
-			$cfg['dataUrl'] = $values;
-		else
-			$cfg['value'] = $values;
+		$cfg['value'] = $values;
+ 		if ($multiselect === TRUE) {
+			 $cfg['multiple'] = $multiselect;
+			 $cfg['size'] = $size;
+ 		}
+ 		return $cfg;
+ 	}
+ 	/**
+ 	 * Помощник, представляющий возможность сформировать значение дополнительных параметров editOptions для типа редактирования editType = 'select', где данные будут запрашиваться по указанному URL.
+ 	 * @param array/string $values Массив допустимых значений списка или адрес по которому можно получить данный список. В случае указания адреса, должна формироваться страница с содержимым вида: "<select><option value='1'>One</option><option value='2'>Two</option></select>"
+ 	 * @param bool $multiselect Признак необходимости сформировать список с поддержкой множественного выбора. Значение по умолчанию: false.
+ 	 * @param number $size Высота отображаемой части поля в строках. Значение по умолчанию: 5.
+ 	 * @return array Массив дополнительных параметров, который может применяться для задания значения editOptions.
+ 	 */
+ 	public static function editOptionsSelectUrl($values, $multiselect = FALSE, $size = 5) {
+		$cfg = array();
+		$cfg['dataUrl'] = $values;
  		if ($multiselect === TRUE) {
 			 $cfg['multiple'] = $multiselect;
 			 $cfg['size'] = $size;
@@ -536,7 +549,7 @@ class JqGrid_Column {
  	 */
  	public static function columnSelectValWithSearch($name, $label, $sval = NULL, $width = 250, $align = 'left', $val = NULL, $hidden = FALSE) {
  		$e = jqGrid_Column::columnSelectVal($name, $label, $val, $width, $align);
- 		$e->editOptions = jqGrid_Column::editOptionsSelect((is_array($val) && (count($val) > 0)) ? $val : $sval);
+		$e->editOptions = jqGrid_Column::editOptionsSelect($val);
  		$e->search = TRUE;
  		if (!empty($sval)) {
 	 		$e->stype = 'select';
