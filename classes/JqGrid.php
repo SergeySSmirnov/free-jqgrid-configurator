@@ -5,7 +5,7 @@
  * 
  * @category Controller
  * @author Сергей С. Смирнов
- * @copyright (c) 2010-14 RUSproj, Sergey S. Smirnov
+ * @copyright (c) 2010-15 RUSproj, Sergey S. Smirnov
  */
  class JqGrid {
  	
@@ -319,6 +319,18 @@
  	 */
  	public $width = 0;
 // 	public $xmlReader = array();
+ 	/**
+ 	 * @var bool Признак необходимости добавить форму перед таблицей. Значение по умолчанию: FALSE.
+ 	 */
+ 	public $headerForm = FALSE;
+ 	/**
+ 	 * @var string Задает действительный идентификатор html-элемента, который будет содержать подгружаемую форму, расположенную перед таблицей. Значение по умолчанию: '#hForm'.
+ 	 */
+ 	public $headerFormHtmlID = '#hForm';
+ 	/**
+ 	 * @var string Название функции, осуществляющей загрузку и отрисовку формы. Значение по умолчанию: '' (не определено).
+ 	 */
+ 	public $headerFormCompleteFunction = '';
  	
  	
  	/**
@@ -483,6 +495,10 @@
  		$cfg['config']['viewsortcols'] = array($this->viewSortColsVisibleIcons, 'vertical', $this->viewSortColsClickableHeaders);
  		if ($this->width > 0)
  			$cfg['config']['width'] = $this->width;
+ 		if ($this->headerForm === TRUE) {
+ 			$cfg['headerForm']['htmlID'] = $this->headerFormHtmlID;
+ 			$cfg['headerForm']['completeFunction'] = $this->headerFormCompleteFunction;
+ 		}
  		
  		// Формируем дополнительные параметры
  		$cfg['config']['tableId'] = $this->tableId;

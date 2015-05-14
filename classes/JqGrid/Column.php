@@ -6,7 +6,7 @@
  * 
  * @category Controller
  * @author Сергей С. Смирнов
- * @copyright (c) 2010-14 RUSproj, Sergey S. Smirnov
+ * @copyright (c) 2010-15 RUSproj, Sergey S. Smirnov
  */
 class JqGrid_Column {
  	
