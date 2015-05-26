@@ -359,7 +359,7 @@
  		if (($this->addButtonFreze === TRUE) || ($this->addButtonSortColumns === TRUE)) {
  			$this->customButtons[] = JqGrid_CustomButton::addSeparator();
  			if ($this->addButtonSortColumns === TRUE)
- 				$this->customButtons[] = JqGrid_CustomButton::addButton('columnChooser', '', 'ui-icon-arrowthick-2-e-w', 'Переупорядочивание и скрытие колонок');
+ 				$this->customButtons[] = JqGrid_CustomButton::addButton('columnChooser', '', 'ui-icon-shuffle', 'Переупорядочивание и скрытие колонок');
  			if ($this->addButtonFreze === TRUE)
  				$this->customButtons[] = JqGrid_CustomButton::addButton('columnFreze', '', 'ui-icon-unlocked', 'Заморозить/разморозить фиксированные столбцы');
  		}
