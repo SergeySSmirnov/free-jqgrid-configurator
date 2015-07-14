@@ -2,8 +2,7 @@
  
 /**
  * Класс, который представляет конфигурацию кнопки "Поиск данных".
- * 
- * @category Controller
+ * @package JqGrid
  * @author Сергей С. Смирнов
  * @copyright (c) 2010-15 RUSproj, Sergey S. Smirnov
  */

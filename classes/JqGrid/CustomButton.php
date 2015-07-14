@@ -2,8 +2,7 @@
  
 /**
  * Класс, который представляет конфигурацию пользовательской кнопки, добавляемой на панель инструментов jqGrid.
- * 
- * @category Controller
+ * @package JqGrid
  * @author Сергей С. Смирнов
  * @copyright (c) 2010-15 RUSproj, Sergey S. Smirnov
  */

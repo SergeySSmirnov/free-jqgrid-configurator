@@ -3,8 +3,7 @@
 /**
  * Класс, который представляет конфигурацию столбца таблицы jqGrid.
  * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:colmodel_options
- * 
- * @category Controller
+ * @package JqGrid
  * @author Сергей С. Смирнов
  * @copyright (c) 2010-15 RUSproj, Sergey S. Smirnov
  */

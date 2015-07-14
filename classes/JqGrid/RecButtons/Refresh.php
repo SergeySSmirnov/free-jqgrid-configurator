@@ -2,8 +2,7 @@
  
 /**
  * Класс, который представляет конфигурацию кнопки "Обновить содержимое таблицы".
- * 
- * @category Controller
+ * @package JqGrid
  * @author Сергей С. Смирнов
  * @copyright (c) 2010-15 RUSproj, Sergey S. Smirnov
  */
