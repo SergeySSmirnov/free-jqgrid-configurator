@@ -132,7 +132,7 @@
 // 	public $gridstate = '';
 //	public $gridview = FALSE;
  	/**
- 	 * @var Признак того, что в таблице разрешена группировка столбцов. Значение по умолчанию: FALSE.
+ 	 * @var bool Признак того, что в таблице разрешена группировка столбцов. Значение по умолчанию: FALSE.
  	 */
  	public $grouping = FALSE;
  	/**
@@ -199,7 +199,7 @@
  	 */
  	public $recButtonsConfig = NULL;
  	/**
- 	 * @var jqGrid_Pager Конфигурационные параметры панели постранияной навигации.
+ 	 * @var jqGrid_Pager Конфигурационные параметры панели постраничной навигации.
  	 */
  	public $pager = NULL;
 // 	public $prmNames = array(page => 'page', rows => 'rows', sort => 'sidx', order => 'sord', search => '_search', nd => 'nd', id => 'id', oper => 'oper', editoper => 'edit', addoper => 'add', deloper => 'del', subgridid => 'id', npage => null, totalrows => 'totalrows');
