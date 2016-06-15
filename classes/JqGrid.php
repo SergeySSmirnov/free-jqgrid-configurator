@@ -496,7 +496,8 @@
  			$cfg['config']['width'] = $this->width;
  		if ($this->headerForm === TRUE) {
  			$cfg['headerForm']['htmlID'] = $this->headerFormHtmlID;
- 			$cfg['headerForm']['completeFunction'] = $this->headerFormCompleteFunction;
+ 			if (!empty($this->headerFormCompleteFunction))
+ 				$cfg['headerForm']['completeFunction'] = $this->headerFormCompleteFunction;
  		}
  		
  		// Формируем дополнительные параметры
