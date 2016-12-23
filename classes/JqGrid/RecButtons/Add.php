@@ -4,24 +4,28 @@
  * Класс, который представляет конфигурацию кнопки "Добавить новую запись".
  * @package JqGrid
  * @author Сергей С. Смирнов
- * @copyright (c) 2010-15 RUSproj, Sergey S. Smirnov
+ * @copyright (c) 2010-NOW RUSproj, Sergey S. Smirnov
  */
  class JqGrid_RecButtons_Add {
  	
  	/**
- 	 * @var string Задает класс значка из стиля jQuery, который должен соответствовать кнопке. Значение по умолчанию: '' (не задано).
+ 	 * Задает класс значка из стиля jQuery, который должен соответствовать кнопке. Значение по умолчанию: '' (не задано).
+ 	 * @var string
  	 */
  	public $addIcon = '';
  	/**
- 	 * @var bool Назначить кнопке другой обработчик нажатия. Значение по умолчанию: FALSE.
+ 	 * Назначить кнопке другой обработчик нажатия. Значение по умолчанию: FALSE.
+ 	 * @var bool
  	 */
  	public $addFunc = FALSE;
  	/**
- 	 * @var string Название функции, которая должна запускаться вместо действия по умолчанию. Данная функция не имеет параметров. Значение по умолчанию: 'editForm_Show'.
+ 	 * Название функции, которая должна запускаться вместо действия по умолчанию. Данная функция не имеет параметров. Значение по умолчанию: 'editForm_Show'.
+ 	 * @var string
  	 */
  	public $addFunctionName = 'editForm_Show';
  	/**
- 	 * @var bool Признак необходимости закрывать все всплывающие окна при нажатии на клавишу "Esc". Значение по умолчанию: TRUE.
+ 	 * Признак необходимости закрывать все всплывающие окна при нажатии на клавишу "Esc". Значение по умолчанию: TRUE.
+ 	 * @var bool
  	 */
  	public $closeOnEscape = TRUE;
  	
@@ -32,17 +36,15 @@
  	 * @return array Массив, содержащий итоговые значения параметров.
  	 */
  	public function getConfig($cfg) {
- 		// Формируем массив основной конфигурации
  		if (!empty($this->addIcon))
  			$cfg['recButtons']['addicon'] = $this->addIcon;
- 		if ($this->addFunc === TRUE)
+ 		if ($this->addFunc)
 	 		$cfg['recButtons']['addFunctionName'] = $this->addFunctionName;
- 		// Формируем массив дополнительной конфигурации
  		$cfg['recButtonsAdd'] = array();
  		$cfg['recButtonsAdd']['closeOnEscape'] = $this->closeOnEscape;
+
  		// TODO: Необходимо описать дополнительные параметры добавления записи.
  			
- 		// Возвращаем результат
  		return $cfg;
  	} 
  	
