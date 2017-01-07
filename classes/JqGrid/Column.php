@@ -3,121 +3,144 @@
 /**
  * Класс, который представляет конфигурацию столбца таблицы jqGrid.
  * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:colmodel_options
- * 
- * @category Controller
+ * @package JqGrid
  * @author Сергей С. Смирнов
- * @copyright (c) 2010-15 RUSproj, Sergey S. Smirnov
+ * @copyright (c) 2010-NOW RUSproj, Sergey S. Smirnov
  */
 class JqGrid_Column {
  	
  	/**
- 	 * @var string Выравнивание содержимого в ячейке по горизонтали. Допустимые значения: left, center, right. Значение по умолчанию: 'left'.
+ 	 * Выравнивание содержимого в ячейке по горизонтали. Допустимые значения: left, center, right. Значение по умолчанию: 'left'.
+ 	 * @var string
  	 */
  	public $align = 'left';
  	/**
- 	 * @var string CSS-класс, который долженн быть назначен каждой ячейке (<td>) столбца таблицы. Если нужно назначить несколько классов, то их следует разделить пробелом. Значение по умолчанию: ''. 
+ 	 * CSS-класс, который долженн быть назначен каждой ячейке (<td>) столбца таблицы. Если нужно назначить несколько классов, то их следует разделить пробелом. Значение по умолчанию: ''.
+ 	 * @var string 
  	 */
  	public $classes = '';
  	/**
- 	 * @var string Значение по умолчанию, которое будет установлено в поле при операции поиска. Значение по умолчанию: ''.
+ 	 * Значение по умолчанию, которое будет установлено в поле при операции поиска. Значение по умолчанию: ''.
+ 	 * @var string
  	 */
  	public $defval = '';
  	/**
- 	 * @var string Определяет тип поля, которое будет сформировано для его редактирования. Если значение не определено, то редактирование запрещено. Допустимые значения:  text, textarea, select, checkbox, password, button, image или file. Значение по умолчанию: ''.
+ 	 * Определяет тип поля, которое будет сформировано для его редактирования. Если значение не определено, то редактирование запрещено. Допустимые значения:  text, textarea, select, checkbox, password, button, image или file. Значение по умолчанию: ''.
+ 	 * @var string
  	 */
  	public $editType = '';
  	/**
- 	 * @var array Массив допустимых параметров, определяющих поведение поля в зависимости от его типа (параметра editType). Для формирования значения можно воспользоваться помощниками jqGrid_Column::options*(). Значение по умолчанию: array().
+ 	 * Массив допустимых параметров, определяющих поведение поля в зависимости от его типа (параметра editType). Для формирования значения можно воспользоваться помощниками jqGrid_Column::options*(). Значение по умолчанию: array().
+ 	 * @var array
  	 * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules#edittype
  	 */
  	public $editOptions = array();
  	/**
- 	 * @var string Тип форматирования значений ячеек в данном столбце. Допустимые значения: integer, number, currency, date, email, link, showlink, checkbox, select и actions. Значение по умолчанию: ''.
+ 	 * Тип форматирования значений ячеек в данном столбце. Допустимые значения: integer, number, currency, date, email, link, showlink, checkbox, select и actions. Значение по умолчанию: ''.
+ 	 * @var string
  	 * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:predefined_formatter
  	 */
  	public $formatter = '';
  	/**
- 	 * @var array Массив параметров форматирования. Для формирования значения можно воспользоваться помощниками jqGrid_Column::format*(). Значение по умолчанию: array().
+ 	 * Массив параметров форматирования. Для формирования значения можно воспользоваться помощниками jqGrid_Column::format*(). Значение по умолчанию: array().
+ 	 * @var array
  	 * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:predefined_formatter
  	 */
  	public $formatOptions = array();
  	/**
- 	 * @var bool Признак того, что ширина столбца будет постоянной, независимо от вызова функций, которые меняют ширину таблицы. Чтобы данный параметр имел действие, необходимо установить в конфигурации таблицы параметр shrinkToFit. Значение по умолчанию: FALSE.
+ 	 * Признак того, что ширина столбца будет постоянной, независимо от вызова функций, которые меняют ширину таблицы. Чтобы данный параметр имел действие, необходимо установить в конфигурации таблицы параметр shrinkToFit. Значение по умолчанию: FALSE.
+ 	 * @var bool
  	 */
  	public $fixed = FALSE;
  	/**
- 	 * @var array Определяет дополнительные опции поля для редактирования в отдельной форме. Для формирования значения можно воспользоваться помощником jqGrid_Column::formOptions(). Значение по умолчанию: array().
+ 	 * Определяет дополнительные опции поля для редактирования в отдельной форме. Для формирования значения можно воспользоваться помощником jqGrid_Column::formOptions(). Значение по умолчанию: array().
+ 	 * @var array
  	 */
  	public $formOptions = array();
  	/**
- 	 * @var bool Признак того, что текущий столбец необходимо заморозить при нажатии на кнопку заморозки (вызове метода setFrozenColumns). Внимание! Заморозка будет работать если только столбец или столбцы стоят первыми, а также заморозка не будет работать если активно одно из следующих действий или свойств: TreeGrid, SubGrid, cellEdit, inline edit, sortable, Data grouping, scroll или footer row (footerrow paremeter). Значение по умолчанию: FALSE.
+ 	 * Признак того, что текущий столбец необходимо заморозить при нажатии на кнопку заморозки (вызове метода setFrozenColumns). Внимание! Заморозка будет работать если только столбец или столбцы стоят первыми, а также заморозка не будет работать если активно одно из следующих действий или свойств: TreeGrid, SubGrid, cellEdit, inline edit, sortable, Data grouping, scroll или footer row (footerrow paremeter). Значение по умолчанию: FALSE.
+ 	 * @var bool
  	 */
  	public $frozen = FALSE;
  	/**
- 	 * @var bool Признак необходимости скрыть данный столбец при загрузке. Значение по умолчанию: FALSE.
+ 	 * Признак необходимости скрыть данный столбец при загрузке. Значение по умолчанию: FALSE.
+ 	 * @var bool
  	 */
  	public $hidden = FALSE;
  	/**
- 	 * @var bool Признак необходимости скрыть данный столбец из окна сортировки столбцов. Значение по умолчанию: FALSE.
+ 	 * Признак необходимости скрыть данный столбец из окна сортировки столбцов. Значение по умолчанию: FALSE.
+ 	 * @var bool
  	 */
  	public $hiddenDlg = FALSE;
  	/**
- 	 * @var string Отображаемое имя столбца. Значение по умолчанию: ''.
+ 	 * Отображаемое имя столбца. Значение по умолчанию: ''.
+ 	 * @var string
  	 */
  	public $label = '';
  	/**
- 	 * @var string Имя столбца. Значение по умолчанию: ''.
+ 	 * Имя столбца. Значение по умолчанию: ''.
+ 	 * @var string
  	 */
  	public $name = '';
  	/**
- 	 * @var bool Признак того, что можно менять размер данного столбца. Значение по умолчанию: TRUE.
+ 	 * Признак того, что можно менять размер данного столбца. Значение по умолчанию: TRUE.
+ 	 * @var bool
  	 */
  	public $resizable = TRUE;
  	/**
- 	 * @var bool Признак того, что по данному столбцу можно проводить сорировку. Значение по умолчанию: TRUE.
+ 	 * Признак того, что по данному столбцу можно проводить сорировку. Значение по умолчанию: TRUE.
+ 	 * @var bool
  	 */
  	public $sortable = TRUE;
  	/**
- 	 * @var bool Признак того, что по данному столбцу может производится поиск. Значение по умолчанию: TRUE.
+ 	 * Признак того, что по данному столбцу может производится поиск. Значение по умолчанию: TRUE.
+ 	 * @var bool
  	 */
  	public $search = TRUE;
  	/**
- 	 * @var array Массив, содержащий параметры поиска. Для формирования значения можно воспользоваться помощником jqGrid_Column::searchOptions(). Значение по умолчанию: array().
+ 	 * Массив, содержащий параметры поиска. Для формирования значения можно воспользоваться помощником jqGrid_Column::searchOptions(). Значение по умолчанию: array().
+ 	 * @var array
  	 * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:search_config
  	 */
  	public $searchOptions = array();	
  	/**
- 	 * @var bool Признак того, что если значение равно false, то заголовок не отображается в столбце кога мы щелкаем по клетке мышью. Значение по умолчанию: TRUE.
+ 	 * Признак того, что если значение равно false, то заголовок не отображается в столбце кога мы щелкаем по клетке мышью. Значение по умолчанию: TRUE.
+ 	 * @var bool
  	 */
  	public $title = TRUE;
  	/**
- 	 * @var int Ширина столбца в пикселах. Значение по умолчанию: 150.
+ 	 * Ширина столбца в пикселах. Значение по умолчанию: 150.
+ 	 * @var int
  	 */
  	public $width = 150;
  	/**
- 	 * @var bool Признак необходимости отображать данное поле в окне просмотра (если активен метод viewGridRow). Значение по умолчанию: TRUE.
+ 	 * Признак необходимости отображать данное поле в окне просмотра (если активен метод viewGridRow). Значение по умолчанию: TRUE.
+ 	 * @var bool
  	 */
  	public $viewable = TRUE;
  	/**
- 	 * @var string Тип элемента, когда осуществляется поиск. Доступные значения: text и select. Значение по умолчанию: 'text'.
+ 	 * Тип элемента, когда осуществляется поиск. Доступные значения: text и select. Значение по умолчанию: 'text'.
+ 	 * @var string
  	 */
  	public $stype = 'text';
  	/**
- 	 * @var string Используется только когда stype = 'select'. Задает адрес, откуда загружаются значения выпадающего списка. В случае указания адреса, должна формироваться страница с содержимым вида: "<select><option value='1'>One</option><option value='2'>Two</option></select>". Значение по умолчанию: ''.
+ 	 * Используется только когда stype = 'select'. Задает адрес, откуда загружаются значения выпадающего списка. В случае указания адреса, должна формироваться страница с содержимым вида: "<select><option value='1'>One</option><option value='2'>Two</option></select>". Значение по умолчанию: ''.
+ 	 * @var string
  	 */
  	public $surl = '';
  	/**
- 	 * @var boolean Признак того что поле является первичным ключом необходимо для корректной работы собственных форм
+ 	 * Признак того что поле является первичным ключом необходимо для корректной работы собственных форм.
+ 	 * @var boolean
  	 */
  	public $is_primary_key = FALSE;
 
 
  	/**
  	 * Формирует массив конфигурационных параметров, которые может воспринимать скрипт инициализации base.table.js таблиц jqGrid. 
+ 	 * @return array Массив, содержащий конфигурацию для инициализации таблицы JqGrid. 
  	 */
  	public function getConfig() {
  		$cfg = array();
- 		// Формируем результирующую конфигурацию
  		if (!empty($this->align))
  			$cfg['align'] = $this->align;
  		if (!empty($this->classes))
@@ -137,7 +160,7 @@ class JqGrid_Column {
  				$cfg['formatoptions'] = $this->formatOptions;
  		}
  		$cfg['search'] = $this->search;
- 		if ($this->search === TRUE) {
+ 		if ($this->search) {
  			$cfg['stype'] = $this->stype;
  			if (strtolower($this->stype) === 'select')
  				$cfg['surl'] = $this->surl;
@@ -146,32 +169,31 @@ class JqGrid_Column {
  			else
  				$cfg['searchoptions'] = jqGrid_Column::searchOptions();
  		}
- 		if ($this->fixed === TRUE)
+ 		if ($this->fixed)
  			$cfg['fixed'] = TRUE;
  		if (count($this->formOptions) > 0)
  			$cfg['formoptions'] = $this->formOptions;
- 		if ($this->frozen === TRUE)
+ 		if ($this->frozen)
  			$cfg['frozen'] = TRUE;
- 		if ($this->hiddenDlg === TRUE)
+ 		if ($this->hiddenDlg)
  			$cfg['hidedlg'] = TRUE;
- 		if ($this->hidden === TRUE)
+ 		if ($this->hidden)
  			$cfg['hidden'] = TRUE;
  		if (!empty($this->label))
  			$cfg['label'] = $this->label;
  		if (!empty($this->name))
  			$cfg['name'] = $this->name;
- 		if ($this->resizable === FALSE)
+ 		if (!$this->resizable)
  			$cfg['resizable'] = FALSE;
- 		if ($this->sortable === FALSE)
+ 		if (!$this->sortable)
  			$cfg['sortable'] = FALSE;
- 		if ($this->title === FALSE)	
+ 		if (!$this->title)	
  			$cfg['title'] = FALSE;
  		if ($this->width > 0)
  			$cfg['width'] = $this->width;
- 		if ($this->viewable === FALSE)
+ 		if (!$this->viewable)
  			$cfg['viewable'] = FALSE;
  		$cfg['is_primary_key'] = $this->is_primary_key;
- 		// Возвращаем результат
  		return $cfg;
  	}
  	
@@ -232,7 +254,7 @@ class JqGrid_Column {
  	public static function editOptionsSelect($values, $multiselect = FALSE, $size = 5) {
 		$cfg = array();
 		$cfg['value'] = $values;
- 		if ($multiselect === TRUE) {
+ 		if ($multiselect) {
 			 $cfg['multiple'] = $multiselect;
 			 $cfg['size'] = $size;
  		}
@@ -248,7 +270,7 @@ class JqGrid_Column {
  	public static function editOptionsSelectUrl($values, $multiselect = FALSE, $size = 5) {
 		$cfg = array();
 		$cfg['dataUrl'] = $values;
- 		if ($multiselect === TRUE) {
+ 		if ($multiselect) {
 			 $cfg['multiple'] = $multiselect;
 			 $cfg['size'] = $size;
  		}
@@ -278,9 +300,6 @@ class JqGrid_Column {
  	public static function editOptionsFile($alt) {
  		return array('alt' => $alt);
  	}
- 	
-	
- 	
  	/**
  	 * Помощник, представляющий возможность сформировать значение дополнительных параметров formOptions.
  	 * @param number $rowpos Если больше 0, то определяет позицию элемента в соответствующей строке таблицы формы.
@@ -304,8 +323,6 @@ class JqGrid_Column {
  			$cfg['elmsuffix'] = $elmsuffix;
  		return $cfg;
  	}
- 	
- 	
  	/**
  	 * Помощник, представляющий возможность сформировать значение дополнительных параметров searchOptions.
  	 * @param string $dataUrl Адрес, откуда загружаются значения выпадающего списка. В случае указания адреса, должна формироваться страница с содержимым вида: "<select><option value='1'>One</option><option value='2'>Two</option></select>". Значение по умолчанию: ''.
@@ -326,8 +343,6 @@ class JqGrid_Column {
  			$cfg['value'] = $value;
  		return $cfg;
  	}
- 	
- 	
  	/**
  	 * Помощник, представляющий возможность сформировать значение дополнительных параметров formatOptions для типа редактирования formatter = 'integer'.
  	 * @param string $thousandsSeparator Разделитель тысяч. Значение по умолчанию: ' '.
@@ -491,7 +506,7 @@ class JqGrid_Column {
  		$e->name = $name;
  		$e->label = $label;
  		$e->search = FALSE;
- 		if ($canEdit === TRUE)
+ 		if ($canEdit)
  			$e->editType = 'text';
  		$e->width = $width;
  		$e->align = $align;
@@ -575,7 +590,7 @@ class JqGrid_Column {
  		$e->align = $align;
  		$e->formatter = 'checkbox';
 		$e->formatOptions = jqGrid_Column::formatCheckbox('0');
- 		if ($canEdit === TRUE) {
+ 		if ($canEdit) {
 			$e->editType = 'checkbox';
 			$e->editOptions = jqGrid_Column::editOptionsCheckbox('1', '0');
  		}
@@ -632,7 +647,7 @@ class JqGrid_Column {
  		$e->name = $name;
  		$e->label = $label;
  		$e->search = FALSE;
- 		if ($canEdit === TRUE)
+ 		if ($canEdit)
  			$e->editType = 'text';
  		$e->formatter = 'date';
  		$e->formatOptions = jqGrid_Column::formatDate($srcformat, $newformat);
@@ -658,7 +673,6 @@ class JqGrid_Column {
  		$e->hidden = $hidden;
  		return $e;
  	}
- 	
  	/**
  	 * Функция формирует выпадающий список, представленный в виде HTML на основе заданного массива значений.
  	 * @param array $vals Массив значений, на основе которого будет формироваться выпадающий список.

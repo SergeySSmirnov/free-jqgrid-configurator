@@ -2,63 +2,85 @@
  
 /**
  * Класс, который представляет конфигурацию панели управления записями в таблице jqGrid.
- * 
- * @category Controller
+ * @package JqGrid
  * @author Сергей С. Смирнов
- * @copyright (c) 2010-15 RUSproj, Sergey S. Smirnov
+ * @copyright (c) 2010-NOW RUSproj, Sergey S. Smirnov
  */
  class JqGrid_RecButtons {
  	
  	/**
- 	 * @var bool Признак необходимости отобразить кнопку "Просмотреть выбранную запись". Значение по умолчанию: FALSE.
+ 	 * Признак необходимости отобразить кнопку "Просмотреть выбранную запись". Значение по умолчанию: FALSE.
+ 	 * @var bool
  	 */
  	public $view = FALSE;
  	/**
- 	 * @var JqGrid_RecButtons_View Конфигурация кнопки "Просмотреть выбранную запись".
+ 	 * Конфигурация кнопки "Просмотреть выбранную запись".
+ 	 * @var JqGrid_RecButtons_View
  	 */
  	public $viewConfig = NULL;
  	/**
- 	 * @var bool Признак необходимости отобразить кнопку "Редактировать выбранную запись". Значение по умолчанию: TRUE.
+ 	 * Признак необходимости отобразить кнопку "Редактировать выбранную запись". Значение по умолчанию: TRUE.
+ 	 * @var bool
  	 */
  	public $edit = TRUE;
  	/**
- 	 * @var JqGrid_RecButtons_Edit Конфигурация кнопки "Редактировать выбранную запись".
+ 	 * Конфигурация кнопки "Редактировать выбранную запись".
+ 	 * @var JqGrid_RecButtons_Edit
  	 */
  	public $editConfig = NULL;
  	/**
- 	 * @var bool Признак необходимости отобразить кнопку "Добавить новую запись". Значение по умолчанию: TRUE.
+ 	 * Признак необходимости отобразить кнопку "Добавить новую запись". Значение по умолчанию: TRUE.
+ 	 * @var bool
  	 */
  	public $add = TRUE;
  	/**
- 	 * @var JqGrid_RecButtons_Add Конфигурация кнопки "Добавить новую запись".
+ 	 * Конфигурация кнопки "Добавить новую запись".
+ 	 * @var JqGrid_RecButtons_Add
  	 */
  	public $addConfig = NULL;
  	/**
- 	 * @var bool Признак необходимости отобразить кнопку "Поиск записей". Значение по умолчанию: TRUE.
+ 	 * Признак необходимости отобразить кнопку "Копировать запись". Значение по умолчанию: FALSE.
+ 	 * @var bool
+ 	 */
+ 	public $copy = FALSE;
+ 	/**
+ 	 * Конфигурация кнопки "Копировать запись".
+ 	 * @var JqGrid_RecButtons_Copy
+ 	 */
+ 	public $copyConfig = NULL;
+ 	/**
+ 	 * Признак необходимости отобразить кнопку "Поиск записей". Значение по умолчанию: TRUE.
+ 	 * @var bool
  	 */
  	public $search = TRUE;
  	/**
- 	 * @var JqGrid_RecButtons_Search Конфигурация кнопки "Поиск записей".
+ 	 * Конфигурация кнопки "Поиск записей".
+ 	 * @var JqGrid_RecButtons_Search
  	 */
  	public $searchConfig = NULL;
  	/**
- 	 * @var bool Признак необходимости отобразить кнопку "Обновить". Значение по умолчанию: TRUE.
+ 	 * Признак необходимости отобразить кнопку "Обновить". Значение по умолчанию: TRUE.
+ 	 * @var bool
  	 */
  	public $refresh = TRUE;
  	/**
- 	 * @var JqGrid_RecButtons_Refresh Конфигурация кнопки "Обновить".
+ 	 * Конфигурация кнопки "Обновить".
+ 	 * @var JqGrid_RecButtons_Refresh
  	 */
  	public $refreshConfig = NULL;
  	/**
- 	 * @var bool Признак необходимости отобразить кнопку "Удалить выбранную запись". Значение по умолчанию: TRUE.
+ 	 * Признак необходимости отобразить кнопку "Удалить выбранную запись". Значение по умолчанию: TRUE.
+ 	 * @var bool
  	 */
  	public $del = TRUE;
  	/**
- 	 * @var JqGrid_RecButtons_Del Конфигурация кнопки "Удалить выбранную запись".
+ 	 * Конфигурация кнопки "Удалить выбранную запись".
+ 	 * @var JqGrid_RecButtons_Del
  	 */
  	public $delConfig = NULL;
  	/**
- 	 * @var boolean Признак необходимости копировать все действия (кнопки) в верхней панели. Внимание, navGrid может быть применен только к верху. Тогда его id будет складываться из названия таблицы и "_toppager". Значение по умолчанию: FALSE. 
+ 	 * Признак необходимости копировать все действия (кнопки) в верхней панели. Внимание, navGrid может быть применен только к верху. Тогда его id будет складываться из названия таблицы и "_toppager". Значение по умолчанию: FALSE.
+ 	 * @var boolean 
  	 */
  	public $cloneToTop = FALSE;
  	
@@ -77,32 +99,30 @@
  	
  	/**
  	 * Формирует массив конфигурационных параметров, которые может воспринимать скрипт инициализации base.table.js таблиц jqGrid. 
+ 	 * @return array Массив, содержащий конфигурацию для инициализации таблицы JqGrid. 
  	 */
  	public function getConfig() {
  		$cfg = array();
- 		// Формируем массив основной конфигурации
  		$cfg['recButtons']['view'] = $this->view;
  		$cfg['recButtons']['edit'] = $this->edit;
  		$cfg['recButtons']['add'] = $this->add;
  		$cfg['recButtons']['search'] = $this->search;
  		$cfg['recButtons']['refresh'] = $this->refresh;
  		$cfg['recButtons']['del'] = $this->del;
- 		if ($this->view === TRUE)
+ 		if ($this->view)
  			$cfg = $this->viewConfig->getConfig($cfg);
- 		if ($this->edit === TRUE)
+ 		if ($this->edit)
  			$cfg = $this->editConfig->getConfig($cfg);
- 		if ($this->add === TRUE)
+ 		if ($this->add)
  			$cfg = $this->addConfig->getConfig($cfg);
- 		if ($this->search === TRUE)
+ 		if ($this->search)
  			$cfg = $this->searchConfig->getConfig($cfg);
- 		if ($this->del === TRUE)
+ 		if ($this->del)
  			$cfg = $this->delConfig->getConfig($cfg);
- 		if ($this->refresh === TRUE)
+ 		if ($this->refresh)
  			$cfg = $this->refreshConfig->getConfig($cfg);
- 		if ($this->cloneToTop === TRUE)
+ 		if ($this->cloneToTop)
  			$cfg['recButtons']['cloneToTop'] = TRUE;
- 			
- 		// Возвращаем результат
  		return $cfg;
  	} 
  	
