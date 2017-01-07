@@ -670,7 +670,7 @@ class JqGrid_Column {
  	 */
  	public static function createSelect($vals, $addNull = TRUE, $name = '', $id = '', $class = '') {
  		$_ts = '';
- 		if (($addNull === TRUE) && !in_array('-', $vals))
+ 		if ($addNull && !count(array_filter($vals, function($val) {return trim($val) == '-';}))) // Если в массиве существует элемент '-', то его не добавляем
  			$_ts = '<option value="-1"> - </option>';
  		foreach ($vals as $i => $key)
  			$_ts .= '<option value="'.$i.'">'.$key.'</option>';
