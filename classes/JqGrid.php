@@ -4,7 +4,7 @@ namespace RUSproj\Kohana\JqGrid;
 use RUSproj\Kohana\JqGrid\JqGrid\ {
     JqGrid_CustomButton,
     JqGrid_Column,
-    JqGrid_recButtons,
+    JqGrid_RecButtons,
     JqGrid_Pager
 };
 
