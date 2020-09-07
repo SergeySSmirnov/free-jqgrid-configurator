@@ -1,0 +1,6 @@
+!.gitignore
+
+## IDE & plugins
+/.settings
+.buildpath
+.project
