@@ -1,29 +1,23 @@
 {
 	"keywords" : [
-		"kohana",
-		"kohana module",
-		"kohana module JQuery Grid"
+		"free jqgrid"
 	],
 	"autoload" : {
 		"psr-4" : {
-			"RUSproj\\Kohana\\JqGrid\\" : "classes"
+			"Rusproj\\FreeJqGridConfigurator" : "src"
 		}
 	},
-	"name" : "rusproj/kohana-jqgrid",
-	"type" : "kohana-module",
-	"description" : "Backend helper to apply JQuery Grid capabilities on your site.",
+	"name" : "rusproj/free-jqgrid-configurator",
+	"type" : "library",
+	"description" : "Backend helper to apply free jqGrid capabilities on your site.",
 	"license" : "MIT",
-	"require" : {
-		"php" : ">=7.1",
-		"composer/installers" : "~1.0"
-	},
 	"support" : {
 		"email" : "sergeyssmirnov@mail.ru"
 	},
 	"authors" : [{
-			"name" : "Sergei Smirnov",
+			"name" : "Sergei S. Smirnov",
 			"email" : "sergeissmirnov@mail.ru",
-			"role" : "developer"
+			"homepage" : "https://rusproj.space"
 		}
 	],
 	"extra" : {

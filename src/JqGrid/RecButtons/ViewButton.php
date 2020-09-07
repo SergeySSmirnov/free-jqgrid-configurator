@@ -1,29 +1,32 @@
 <?php
-namespace RUSproj\Kohana\JqGrid\JqGrid\RecButtons;
+namespace Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons;
 
 /**
  * Класс, который представляет конфигурацию кнопки "Просмотреть выбранную запись".
- * @package JqGrid
- * @author Сергей С. Смирнов
- * @copyright (c) 2010-19 RUSproj, Sergey S. Smirnov
+ *
+ * @author Sergei S. Smirnov
+ * @copyright (c) 2010-20 RUSproj, Sergei S. Smirnov
  */
-class JqGrid_RecButtons_View
+class ViewButton
 {
 
     /**
      * Задает класс значка из стиля jQuery, который должен соответствовать кнопке. Значение по умолчанию: '' (не задано).
+     *
      * @var string
      */
     public $viewIcon = '';
 
     /**
      * Признак необходимости закрывать все всплывающие окна при нажатии на клавишу "Esc". Значение по умолчанию: true.
+     *
      * @var bool
      */
     public $closeOnEscape = true;
 
     /**
-     * Формирует массив конфигурационных параметров, которые может воспринимать скрипт инициализации base.table.js таблиц jqGrid.
+     * Формирует массив конфигурационных параметров.
+     *
      * @param array $cfg Массив, который содержит исходные значения параметров, и, в который необходимо записать новые дополнительные параметры.
      * @return array Массив, содержащий итоговые значения параметров.
      */

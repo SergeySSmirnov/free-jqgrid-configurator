@@ -1,127 +1,135 @@
 <?php
-namespace RUSproj\Kohana\JqGrid\JqGrid;
+namespace Rusproj\FreeJqGridConfigurator\JqGrid;
 
-use RUSproj\Kohana\JqGrid\JqGrid\RecButtons\ {
-    JqGrid_RecButtons_Add,
-    JqGrid_RecButtons_Edit,
-    JqGrid_RecButtons_Del,
-    JqGrid_RecButtons_Search,
-    JqGrid_RecButtons_View,
-    JqGrid_RecButtons_Refresh
-};
+use Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons\AddButton;
+use Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons\DeleteButton;
+use Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons\EditButton;
+use Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons\RefreshButton;
+use Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons\SearchButton;
+use Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons\ViewButton;
 
 /**
  * Класс, который представляет конфигурацию панели управления записями в таблице jqGrid.
- * @package JqGrid
- * @author Сергей С. Смирнов
- * @copyright (c) 2010-NOW RUSproj, Sergey S. Smirnov
+ *
+ * @author Sergei S. Smirnov
+ * @copyright (c) 2010-20 RUSproj, Sergei S. Smirnov
  */
-class JqGrid_RecButtons
+class RecButtons
 {
     /**
      * Признак необходимости отобразить кнопку "Просмотреть выбранную запись". Значение по умолчанию: false.
+     *
      * @var bool
      */
     public $view = false;
 
     /**
      * Конфигурация кнопки "Просмотреть выбранную запись".
-     * @var JqGrid_RecButtons_View
+     *
+     * @var \Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons\ViewButton
      */
     public $viewConfig = null;
 
     /**
      * Признак необходимости отобразить кнопку "Редактировать выбранную запись". Значение по умолчанию: true.
+     *
      * @var bool
      */
     public $edit = true;
 
     /**
      * Конфигурация кнопки "Редактировать выбранную запись".
-     * @var JqGrid_RecButtons_Edit
+     *
+     * @var \Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons\EditButton
      */
     public $editConfig = null;
 
     /**
      * Признак необходимости отобразить кнопку "Добавить новую запись". Значение по умолчанию: true.
+     *
      * @var bool
      */
     public $add = true;
 
     /**
      * Конфигурация кнопки "Добавить новую запись".
-     * @var JqGrid_RecButtons_Add
+     *
+     * @var \Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons\AddButton
      */
     public $addConfig = null;
 
     /**
      * Признак необходимости отобразить кнопку "Копировать запись". Значение по умолчанию: false.
+     *
      * @var bool
      */
     public $copy = false;
 
-    // /**
-    // * Конфигурация кнопки "Копировать запись".
-    // * @var JqGrid_RecButtons_Copy
-    // */
-    // public $copyConfig = null;
-
     /**
      * Признак необходимости отобразить кнопку "Поиск записей". Значение по умолчанию: true.
+     *
      * @var bool
      */
     public $search = true;
 
     /**
      * Конфигурация кнопки "Поиск записей".
-     * @var JqGrid_RecButtons_Search
+     *
+     * @var \Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons\SearchButton
      */
     public $searchConfig = null;
 
     /**
      * Признак необходимости отобразить кнопку "Обновить". Значение по умолчанию: true.
+     *
      * @var bool
      */
     public $refresh = true;
 
     /**
      * Конфигурация кнопки "Обновить".
-     * @var JqGrid_RecButtons_Refresh
+     *
+     * @var \Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons\RefreshButton
      */
     public $refreshConfig = null;
 
     /**
      * Признак необходимости отобразить кнопку "Удалить выбранную запись". Значение по умолчанию: true.
+     *
      * @var bool
      */
     public $del = true;
 
     /**
      * Конфигурация кнопки "Удалить выбранную запись".
-     * @var JqGrid_RecButtons_Del
+     *
+     * @var \Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons\DeleteButton
      */
     public $delConfig = null;
 
     /**
-     * Признак необходимости копировать все действия (кнопки) в верхней панели. Внимание, navGrid может быть применен только к верху. Тогда его id будет складываться из названия таблицы и "_toppager". Значение по умолчанию: false.
+     * Признак необходимости копировать все действия (кнопки) в верхней панели. Внимание, navGrid может быть применен только к верху.
+     * Тогда его id будет складываться из названия таблицы и "_toppager". Значение по умолчанию: false.
+     *
      * @var boolean
      */
     public $cloneToTop = false;
 
     /**
-     * Конструктор класса JqGrid_RecButtons.
+     * Конструктор класса RecButtons.
      */
     function __construct() {
-        $this->addConfig = new JqGrid_RecButtons_Add();
-        $this->delConfig = new JqGrid_RecButtons_Del();
-        $this->editConfig = new JqGrid_RecButtons_Edit();
-        $this->refreshConfig = new JqGrid_RecButtons_Refresh();
-        $this->searchConfig = new JqGrid_RecButtons_Search();
-        $this->viewConfig = new JqGrid_RecButtons_View();
+        $this->addConfig = new AddButton();
+        $this->delConfig = new DeleteButton();
+        $this->editConfig = new EditButton();
+        $this->refreshConfig = new RefreshButton();
+        $this->searchConfig = new SearchButton();
+        $this->viewConfig = new ViewButton();
     }
 
     /**
-     * Формирует массив конфигурационных параметров, которые может воспринимать скрипт инициализации base.table.js таблиц jqGrid.
+     * Формирует массив конфигурационных параметров.
+     *
      * @return array Массив, содержащий конфигурацию для инициализации таблицы JqGrid.
      */
     public function getConfig() {
