@@ -2,70 +2,228 @@
 namespace Rusproj\FreeJqGridConfigurator\JqGrid;
 
 use Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface;
+use Rusproj\Uniteller\Exception\NotImplementedException;
 
 /**
- * Класс, который представляет конфигурацию столбца таблицы jqGrid.
+ * Represent JqGrid column configuration capabilities.
  *
  * @author Sergei S. Smirnov
- * @copyright (c) 2010-20 RUSproj, Sergei S. Smirnov
+ * @copyright (c) 2020, RUSproj, Sergei S. Smirnov
  */
 class ColumnDefinition implements ConfigurationDefinitionInterface
 {
 
     /**
-     * Returns a new instance of the {@see \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition} class.
+     * Returns a new instance of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition} class.
      *
+     * @param string $columnName Unique column name.
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     * @throws \Exception Thrown when {@link $columnName} is empty.
      */
-    public static function createInstance()
+    public static function createInstance($columnName)
     {
-        return new ColumnDefinition();
+        return new ColumnDefinition($columnName);
     }
 
 
     /**
-     * Column name.
+     * Initialize a new instance of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition} class.
      *
-     * @var string
+     * @param string $columnName Unique column name.
+     * @throws \Exception Thrown when {@link $columnName} is empty.
      */
-    private $name = '';
+    public function __construct($columnName)
+    {
+        if (empty($columnName)) {
+            throw new \Exception('Column name can\'t be empty.');
+        }
+
+        $this->name = $columnName;
+    }
 
     /**
-     * Column label.
+     * Magic Getter.
      *
-     * @var string
+     * @param string $prop Property name.
+     * @return mixed
      */
-    private $label = '';
+    public function __get($prop)
+    {
+        return isset($this->{$prop}) ? $this->{$prop} : null;
+    }
 
     /**
-     * Column width in pixels.
-     * Default value: 150.
+     * Magic Setter.
      *
-     * @var int
+     * @param string $prop Property name.
+     * @param mixed $value Property value.
      */
-    private $width = 150;
+    public function __set($prop, $value)
+    {
+        $this->{$prop} = $value;
+    }
+
+    /**
+     * Magic Isset.
+     *
+     * @param string $prop Property name.
+     * @return boolean
+     */
+    public function __isset($prop)
+    {
+        return isset($this->{$prop});
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see \Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface::getConfig()
+     */
+    public function getConfig() {
+        $_config = [];
+
+        foreach ($this as $_key => $_val) {
+            if (is_array($_val)) {
+                foreach ($_val as $_subKey => $_subVal) {
+                    if ($_subVal instanceof ConfigurationDefinitionInterface) {
+                        $_config[$_key][] = $_subVal->getConfig();
+                    } else {
+                        $_config[$_key][$_subKey] = $_subVal;
+                    }
+                }
+            } elseif ($_val instanceof ConfigurationDefinitionInterface) {
+                $_config[$_key] = $_val->getConfig();
+            } else {
+                if (is_string($_val)) {
+                    $_val = trim($_val);
+                    if (!empty($_val)) {
+                        $_config[$_key] = $_val;
+                    }
+                } elseif (is_null($_val)) {
+                    continue;
+                } else {
+                    $_config[$_key] = $_val;
+                }
+            }
+        }
+
+        return $_config;
+    }
+
 
     /**
      * Type of text alignment within a column.
+     *
      * Allowed values: 'left', 'center', 'right'.
+     *
      * Default value: 'left'.
      *
      * @var string
      */
     private $align = 'left';
 
+//     /**
+//      * This function add attributes to the cell during the creation of the data - i.e dynamically.
+//      * By example all valid attributes for the table cell can be used or a style attribute with different properties.
+//      * The function should return string. Parameters passed to this function are:
+//      *  - rowId - the id of the row;
+//      *  - val - the value which will be added in the cell;
+//      *  - rawObject - the raw object of the data row - i.e if datatype is json - array, if datatype is xml xml node;
+//      *  - cm - all the properties of this column listed in the colModel;
+//      *  - rdata - the data row which will be inserted in the row. This parameter is array of type name:value, where name is the name in colModel.
+//      *
+//      * @var string
+//      */
+//     private $cellattr = '';
+
     /**
-     * The type of data used for sort.
-     * Allowed values: '', 'integer', 'number', 'date'.
-     * Default value: '' (text).
+     * CSS-classes wich applied to every td-cell of the column.
+     * Multiple classes must be separated by space.
+     *
+     * Default value: ''.
      *
      * @var string
      */
-    private $sorttype = '';
+    private $classes = '';
 
     /**
-     * Force to start sorting of the column by descending oder.
-     * Allowed value: '', 'desc'.
+     * Governs format of sorttype:date (when datetype is set to local) and editrules {date:true} fields.
+     * Determines the expected date format for that column. Uses a PHP-like date formatting.
+     * Currently “/”, “-”, and “.” are supported as date separators.
+     *
+     * Valid formats are:
+     * <ul>
+     *  <li> y,Y,yyyy for four digits year;</li>
+     *  <li> YY, yy for two digits year;</li>
+     *  <li> m,mm for months;</li>
+     *  <li> d,dd for days.</li>
+     * </ul>
+     *
+     * Default value: ''.
+     *
+     * @var string
+     */
+    private $datefmt = '';
+
+    /**
+     * The default value for the search field.
+     * This option is used only in Custom Searching and will be set as initial search.
+     *
+     * Default value: ''.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:custom_searching
+     * @var string
+     */
+    private $defval = '';
+
+    /**
+     * Defines if the field is editable
+     * This option is used in cell, inline and form modules.
+     *
+     * Default value: false.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules
+     * @var boolean
+     */
+    private $editable = false;
+
+    /**
+     * Array of the options for edittype option.
+     * To specify this value can be used one of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition}::editOptions*-methods.
+     *
+     * Default value: [].
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules#editable
+     * @var array
+     */
+    private $editoptions = [];
+
+    /**
+     * Array of the additional rules for the editable field.
+     *
+     * Default value: [].
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules#editrules
+     * @var array
+     */
+    private $editrules = [];
+
+    /**
+     * Defines the edit type for inline and form editing.
+     *
+     * Allowed values: 'text', 'textarea', 'select', 'checkbox', 'password', 'button', 'image', 'file'.
+     *
+     * Default value: ''.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules#edittype
+     * @var string
+     */
+    private $edittype = '';
+
+    /**
+     * Force to start sorting of the column by specified oder.
+     *
+     * Allowed value: '', 'asc', 'desc'.
+     *
      * Default value: ''.
      *
      * @var string
@@ -73,52 +231,73 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     private $firstsortorder = '';
 
     /**
-     * Shortcut, which allows to specify all the options (and some other used for searching and editing) at once.
-     * Allowed values: '', 'number', 'booleanCheckbox' (booleanCheckbox - will displays Boolean input data true and false
-     * as checkbox in case of usage iconSet as 'fontAwesome' {@see \Rusproj\FreeJqGridConfigurator\JqGrid::setIconSet}).
-     * Default value: ''.
+     * If set to true this option does not allow recalculation of the width of the column
+     * if {@link \Rusproj\FreeJqGridConfigurator\JqGrid::setShrinkToFit()} option is set to true.
+     * Also the width does not change if a setGridWidth JS-method is used to change the grid width.
      *
-     * @var string
+     * Default value: false.
+     *
+     * @var boolean
      */
-    private $template = '';
+    private $fixed = false;
 
     /**
-     * Format method wich applied to every column value.
-     * Allowed values: '', 'date', 'select'.
-     * Default value: ''.
+     * Defines various options for form editing.
+     * To specify this value can be used the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::formOptions()}-method.
      *
-     * @var string
+     * Default value: [].
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules#formoptions
+     * @var array
      */
-    // Допустимые значения: integer, number, currency, email, link, showlink, checkbox, actions. Значение по умолчанию: ''.
-    private $formatter = '';
+    private $formoptions = [];
 
     /**
      * Formatter options.
-     * To specify this value can be used one of the formatOptions*-methods.
+     * To specify this value can be used one of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition}::formatOptions*-methods.
+     *
      * Default value: []
      *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:predefined_formatter
      * @var array
      */
     private $formatoptions = [];
 
     /**
-     * Column width can be resized.
-     * Default value: true.
+     * The predefined types (string) or custom function name that controls the format of this field.
+     * Format method applied to every column value.
      *
-     * @var bool
+     * Allowed values: '', 'date', 'select', 'integer', 'number', 'currency', 'email', 'link', 'showlink', 'checkbox', 'actions'.
+     *
+     * Default value: ''.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:predefined_formatter
+     * @var string
      */
-    private $resizable = true;
+    private $formatter = '';
 
     /**
-     * Column values can be sorted.
-     * Default value: true.
+     * If set to true determines that this column will be frozen after calling the setFrozenColumns method.
      *
-     * @var bool
+     * Default value: false.
+     *
+     * @var boolean
      */
-    private $sortable = true;
+    private $frozen = false;
 
     /**
-     * Hide column on table load.
+     * If set to true this column will not appear in the modal dialog where users can choose which columns to show or hide.
+     *
+     * Default value: false.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:show_hide_columns
+     * @var boolean
+     */
+    private $hidedlg = false;
+
+    /**
+     * Defines if this column is hidden at initialization.
+     *
      * Default value: false.
      *
      * @var bool
@@ -126,14 +305,65 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     private $hidden = false;
 
     /**
-     * CSS-classes wich applied to every td-cell. Multiple classes must be separated by space.
+     * Set the index name when sorting. Passed as sidx parameter.
+     *
+     * Default value: ''.
      *
      * @var string
      */
-    private $classes = '';
+    private $index = '';
+
+    /**
+     * Defines the json mapping for the column in the incoming json string.
+     *
+     * Default value: ''.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:retrieving_data
+     * @var string
+     */
+    private $jsonmap = '';
+
+//     /**
+//      * Overwrite the id (defined in readers) from server. Can be set as id for the unique row id.
+//      * Only one column can have this property. This option have higher priority as those from the readers.
+//      * If there are more than one key set the grid finds the first one and the second is ignored.
+//      *
+//      * Default value: false.
+//      *
+//      * @var boolean
+//      */
+//     private $key = false;
+
+    /**
+     * Column label.
+     * This property used when {@link \Rusproj\FreeJqGridConfigurator\JqGrid::getColNames()} is empty.
+     *
+     * Default value: ''.
+     *
+     * @var string
+     */
+    private $label = '';
+
+    /**
+     * Unique column name.
+     * This property is required.
+     *
+     * @var string
+     */
+    private $name = '';
+
+    /**
+     * Column width can be sized.
+     *
+     * Default value: true.
+     *
+     * @var bool
+     */
+    private $resizable = true;
 
     /**
      * Column can be used in search.
+     *
      * Default value: true.
      *
      * @var bool
@@ -142,91 +372,144 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
 
     /**
      * Search options.
-     * To specify this value can be used {@see \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::searchOptions} method.
+     * To specify this value can be used {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::generateSearchOptions()} method.
      *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:search_config
      * @var array
      */
     private $searchoptions = ['sopt' => ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en', 'cn', 'nc', 'nu', 'nn']];
 
     /**
+     * Column values can be sorted.
+     *
+     * Default value: true.
+     *
+     * @var bool
+     */
+    private $sortable = true;
+
+//     /**
+//      * Custom function to make custom sorting when datatype is local.
+//      * Three parameters a, b and direction are passed. The a and b parameters are values to be compared
+//      * direction is numeric 1 and -1 for ascending and descending order. The function should return 1, -1 or 0.
+//      *
+//      * @var unknown
+//      */
+//     private $sortfunc = null;
+
+    /**
+     * Used when {@link \Rusproj\FreeJqGridConfigurator\JqGrid::getDataType()} is local.
+     * Defines the type of the column for appropriate sorting.
+     *
+     * Allowed values:
+     * <ul>
+     *  <li>int/integer - for sorting integer;</li>
+     *  <li>float/number/currency - for sorting decimal numbers;</li>
+     *  <li>date - for sorting date;</li>
+     *  <li>text - for text sorting;</li>
+     *  <li>function - defines a custom function for sorting. To this function we pass the value to be sorted and it should return a value too.</li>
+     * </ul>
+     *
+     * Default value: ''.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:retrieving_data#array_data
+     * @var string
+     */
+    private $sorttype = '';
+
+    /**
      * Data type at the search operation.
+     *
      * Allowed values: 'text', 'select'.
+     *
      * Default value: 'text'.
      *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:search_config
      * @var string
      */
     private $stype = 'text';
 
-
     /**
-     * Column name.
+     * Describes the url from where we can get already-constructed select element.
+     * Valid only in Custom Searching and edittype of select.
      *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Column name.
+     * Default value: ''.
      *
-     * @param string $name
-     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:custom_searching
+     * @var string
      */
-    public function setName($name)
-    {
-        $this->name = $name;
-        return $this;
-    }
+    private $surl = '';
 
     /**
-     * Column label.
+     * Shortcut, which allows to specify all the options (and some other used for searching and editing) at once.
      *
-     * @return string
-     */
-    public function getLabel()
-    {
-        return $this->label;
-    }
-
-    /**
-     * Column label.
+     * Allowed values:
+     * <ul>
+     *  <li>'number';</li>
+     *  <li>'booleanCheckbox' - will displays Boolean input data true and false as checkbox in case of usage {@link \Rusproj\FreeJqGridConfigurator\JqGrid::setIconSet()} as 'fontAwesome'.</li>
+     * </ul>
      *
-     * @param string $label
-     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     * Default value: null.
+     *
+     * @see \Rusproj\FreeJqGridConfigurator\JqGrid::getCmTemplate()
+     * @var object|string
      */
-    public function setLabel($label)
-    {
-        $this->label = $label;
-        return $this;
-    }
+    private $template = '';
 
     /**
-     * Column width in pixels.
+     * If this option is false the title is not displayed in that column when we hover a cell with the mouse.
+     *
+     * Default value: true.
+     *
+     * @var boolean
+     */
+    private $title = true;
+
+    /**
+     * Column initial width in pixels.
+     *
      * Default value: 150.
      *
-     * @return integer
+     * @var int
      */
-    public function getWidth()
-    {
-        return $this->width;
-    }
+    private $width = 150;
 
     /**
-     * Column width in pixels.
-     * Default value: 150.
+     * Defines the xml mapping for the column in the incomming xml file.
      *
-     * @param integer $width
+     * Default value: ''.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:retrieving_data
+     * @var string
      */
-    public function setWidth($width)
-    {
-        $this->width = $width;
-    }
+    private $xmlmap = '';
+
+//     /**
+//      * Custom function to “unformat” a value of the cell when used in editing.
+//      * Unformat is also called during sort operations.
+//      * The value returned by unformat is the value compared during the sort.
+//      *
+//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:custom_formatter
+//      * @var unknown
+//      */
+//     private $unformat = null;
+
+    /**
+     * When the option is set to false the column does not appear in view Form.
+     * This option is valid only when viewGridRow JS-method is activated.
+     *
+     * Default value: true.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:form_editing#viewgridrow
+     * @var boolean
+     */
+    private $viewable = true;
 
     /**
      * Type of text alignment within a column.
+     *
      * Allowed values: 'left', 'center', 'right'.
+     *
      * Default value: 'left'.
      *
      * @return string
@@ -238,8 +521,8 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
 
     /**
      * Type of text alignment within a column.
+     *
      * Allowed values: 'left', 'center', 'right'.
-     * Default value: 'left'.
      *
      * @param string $align
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
@@ -251,209 +534,10 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     }
 
     /**
-     * The type of data used for sort.
-     * Allowed values: '', 'integer', 'number', 'date'.
-     * Default value: '' (text).
+     * CSS-classes wich applied to every td-cell of the column.
+     * Multiple classes must be separated by space.
      *
-     * @return string
-     */
-    public function getSortType()
-    {
-        return $this->sorttype;
-    }
-
-    /**
-     * The type of data used for sort.
-     * Allowed values: '', 'integer', 'number', 'date'.
-     * Default value: '' (text).
-     *
-     * @param string $sortType
-     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
-     */
-    public function setSortType($sortType)
-    {
-        $this->sorttype = $sortType;
-        return $this;
-    }
-
-    /**
-     * Force to start sorting of the column by descending oder.
-     * Allowed value: '', 'desc'.
      * Default value: ''.
-     *
-     * @return string
-     */
-    public function getFirstSortOrder()
-    {
-        return $this->firstsortorder;
-    }
-
-    /**
-     * Force to start sorting of the column by descending oder.
-     * Allowed value: '', 'desc'.
-     * Default value: ''.
-     *
-     * @param string $firstSortOrder
-     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
-     */
-    public function setFirstSortOrder($firstSortOrder)
-    {
-        $this->firstsortorder = $firstSortOrder;
-        return $this;
-    }
-
-    /**
-     * Shortcut, which allows to specify all the options (and some other used for searching and editing) at once.
-     * Allowed values: '', 'number', 'booleanCheckbox'.
-     * Default value: ''.
-     *
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
-    }
-
-    /**
-     * Shortcut, which allows to specify all the options (and some other used for searching and editing) at once.
-     * Allowed values: '', 'number', 'booleanCheckbox'.
-     * Default value: ''.
-     *
-     * @param string $template
-     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
-     */
-    public function setTemplate($template)
-    {
-        $this->template = $template;
-        return $this;
-    }
-
-    /**
-     * Format method wich applied to every column value.
-     * Allowed values: '', 'date', 'select'.
-     * Default value: ''.
-     *
-     * @return string
-     */
-    public function getFormatter()
-    {
-        return $this->formatter;
-    }
-
-    /**
-     * Format method wich applied to every column value.
-     * Allowed values: '', 'date', 'select'.
-     * Default value: ''.
-     *
-     * @param string $formatter
-     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
-     */
-    public function setFormatter($formatter)
-    {
-        $this->formatter = $formatter;
-        return $this;
-    }
-
-    /**
-     * Formatter options.
-     * To specify this value can be used one of the formatOptions*-methods.
-     * Default value: []
-     *
-     * @return array
-     */
-    public function getFormatOptions()
-    {
-        return $this->formatoptions;
-    }
-
-    /**
-     * Formatter options.
-     * To specify this value can be used one of the formatOptions*-methods.
-     * Default value: []
-     *
-     * @param array $formatOptions
-     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
-     */
-    public function setFormatOptions($formatOptions)
-    {
-        $this->formatoptions = $formatOptions;
-        return $this;
-    }
-
-    /**
-     * Column width can be resized.
-     * Default value: true.
-     *
-     * @return boolean
-     */
-    public function getIsResizable()
-    {
-        return $this->resizable;
-    }
-
-    /**
-     * Column width can be resized.
-     * Default value: true.
-     *
-     * @param boolean $resizable
-     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
-     */
-    public function setIsResizable($resizable)
-    {
-        $this->resizable = $resizable;
-        return $this;
-    }
-
-    /**
-     * Column values can be sorted.
-     * Default value: true.
-     *
-     * @return boolean
-     */
-    public function getIsSortable()
-    {
-        return $this->sortable;
-    }
-
-    /**
-     * Column values can be sorted.
-     * Default value: true.
-     *
-     * @param boolean $sortable
-     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
-     */
-    public function setIsSortable($sortable)
-    {
-        $this->sortable = $sortable;
-        return $this;
-    }
-
-    /**
-     * Hide column on table load.
-     * Default value: false.
-     *
-     * @return boolean
-     */
-    public function getIsHidden()
-    {
-        return $this->hidden;
-    }
-
-    /**
-     * Hide column on table load.
-     * Default value: false.
-     *
-     * @param boolean $hidden
-     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
-     */
-    public function setIsHidden($hidden)
-    {
-        $this->hidden = $hidden;
-        return $this;
-    }
-
-    /**
-     * CSS-classes wich applied to every td-cell. Multiple classes must be separated by space.
      *
      * @return string
      */
@@ -463,7 +547,8 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     }
 
     /**
-     * CSS-classes wich applied to every td-cell. Multiple classes must be separated by space.
+     * CSS-classes wich applied to every td-cell of the column.
+     * Multiple classes must be separated by space.
      *
      * @param string $classes
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
@@ -475,24 +560,539 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     }
 
     /**
-     * Column can be used in search.
+     * Governs format of sorttype:date (when datetype is set to local) and editrules {date:true} fields.
+     * Determines the expected date format for that column. Uses a PHP-like date formatting.
+     * Currently “/”, “-”, and “.” are supported as date separators.
+     *
+     * Valid formats are:
+     * <ul>
+     *  <li> y,Y,yyyy for four digits year;</li>
+     *  <li> YY, yy for two digits year;</li>
+     *  <li> m,mm for months;</li>
+     *  <li> d,dd for days.</li>
+     * </ul>
+     *
+     * Default value: ''.
+     *
+     * @return string
+     */
+    public function getDateFormat()
+    {
+        return $this->datefmt;
+    }
+
+    /**
+     * Governs format of sorttype:date (when datetype is set to local) and editrules {date:true} fields.
+     * Determines the expected date format for that column. Uses a PHP-like date formatting.
+     * Currently “/”, “-”, and “.” are supported as date separators.
+     *
+     * Valid formats are:
+     * <ul>
+     *  <li> y,Y,yyyy for four digits year;</li>
+     *  <li> YY, yy for two digits year;</li>
+     *  <li> m,mm for months;</li>
+     *  <li> d,dd for days.</li>
+     * </ul>
+     *
+     * @param string $dateFormat
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setDateFormat($dateFormat)
+    {
+        $this->datefmt = $dateFormat;
+        return $this;
+    }
+
+    /**
+     * The default value for the search field.
+     * This option is used only in Custom Searching and will be set as initial search.
+     *
+     * Default value: ''.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:custom_searching
+     * @return string
+     */
+    public function getCustomSearchDefaultValue()
+    {
+        return $this->defval;
+    }
+
+    /**
+     * The default value for the search field.
+     * This option is used only in Custom Searching and will be set as initial search.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:custom_searching
+     * @param string $defVal
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setCustomSearchDefaultValue($defVal)
+    {
+        $this->defval = $defVal;
+        return $this;
+    }
+
+    /**
+     * Defines if the field is editable
+     * This option is used in cell, inline and form modules.
+     *
+     * Default value: false.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules
+     * @return boolean
+     */
+    public function getIsEditable()
+    {
+        return $this->editable;
+    }
+
+    /**
+     * Defines if the field is editable
+     * This option is used in cell, inline and form modules.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules
+     * @param boolean $isEditable
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setIsEditable($isEditable)
+    {
+        $this->editable = $isEditable;
+        return $this;
+    }
+
+    /**
+     * Array of the options for edittype option.
+     * To specify this value can be used one of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition}::editOptions*-methods.
+     *
+     * Default value: [].
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules#editable
+     * @return array
+     */
+    public function getEditOptions()
+    {
+        return $this->editoptions;
+    }
+
+    /**
+     * Array of the options for edittype option.
+     * To specify this value can be used one of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition}::editOptions*-methods.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules#editable
+     * @param array $editOptions
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setEditOptions($editOptions)
+    {
+        $this->editoptions = $editOptions;
+        return $this;
+    }
+
+    /**
+     * Defines if the field is editable
+     * This option is used in cell, inline and form modules.
+     *
+     * Default value: false.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules
+     * @return array
+     */
+    public function getEditRules()
+    {
+        return $this->editrules;
+    }
+
+    /**
+     * Defines if the field is editable
+     * This option is used in cell, inline and form modules.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules
+     * @param array $editRules
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setEditRules($editRules)
+    {
+        $this->editrules = $editRules;
+        return $this;
+    }
+
+    /**
+     * Defines the edit type for inline and form editing.
+     *
+     * Allowed values: 'text', 'textarea', 'select', 'checkbox', 'password', 'button', 'image', 'file'.
+     *
+     * Default value: ''.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules#edittype
+     * @return string
+     */
+    public function getEditType()
+    {
+        return $this->edittype;
+    }
+
+    /**
+     * Defines the edit type for inline and form editing.
+     *
+     * Allowed values: 'text', 'textarea', 'select', 'checkbox', 'password', 'button', 'image', 'file'.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules#edittype
+     * @param string $editType
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setEditType($editType)
+    {
+        $this->edittype = $editType;
+        return $this;
+    }
+
+    /**
+     * Force to start sorting of the column by specified oder.
+     *
+     * Allowed value: '', 'asc', 'desc'.
+     *
+     * Default value: ''.
+     *
+     * @return string
+     */
+    public function getFirstSortOrder()
+    {
+        return $this->firstsortorder;
+    }
+
+    /**
+     * Force to start sorting of the column by specified oder.
+     *
+     * Allowed value: '', 'asc', 'desc'.
+     *
+     * @param string $firstSortOrder
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setFirstSortOrder($firstSortOrder)
+    {
+        $this->firstsortorder = $firstSortOrder;
+        return $this;
+    }
+
+    /**
+     * If set to true this option does not allow recalculation of the width of the column
+     * if {@link \Rusproj\FreeJqGridConfigurator\JqGrid::setShrinkToFit()} option is set to true.
+     * Also the width does not change if a setGridWidth JS-method is used to change the grid width.
+     *
+     * Default value: false.
+     *
+     * @return boolean
+     */
+    public function getIsFixed()
+    {
+        return $this->fixed;
+    }
+
+    /**
+     * If set to true this option does not allow recalculation of the width of the column
+     * if {@link \Rusproj\FreeJqGridConfigurator\JqGrid::setShrinkToFit()} option is set to true.
+     * Also the width does not change if a setGridWidth JS-method is used to change the grid width.
+     *
+     * @param boolean $fixed
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setIsFixed($fixed)
+    {
+        $this->fixed = $fixed;
+        return $this;
+    }
+
+    /**
+     * Defines various options for form editing.
+     * To specify this value can be used the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::formOptions()}-method.
+     *
+     * Default value: [].
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules#formoptions
+     * @return array
+     */
+    public function getFormOptions()
+    {
+        return $this->formoptions;
+    }
+
+    /**
+     * Defines various options for form editing.
+     * To specify this value can be used the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::formOptions()}-method.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:common_rules#formoptions
+     * @param array $formOptions
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setFormOptions($formOptions)
+    {
+        $this->formoptions = $formOptions;
+        return $this;
+    }
+
+    /**
+     * Formatter options.
+     * To specify this value can be used one of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition}::formatOptions*-methods.
+     *
+     * Default value: []
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:predefined_formatter
+     * @return array
+     */
+    public function getFormatOptions()
+    {
+        return $this->formatoptions;
+    }
+
+    /**
+     * Formatter options.
+     * To specify this value can be used one of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition}::formatOptions*-methods.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:predefined_formatter
+     * @param array $formatOptions
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setFormatOptions($formatOptions)
+    {
+        $this->formatoptions = $formatOptions;
+        return $this;
+    }
+
+    /**
+     * The predefined types (string) or custom function name that controls the format of this field.
+     * Format method applied to every column value.
+     *
+     * Allowed values: '', 'date', 'select', 'integer', 'number', 'currency', 'email', 'link', 'showlink', 'checkbox', 'actions'.
+     *
+     * Default value: ''.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:predefined_formatter
+     * @return string
+     */
+    public function getFormatter()
+    {
+        return $this->formatter;
+    }
+
+    /**
+     * The predefined types (string) or custom function name that controls the format of this field.
+     * Format method applied to every column value.
+     *
+     * Allowed values: '', 'date', 'select', 'integer', 'number', 'currency', 'email', 'link', 'showlink', 'checkbox', 'actions'.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:predefined_formatter
+     * @param string $formatter
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setFormatter($formatter)
+    {
+        $this->formatter = $formatter;
+        return $this;
+    }
+
+    /**
+     * If set to true determines that this column will be frozen after calling the setFrozenColumns method.
+     *
+     * Default value: false.
+     *
+     * @return boolean
+     */
+    public function getIsFrozen()
+    {
+        return $this->frozen;
+    }
+
+    /**
+     * If set to true determines that this column will be frozen after calling the setFrozenColumns method.
+     *
+     * @param boolean $frozen
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setIsFrozen($frozen)
+    {
+        $this->frozen = $frozen;
+        return $this;
+    }
+
+    /**
+     * If set to true this column will not appear in the modal dialog where users can choose which columns to show or hide.
+     *
+     * Default value: false.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:show_hide_columns
+     * @return boolean
+     */
+    public function getIsHideDlg()
+    {
+        return $this->hidedlg;
+    }
+
+    /**
+     * If set to true this column will not appear in the modal dialog where users can choose which columns to show or hide.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:show_hide_columns
+     * @param boolean $hideDlg
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setIsHideDlg($hideDlg)
+    {
+        $this->hidedlg = $hideDlg;
+        return $this;
+    }
+
+    /**
+     * Defines if this column is hidden at initialization.
+     *
+     * Default value: false.
+     *
+     * @return boolean
+     */
+    public function getIsHidden()
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * Defines if this column is hidden at initialization.
+     *
+     * @param boolean $hidden
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setIsHidden($hidden)
+    {
+        $this->hidden = $hidden;
+        return $this;
+    }
+
+    /**
+     * Set the index name when sorting. Passed as sidx parameter.
+     *
+     * Default value: ''.
+     *
+     * @return string
+     */
+    public function getIndex()
+    {
+        return $this->index;
+    }
+
+    /**
+     * Set the index name when sorting. Passed as sidx parameter.
+     *
+     * @param string $index
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setIndex($index)
+    {
+        $this->index = $index;
+        return $this;
+    }
+
+    /**
+     * Defines the json mapping for the column in the incoming json string.
+     *
+     * Default value: ''.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:retrieving_data
+     * @return string
+     */
+    public function getJsonMap()
+    {
+        return $this->jsonmap;
+    }
+
+    /**
+     * Defines the json mapping for the column in the incoming json string.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:retrieving_data
+     * @param string $jsonmap
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setJsonMap($jsonmap)
+    {
+        $this->jsonmap = $jsonmap;
+        return $this;
+    }
+
+    /**
+     * Column label.
+     * This property used when {@link \Rusproj\FreeJqGridConfigurator\JqGrid::getColNames()} is empty.
+     *
+     * Default value: ''.
+     *
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * Column label.
+     * This property used when {@link \Rusproj\FreeJqGridConfigurator\JqGrid::getColNames()} is empty.
+     *
+     * @param string $label
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
+        return $this;
+    }
+
+    /**
+     * Unique column name.
+     * This property is required.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Column width can be sized.
+     *
      * Default value: true.
      *
      * @return boolean
      */
-    public function isSearch()
+    public function getIsResizable()
+    {
+        return $this->resizable;
+    }
+
+    /**
+     * Column width can be sized.
+     *
+     * @param boolean $isResizable
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setIsResizable($isResizable)
+    {
+        $this->resizable = $isResizable;
+        return $this;
+    }
+
+    /**
+     * Column can be used in search.
+     *
+     * Default value: true.
+     *
+     * @return boolean
+     */
+    public function getIsCanSearch()
     {
         return $this->search;
     }
 
     /**
      * Column can be used in search.
-     * Default value: true.
      *
      * @param boolean $search
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
      */
-    public function setSearch($search)
+    public function setIsCanSearch($search)
     {
         $this->search = $search;
         return $this;
@@ -500,33 +1100,108 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
 
     /**
      * Search options.
-     * To specify this value can be used {@see \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::searchOptions} method.
+     * To specify this value can be used {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::generateSearchOptions()} method.
      *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:search_config
      * @return array
      */
-    public function getSearchoptions()
+    public function getSearchOptions()
     {
         return $this->searchoptions;
     }
 
     /**
      * Search options.
-     * To specify this value can be used {@see \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::searchOptions} method.
+     * To specify this value can be used {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::generateSearchOptions()} method.
      *
-     * @param array $searchoptions
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:search_config
+     * @param array $searchOptions
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
      */
-    public function setSearchoptions($searchoptions)
+    public function setSearchOptions($searchOptions)
     {
-        $this->searchoptions = $searchoptions;
+        $this->searchoptions = $searchOptions;
+        return $this;
+    }
+
+    /**
+     * Column values can be sorted.
+     *
+     * Default value: true.
+     *
+     * @return boolean
+     */
+    public function getIsSortable()
+    {
+        return $this->sortable;
+    }
+
+    /**
+     * Column values can be sorted.
+     *
+     * @param boolean $isSortable
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setIsSortable($isSortable)
+    {
+        $this->sortable = $isSortable;
+        return $this;
+    }
+
+    /**
+     * Used when {@link \Rusproj\FreeJqGridConfigurator\JqGrid::getDataType()} is local.
+     * Defines the type of the column for appropriate sorting.
+     *
+     * Allowed values:
+     * <ul>
+     *  <li>int/integer - for sorting integer;</li>
+     *  <li>float/number/currency - for sorting decimal numbers;</li>
+     *  <li>date - for sorting date;</li>
+     *  <li>text - for text sorting;</li>
+     *  <li>function - defines a custom function for sorting. To this function we pass the value to be sorted and it should return a value too.</li>
+     * </ul>
+     *
+     * Default value: ''.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:retrieving_data#array_data
+     * @return string
+     */
+    public function getSortType()
+    {
+        return $this->sorttype;
+    }
+
+    /**
+     * Used when {@link \Rusproj\FreeJqGridConfigurator\JqGrid::getDataType()} is local.
+     * Defines the type of the column for appropriate sorting.
+     *
+     * Allowed values:
+     * <ul>
+     *  <li>int/integer - for sorting integer;</li>
+     *  <li>float/number/currency - for sorting decimal numbers;</li>
+     *  <li>date - for sorting date;</li>
+     *  <li>text - for text sorting;</li>
+     *  <li>function - defines a custom function for sorting. To this function we pass the value to be sorted and it should return a value too.</li>
+     * </ul>
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:retrieving_data#array_data
+     * @param string $sortType
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setSortType($sortType)
+    {
+        $this->sorttype = $sortType;
         return $this;
     }
 
     /**
      * Data type at the search operation.
+     *
      * Allowed values: 'text', 'select'.
+     *
      * Default value: 'text'.
      *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:search_config
      * @return string
      */
     public function getSearchType()
@@ -536,157 +1211,193 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
 
     /**
      * Data type at the search operation.
-     * Allowed values: 'text', 'select'.
-     * Default value: 'text'.
      *
-     * @param string $stype
+     * Allowed values: 'text', 'select'.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:search_config
+     * @param string $sType
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
      */
-    public function setSearchType($stype)
+    public function setSearchType($sType)
     {
-        $this->stype = $stype;
+        $this->stype = $sType;
+        return $this;
+    }
+
+    /**
+     * Describes the url from where we can get already-constructed select element.
+     * Valid only in Custom Searching and edittype of select.
+     *
+     * Default value: ''.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:custom_searching
+     * @return string
+     */
+    public function getSurl()
+    {
+        return $this->surl;
+    }
+
+    /**
+     * Describes the url from where we can get already-constructed select element.
+     * Valid only in Custom Searching and edittype of select.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:custom_searching
+     * @param string $surl
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setSurl($surl)
+    {
+        $this->surl = $surl;
+        return $this;
+    }
+
+    /**
+     * Shortcut, which allows to specify all the options (and some other used for searching and editing) at once.
+     *
+     * Allowed values:
+     * <ul>
+     *  <li>'number';</li>
+     *  <li>'booleanCheckbox' - will displays Boolean input data true and false as checkbox in case of usage {@link \Rusproj\FreeJqGridConfigurator\JqGrid::setIconSet()} as 'fontAwesome'.</li>
+     * </ul>
+     *
+     * Default value: null.
+     *
+     * @see \Rusproj\FreeJqGridConfigurator\JqGrid::getCmTemplate()
+     * @return object
+     */
+    public function getTemplate()
+    {
+        return $this->template;
+    }
+
+    /**
+     * Shortcut, which allows to specify all the options (and some other used for searching and editing) at once.
+     *
+     * Allowed values:
+     * <ul>
+     *  <li>'number';</li>
+     *  <li>'booleanCheckbox' - will displays Boolean input data true and false as checkbox in case of usage {@link \Rusproj\FreeJqGridConfigurator\JqGrid::setIconSet()} as 'fontAwesome'.</li>
+     * </ul>
+     *
+     * @see \Rusproj\FreeJqGridConfigurator\JqGrid::getCmTemplate()
+     * @param object $template
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+        return $this;
+    }
+
+    /**
+     * If this option is false the title is not displayed in that column when we hover a cell with the mouse.
+     *
+     * Default value: true.
+     *
+     * @return boolean
+     */
+    public function isTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * If this option is false the title is not displayed in that column when we hover a cell with the mouse.
+     *
+     * @param boolean $title
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * Column initial width in pixels.
+     *
+     * Default value: 150.
+     *
+     * @return integer
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    /**
+     * Column initial width in pixels.
+     *
+     * @param integer $width
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+        return $this;
+    }
+
+    /**
+     * Defines the xml mapping for the column in the incomming xml file.
+     *
+     * Default value: ''.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:retrieving_data
+     * @return string
+     */
+    public function getXmlmap()
+    {
+        return $this->xmlmap;
+    }
+
+    /**
+     * Defines the xml mapping for the column in the incomming xml file.
+     *
+     * Default value: ''.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:retrieving_data
+     * @param string $xmlmap
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setXmlmap($xmlmap)
+    {
+        $this->xmlmap = $xmlmap;
+        return $this;
+    }
+
+    /**
+     * When the option is set to false the column does not appear in view Form.
+     * This option is valid only when viewGridRow JS-method is activated.
+     *
+     * Default value: true.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:form_editing#viewgridrow
+     * @return boolean
+     */
+    public function isViewable()
+    {
+        return $this->viewable;
+    }
+
+    /**
+     * When the option is set to false the column does not appear in view Form.
+     * This option is valid only when viewGridRow JS-method is activated.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:form_editing#viewgridrow
+     * @param boolean $viewable
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setViewable($viewable)
+    {
+        $this->viewable = $viewable;
         return $this;
     }
 
 
-//     /**
-//      * Значение по умолчанию, которое будет установлено в поле при операции поиска. Значение по умолчанию: ''.
-//      *
-//      * @var string
-//      */
-//     public $defval = '';
+    // ---------------------------------------------------------------------------------------
+    // Helpers
 
-//     /**
-//      * Определяет тип поля, которое будет сформировано для его редактирования.
-//      * Если значение не определено, то редактирование запрещено.
-//      * Допустимые значения:  text, textarea, select, checkbox, password, button, image или file. Значение по умолчанию: ''.
-//      *
-//      * @var string
-//      */
-//     public $editType = '';
-
-//     /**
-//      * Массив допустимых параметров, определяющих поведение поля в зависимости от его типа (параметра editType).
-//      * Для формирования значения можно воспользоваться помощниками {@see \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::options}.
-//      * Значение по умолчанию: [].
-//      *
-//      * @var array
-//      */
-//     public $editOptions = [];
-
-//     /**
-//      * Признак того, что ширина столбца будет постоянной, независимо от вызова функций, которые меняют ширину таблицы.
-//      * Чтобы данный параметр имел действие, необходимо установить в конфигурации таблицы параметр shrinkToFit.
-//      * Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $fixed = false;
-
-//     /**
-//      * Определяет дополнительные опции поля для редактирования в отдельной форме. Для формирования значения можно воспользоваться
-//      * помощником {@see \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::formOptions}. Значение по умолчанию: [].
-//      * @var array
-//      */
-//     public $formOptions = [];
-
-//     /**
-//      * Признак того, что текущий столбец необходимо заморозить при нажатии на кнопку заморозки (вызове метода setFrozenColumns).
-//      * Внимание! Заморозка будет работать если только столбец или столбцы стоят первыми,
-//      * а также заморозка не будет работать если активно одно из следующих действий или свойств:
-//      * TreeGrid, SubGrid, cellEdit, inline edit, sortable, Data grouping, scroll или footer row (footerrow paremeter).
-//      * Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $frozen = false;
-
-//     /**
-//      * Признак необходимости скрыть данный столбец из окна сортировки столбцов. Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $hiddenDlg = false;
-
-//     /**
-//      * Признак того, что если значение равно false, то заголовок не отображается в столбце кога мы щелкаем по клетке мышью.
-//      * Значение по умолчанию: true.
-//      *
-//      * @var bool
-//      */
-//     public $title = true;
-
-//     /**
-//      * Признак необходимости отображать данное поле в окне просмотра (если активен метод viewGridRow). Значение по умолчанию: true.
-//      *
-//      * @var bool
-//      */
-//     public $viewable = true;
-
-//     /**
-//      * Используется только когда stype = 'select'. Задает адрес, откуда загружаются значения выпадающего списка.
-//      * В случае указания адреса, должна формироваться страница с содержимым вида:
-//      * "<select><option value='1'>One</option><option value='2'>Two</option></select>".
-//      * Значение по умолчанию: ''.
-//      *
-//      * @var string
-//      */
-//     public $surl = '';
-
-    /**
-     * Returns configuration as an array of key-value pairs.
-     *
-     * @return array
-     */
-    public function getConfig() {
-        $_config = [];
-
-        foreach ($this as $_key => $_val) {
-            if (is_array($_val)) {
-                foreach ($_val as $_subKey => $_subVal) {
-                    if ($_subVal instanceof ConfigurationDefinitionInterface) {
-                        $_config[$_key][] = $_subVal->getConfig();
-                    } else {
-                        $_config[$_key][$_subKey] = $_val;
-                    }
-                }
-            } elseif ($_val instanceof ConfigurationDefinitionInterface) {
-                $_config[$_key] = $_val->getConfig();
-            } else {
-                if (is_string($_val)) {
-                    $_val = trim($_val);
-                    if (!empty($_val)) {
-                        $_config[$_key] = $_val;
-                    }
-                } else {
-                    $_config[$_key] = $_val;
-                }
-            }
-        }
-
-//         $_config['editable'] = false;
-//         if (!empty($this->editType)) {
-//             $_config['editable'] = true;
-//             $_config['edittype'] = $this->editType;
-//             if (count($this->editOptions) > 0) {
-//                 $_config['editoptions'] = $this->editOptions;
-//             }
-//         }
-//         $_config['search'] = $this->search;
-//         if ($this->search) {
-//             $_config['stype'] = $this->stype;
-//             if (strtolower($this->stype) === 'select') {
-//                 $_config['surl'] = $this->surl;
-//             }
-//             if (count($this->searchOptions) > 0) {
-//                 $_config['searchoptions'] = $this->searchOptions;
-//             } else {
-//                 $_config['searchoptions'] = ColumnDefinition::searchOptions();
-//             }
-//         }
-
-        return $_config;
-    }
 
 //     /**
 //      * Помощник, представляющий возможность сформировать значение дополнительных параметров editOptions для типа редактирования editType = 'text' или editType = 'password'.
@@ -844,6 +1555,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
 
     /**
      * Helper wich return array of search options.
+     * This method can be used to prepare data to the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::setSearchOptions()} method.
      *
      * @param string $dataUrl URL to download select list. This URL must return rendered HTML select.
      * @param array $sopt Operators used to build search queries. Allowed values: eq, ne, lt, le, gt, ge, bw, bn, in, ni, ew, en, cn, nc, nu, nn.
@@ -851,7 +1563,8 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      * @param array $value An array of allowed values represented by the select list.
      * @return array
      */
-    public static function searchOptions($dataUrl = '', $sopt = ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en', 'cn', 'nc', 'nu', 'nn'], $defaultValue = '', $value = []) {
+    public static function generateSearchOptions($dataUrl = '', $sopt = ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en', 'cn', 'nc', 'nu', 'nn'], $defaultValue = '', $value = [])
+    {
         $_config = [];
 
         if (!empty($dataUrl)) {
@@ -873,16 +1586,58 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
         return $_config;
     }
 
+    /**
+     * Helper wich returns array of format options for columns with values of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::getFormatter()} = 'integer'.
+     *
+     * @param string $thousandsSeparator Determines the separator for the thousands.
+     * @param string $defaulValue Default value if nothing in the data.
+     * @return array
+     */
+    public static function formatOptionsInteger($thousandsSeparator = ' ', $defaulValue = '')
+    {
+        return ['thousandsSeparator' => $thousandsSeparator, 'defaulValue' => $defaulValue];
+    }
 
     /**
-     * Helper wich returns array of format options for columns with values of the Date type (formatter = 'date').
+     * Helper wich returns array of format options for columns with values of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::getFormatter()} = 'number'.
+     *
+     * @param string $thousandsSeparator Determines the separator for the thousands.
+     * @param string $decimalSeparator Determines the separator for the decimals.
+     * @param integer $decimalPlaces Determine how many decimal places we should have for the number.
+     * @param string $defaulValue Default value if nothing in the data.
+     * @return array
+     */
+    public static function formatOptionsNumber($thousandsSeparator = ' ', $decimalSeparator = ',', $decimalPlaces = 2, $defaulValue = '')
+    {
+        return ['thousandsSeparator' => $thousandsSeparator, 'decimalSeparator' => $decimalSeparator, 'decimalPlaces' => $decimalPlaces, 'defaulValue' => $defaulValue];
+    }
+
+    /**
+     * Helper wich returns array of format options for columns with values of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::getFormatter()} = 'currency'.
+     *
+     * @param string $thousandsSeparator Determines the separator for the thousands.
+     * @param string $decimalSeparator Determines the separator for the decimals.
+     * @param integer $decimalPlaces Determine how many decimal places we should have for the number.
+     * @param string $defaulValue Default value if nothing in the data.
+     * @param string $prefix Text that is inserted before the number.
+     * @param string $suffix Text that is added after the number.
+     * @return array
+     */
+    public static function formatOptionsCurrency($thousandsSeparator = ' ', $decimalSeparator = ',', $decimalPlaces = 2, $defaulValue = '', $prefix = '', $suffix = '')
+    {
+        return ['thousandsSeparator' => $thousandsSeparator, 'decimalSeparator' => $decimalSeparator, 'decimalPlaces' => $decimalPlaces, 'defaulValue' => $defaulValue, 'prefix' => $prefix, 'suffix' => $suffix];
+    }
+
+    /**
+     * Helper wich returns array of format options for columns with values of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::getFormatter()} = 'date'.
      *
      * @param string $srcFormat Source format. Default value: 'Y-m-d H:i:s'.
      * @param string $newFormat New format. Default value: 'd.m.Y H:i:s'.
-     * @param string $parseRe Выражение для парсинга строки. Значение по умолчанию: ''.
+     * @param string $parseRe A expression for parsing date strings.
      * @return array
      */
-    public static function formatOptionsDate($srcFormat = 'Y-m-d H:i:s', $newFormat = 'd.m.Y H:i:s', $parseRe = '') {
+    public static function formatOptionsDate($srcFormat = 'Y-m-d H:i:s', $newFormat = 'd.m.Y H:i:s', $parseRe = '')
+    {
         $_config = ['srcformat' => $srcFormat, 'newformat' => $newFormat];
 
         if (!empty($parseRe)) {
@@ -893,13 +1648,61 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     }
 
     /**
-     * Helper wich returns array of format options for columns with values of the Select type (formatter = 'select').
+     * Helper wich returns array of format options for columns with values of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::getFormatter()} = 'email'.
      *
-     * @param array|string $list An array of Key-Value (Input-Output) pairs. Also can be presented as a string in format: 'Key1:Value1;Key2:Value2;...'.
-     * @param string $defaultValue Default value from {@see $list} parameter.
      * @return array
      */
-    public static function formatOptionsSelect($list, $defaultValue = null) {
+    public static function formatOptionsEmail()
+    {
+        return [];
+    }
+
+    /**
+     * Helper wich returns array of format options for columns with values of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::getFormatter()} = 'link'.
+     *
+     * @param string $target The default value of the target options is null. When this options is set, we construct a link with the target property set and the cell value put in the href tag.
+     * @return array
+     */
+    public static function formatOptionsLink($target = '')
+    {
+        return !empty($target) ? ['target' => $target] : [];
+    }
+
+    /**
+     * Helper wich returns array of format options for columns with values of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::getFormatter()} = 'showlink'.
+     *
+     * @param string $baseLinkUrl Base link.
+     * @param string $showAction An additional value which is added after the {@link $baseLinkUrl}.
+     * @param string $addParam An additional parameter that can be added after the {@link $idName} parameter.
+     * @param string $target If set, is added as an additional attribute.
+     * @param string $idName The first parameter that is added after the {@link $showAction}. By default, this is id.
+     * @return array
+     */
+    public static function formatOptionsShowlink($baseLinkUrl = '', $showAction = '', $addParam = '', $target = '', $idName = '')
+    {
+        return ['baseLinkUrl' => $baseLinkUrl, 'showAction' => $showAction, 'addParam' => $addParam, 'target' => $target, 'idName' => $idName];
+    }
+
+    /**
+     * Helper wich returns array of format options for columns with values of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::getFormatter()} = 'checkbox'.
+     *
+     * @param string $disabled Determines if the checkbox can be changed. If set to false, the values in checkbox can be changed.
+     * @return array
+     */
+    public static function formatCheckbox($disabled = true)
+    {
+        return ['disabled' => $disabled];
+    }
+
+    /**
+     * Helper wich returns array of format options for columns with values of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::getFormatter()} = 'select'.
+     *
+     * @param array|string $list An array of Key-Value (Input-Output) pairs. Also can be presented as a string in format: 'Key1:Value1;Key2:Value2;...'.
+     * @param string $defaultValue Default value from {@link $list} parameter.
+     * @return array
+     */
+    public static function formatOptionsSelect($list, $defaultValue = null)
+    {
         $_config = [];
 
         if (!is_array($list)) {
@@ -924,99 +1727,17 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
         return $_config;
     }
 
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров formatOptions для типа редактирования formatter = 'integer'.
-//      *
-//      * @param string $thousandsSeparator Разделитель тысяч. Значение по умолчанию: ' '.
-//      * @param string $defaulValue Значение, используемое в том случае, если значение в ячейке отсутствует. Значение по умолчанию: ''.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения formatOptions.
-//      */
-//     public static function formatInteger($thousandsSeparator = ' ', $defaulValue = '') {
-//         return ['thousandsSeparator' => $thousandsSeparator, 'defaulValue' => $defaulValue];
-//     }
-
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров formatOptions для типа редактирования formatter = 'number'.
-//      *
-//      * @param string $thousandsSeparator Разделитель тысяч. Значение по умолчанию: ' '.
-//      * @param string $decimalSeparator Разделитель целой и дробной части. Значение по умолчанию: ','.
-//      * @param int $decimalPlaces Число отображаемых разрядов после запятой. Значение по умолчанию: 2.
-//      * @param string $defaulValue Значение, используемое в том случае, если значение в ячейке отсутствует. Значение по умолчанию: ''.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения formatOptions.
-//      */
-//     public static function formatNumber($thousandsSeparator = ' ', $decimalSeparator = ',', $decimalPlaces = 2, $defaulValue = '') {
-//         return ['thousandsSeparator' => $thousandsSeparator, 'decimalSeparator' => $decimalSeparator, 'decimalPlaces' => $decimalPlaces, 'defaulValue' => $defaulValue];
-//     }
-
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров formatOptions для типа редактирования formatter = 'currency'.
-//      *
-//      * @param string $thousandsSeparator Разделитель тысяч. Значение по умолчанию: ' '.
-//      * @param string $decimalSeparator Разделитель целой и дробной части. Значение по умолчанию: ','.
-//      * @param int $decimalPlaces Число отображаемых разрядов после запятой. Значение по умолчанию: 2.
-//      * @param string $defaulValue Значение, используемое в том случае, если значение в ячейке отсутствует. Значение по умолчанию: ''.
-//      * @param string $prefix Префикс, добавляемый в начале значения. Значение по умолчанию: ''.
-//      * @param string $suffix Суффикс, добавляемый в конце значения. Значение по умолчанию: ''.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения formatOptions.
-//      */
-//     public static function formatCurrency($thousandsSeparator = ' ', $decimalSeparator = ',', $decimalPlaces = 2, $defaulValue = '', $prefix = '', $suffix = '') {
-//         return ['thousandsSeparator' => $thousandsSeparator, 'decimalSeparator' => $decimalSeparator, 'decimalPlaces' => $decimalPlaces, 'defaulValue' => $defaulValue, 'prefix' => $prefix, 'suffix' => $suffix];
-//     }
-
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров formatOptions для типа редактирования formatter = 'email'.
-//      *
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения formatOptions.
-//      */
-//     public static function formatEmail() {
-//         return [];
-//     }
-
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров formatOptions для типа редактирования formatter = 'link'.
-//      *
-//      * @param string $target Ссылка назначения. Значение по умолчанию: ''.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения formatOptions.
-//      */
-//     public static function formatLink($target = '') {
-//         return !empty($target) ? ['target' => $target] : [];
-//     }
-
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров formatOptions для типа редактирования formatter = 'showlink'.
-//      *
-//      * @param string $baseLinkUrl Базовый url ссылки. Значение по умолчанию: ''.
-//      * @param string $showAction Значение, которое добавляется после baseLinkUrl. Значение по умолчанию: ''.
-//      * @param string $addParam Параметр, который может быть добавлен после свойства idName Значение по умолчанию: ''.
-//      * @param string $target Ссылка назначения. Значение по умолчанию: ''.
-//      * @param string $idName Добавляемый идентификатор. Значение по умолчанию: ''.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения formatOptions.
-//      */
-//     public static function formatShowlink($baseLinkUrl = '', $showAction = '', $addParam = '', $target = '', $idName = '') {
-//         return ['baseLinkUrl' => $baseLinkUrl, 'showAction' => $showAction, 'addParam' => $addParam, 'target' => $target, 'idName' => $idName];
-//     }
-
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров formatOptions для типа редактирования formatter = 'checkbox'.
-//      *
-//      * @param string $disabled Значение, используемое для снятия галочки, в противном случае она будет установлена.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения formatOptions.
-//      */
-//     public static function formatCheckbox($disabled) {
-//         return ['disabled' => $disabled];
-//     }
-
-//     /**
-//      * НЕ РЕАЛИЗОВАНО!!! Помощник, представляющий возможность сформировать значение дополнительных параметров formatOptions для типа редактирования formatter = 'actions'.
-//      *
-//      * @param string $ Значение по умолчанию: ''.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения formatOptions.
-//      */
-//     public static function formatActions() {
-
-//         // TODO: В дальнейшем, если будет использоваться данный помощник, необходима реализация.
-//         return [keys => false, editbutton => true, delbutton => true, editformbutton => false, onEdit => null, onSuccess => null, afterSave => null, onError => null, afterRestore => null, extraparam => [oper => 'edit'], url => null, delOptions => [], editOptions => []];
-//     }
+    /**
+     * NOT IMPLEMENTED!
+     *
+     * Helper wich returns array of format options for columns with values of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition::getFormatter()} = 'actions'.
+     *
+     * @throws \Exception Not implemented.
+     */
+    public static function formatActions()
+    {
+        throw new \Exception('Not implemented.');
+    }
 
 //     /**
 //      * Помощник формирует конфигурационный массив для столбца числовых идентификаторов. Данный столбец будет скрыт и не будет участвовать в поиске.
@@ -1057,48 +1778,48 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
 //         return $e;
 //     }
 
-//     /**
-//      * Помощник формирует конфигурационный массив для текстового столбца значений без возможности поиска.
-//      *
-//      * @param string $name Имя столбца.
-//      * @param string $label Заголовок столбца.
-//      * @param int $width Ширина столбца в пикселах. Значение по умолчанию: 250.
-//      * @param string $align Выравнивание текста в ячейке. Возможные значения: left, center, right. Значение по умолчанию: 'left'.
-//      * @param bool $canEdit Признак того, что данное поле можно редактировать. Значение по умолчанию: true.
-//      * @return ColumnDefinition Конфигурационный массив для указанного столбца.
-//      */
-//     public static function columnTextVal($name, $label, $width = 250, $align = 'left', $canEdit = true) {
-//         $e = new ColumnDefinition();
-//         $e->name = $name;
-//         $e->label = $label;
-//         $e->search = false;
-//         if ($canEdit) {
-//             $e->editType = 'text';
-//         }
-//         $e->width = $width;
-//         $e->align = $align;
-//         return $e;
-//     }
+    /**
+     * Helper generates column config for which contains text data.
+     *
+     * @param string $name Column name.
+     * @param string $label Column label.
+     * @param integer $width Column width in pixels.
+     * @param string $align Text align. Allowed values: 'left', 'center', 'right'.
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     * @throws \Exception Thrown when {@link $name} is empty.
+     */
+    public static function columnText($name, $label, $width = 250, $align = 'left')
+    {
+        return self::createInstance($name)
+            ->setLabel($label)
+            ->setWidth($width)
+            ->setAlign($align)
+            ->setIsEditable(true);
+    }
 
-//     /**
-//      * Помощник формирует конфигурационный массив для текстового столбца значений с возможностью поиска.
-//      *
-//      * @param string $name Имя столбца.
-//      * @param string $label Заголовок столбца.
-//      * @param int $width Ширина столбца в пикселах. Значение по умолчанию: 250.
-//      * @param string $align Выравнивание текста в ячейке. Возможные значения: left, center, right. Значение по умолчанию: 'left'.
-//      * @param bool $canEdit Признак того, что данное поле можно редактировать. Значение по умолчанию: true.
-//      * @param bool $hidden Признак того, что данное поле будет скрыто в основной таблице, но будет доступно для отображения с помощью окна сортировки столбцов. Значение по умолчанию: false.
-//      * @param bool $frozen Признак того, что столбец необходимо заморозить.
-//      * @return ColumnDefinition Конфигурационный массив для указанного столбца.
-//      */
-//     public static function columnTextValWithSearch($name, $label, $width = 250, $align = 'left', $canEdit = true, $hidden = false, $frozen = false) {
-//         $e = ColumnDefinition::columnTextVal($name, $label, $width, $align, $canEdit);
-//         $e->search = true;
-//         $e->hidden = $hidden;
-//         $e->frozen = $frozen;
-//         return $e;
-//     }
+    /**
+     * Helper generates column config for which contains date data.
+     *
+     * @param string $name Column name.
+     * @param string $label Column label.
+     * @param integer $width Column width in pixels.
+     * @param string $align Text align. Allowed values: 'left', 'center', 'right'.
+     * @param string $srcFormat Source date format.
+     * @param string $newFormat New date format.
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     * @throws \Exception Thrown when {@link $name} is empty.
+     */
+    public static function columnDate($name, $label, $width = 250, $align = 'left', $srcFormat = 'Y-m-d H:i:s', $newFormat = 'd.m.Y H:i:s')
+    {
+        return self::createInstance($name)
+            ->setLabel($label)
+            ->setWidth($width)
+            ->setAlign($align)
+            ->setFormatter('date')
+            ->setFormatOptions(self::formatOptionsDate($srcFormat, $newFormat))
+            ->setDateFormat($srcFormat)
+            ->setIsEditable(true);
+    }
 
 //     /**
 //      * Помощник формирует конфигурационный массив для столбца из списка значений без возможности поиска.
@@ -1208,53 +1929,6 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
 //         $e->editType = 'ac';
 //         $e->width = $col_width;
 //         $e->editOptions = ['field' => $field_name, 'model' => $model_name];
-//         return $e;
-//     }
-
-//     /**
-//      * Помощник формирует конфигурационный массив для текстового столбца значений дат без возможности поиска.
-//      *
-//      * @param string $name Имя столбца.
-//      * @param string $label Заголовок столбца.
-//      * @param int $width Ширина столбца в пикселах. Значение по умолчанию: 250.
-//      * @param string $align Выравнивание текста в ячейке. Возможные значения: left, center, right. Значение по умолчанию: 'left'.
-//      * @param bool $canEdit Признак того, что данное поле можно редактировать. Значение по умолчанию: true.
-//      * @param string $srcformat Формат исходного значения, которое должно быть отформатировано. Аналогично PHP преобразованиям. Значение по умолчанию: 'Y-m-d H:i:s'.
-//      * @param string $newformat Новый формат, в который необходимо преобразовать. Аналогично PHP преобразованиям. Значение по умолчанию: 'd.m.Y H:i:s'.
-//      * @return ColumnDefinition Конфигурационный массив для указанного столбца.
-//      */
-//     public static function columnDateVal($name, $label, $width = 250, $align = 'left', $canEdit = true, $srcformat = 'Y-m-d H:i:s', $newformat = 'd.m.Y H:i:s') {
-//         $e = new ColumnDefinition();
-//         $e->name = $name;
-//         $e->label = $label;
-//         $e->search = false;
-//         if ($canEdit) {
-//             $e->editType = 'text';
-//         }
-//         $e->formatter = 'date';
-//         $e->formatOptions = ColumnDefinition::formatDate($srcformat, $newformat);
-//         $e->width = $width;
-//         $e->align = $align;
-//         return $e;
-//     }
-
-//     /**
-//      * Помощник формирует конфигурационный массив для текстового столбца значений дат с возможностью поиска.
-//      *
-//      * @param string $name Имя столбца.
-//      * @param string $label Заголовок столбца.
-//      * @param int $width Ширина столбца в пикселах. Значение по умолчанию: 250.
-//      * @param string $align Выравнивание текста в ячейке. Возможные значения: left, center, right. Значение по умолчанию: 'left'.
-//      * @param bool $canEdit Признак того, что данное поле можно редактировать. Значение по умолчанию: true.
-//      * @param string $srcformat Формат исходного значения, которое должно быть отформатировано. Аналогично PHP преобразованиям. Значение по умолчанию: 'Y-m-d H:i:s'.
-//      * @param string $newformat Новый формат, в который необходимо преобразовать. Аналогично PHP преобразованиям. Значение по умолчанию: 'd.m.Y H:i:s'.
-//      * @param bool $hidden Признак того, что данное поле будет скрыто в основной таблице, но будет доступно для отображения с помощью окна сортировки столбцов. Значение по умолчанию: false.
-//      * @return ColumnDefinition Конфигурационный массив для указанного столбца.
-//      */
-//     public static function columnDateValWithSearch($name, $label, $width = 250, $align = 'left', $canEdit = true, $srcformat = 'Y-m-d H:i:s', $newformat = 'd.m.Y H:i:s', $hidden = false) {
-//         $e = ColumnDefinition::columnDateVal($name, $label, $width, $align, $canEdit, $srcformat, $newformat);
-//         $e->search = true;
-//         $e->hidden = $hidden;
 //         return $e;
 //     }
 

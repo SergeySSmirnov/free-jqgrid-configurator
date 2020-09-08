@@ -3,14 +3,13 @@ namespace Rusproj\FreeJqGridConfigurator;
 
 use Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface;
 use Rusproj\FreeJqGridConfigurator\JqGrid\CustomButton;
-use Rusproj\FreeJqGridConfigurator\JqGrid\Pager;
 use Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons;
 
 /**
  * Класс, который представляет основную конфигурацию таблицы jqGrid.
  *
  * @author Sergei S. Smirnov
- * @copyright (c) 2010-20 RUSproj, Sergei S. Smirnov
+ * @copyright (c) 2020, RUSproj, Sergei S. Smirnov
  */
 class JqGrid implements ConfigurationDefinitionInterface
 {
@@ -26,11 +25,173 @@ class JqGrid implements ConfigurationDefinitionInterface
     }
 
     /**
+     * Magic Getter.
+     *
+     * @param string $prop Property name.
+     * @return mixed
+     */
+    public function __get($prop)
+    {
+        return isset($this->{$prop}) ? $this->{$prop} : null;
+    }
+
+    /**
+     * Magic Setter.
+     *
+     * @param string $prop Property name.
+     * @param mixed $value Property value.
+     */
+    public function __set($prop, $value)
+    {
+        $this->{$prop} = $value;
+    }
+
+    /**
+     * Magic Isset.
+     *
+     * @param string $prop Property name.
+     * @return boolean
+     */
+    public function __isset($prop)
+    {
+        return isset($this->{$prop});
+    }
+
+
+    /**
+     * The class that is used for applying different styles to alternate (zebra) rows in the grid.
+     * This option is valid only if the altRows option is set to true.
+     * Default value: ''.
+     */
+    private $altclass = '';
+
+    /**
+     * Set a zebra-striped grid (alternate rows have different styles).
+     * Default value: false.
+     *
+     * @var boolean
+     */
+    private $altRows = false;
+
+    /**
+     * When set to true encodes (html encode) the incoming (from server) and posted data (from editing modules).
+     * For example < will be converted to &lt;.
+     * Default value: false.
+     *
+     * @var boolean
+     */
+    private $autoencode = false;
+
+    /**
+     * When set to true, the grid width is recalculated automatically to the width of the parent element.
+     * This is done only initially when the grid is created. In order to resize the grid when the parent element
+     * changes width you should apply custom JS-code and use the setGridWidth method for this purpose.
+     * Default value: true.
+     *
+     * @var boolean
+     */
+    private $autowidth = true;
+
+    /**
+     * Table caption.
+     *
+     * @var string
+     */
+    private $caption = '';
+
+    /**
+     * This option determines the padding + border width of the cell. Usually this should not be changed,
+     * but if custom changes to the td element are made in the grid css file, this will need to be changed.
+     * The initial value of 5 means paddingLef(2) + paddingRight (2) + borderLeft (1) = 5.
+     * Default value: 5.
+     *
+     * @var integer
+     */
+    private $cellLayout = 5;
+
+    /**
+     * Enables or disables cell editing.
+     * Default value: false.
+     * See {@see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
+     *
+     * @var boolean
+     */
+    private $cellEdit = false;
+
+    /**
+     * Determines where the contents of the cell are saved.
+     * Allowed values: '', 'remote', 'clientArray'.
+     * Default value: ''.
+     * See {@see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
+     *
+     * @var string
+     */
+    private $cellsubmit = '';
+
+    /**
+     * The URL where the cell is to be saved.
+     * Default value: ''.
+     * See {@see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
+     *
+     * @var string
+     */
+    private $cellurl = '';
+
+    /**
+     * Defines a set of properties which override the default values in colModel.
+     * For example if you want to make all columns not sortable, then only one propery here can be specified
+     * instead of specifying it in all columns in colModel.
+     * Default value: null.
+     *
+     * @var object
+     */
+    private $cmTemplate = null;
+
+    /**
      * Columns definition array.
      *
      * @var \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition[]
      */
     private $colModel = [];
+
+    /**
+     * An array in which we place the names of the columns. This is the text that appears in the head of the grid (header layer).
+     * The names are separated with commas. Note that the number of elements in this array
+     * should be equal of the number elements in the colModel array.
+     * Default value: [].
+     *
+     * @var array
+     */
+    private $colNames = [];
+
+    /**
+     * Local array of the data wich must be shown at the table (dataType = 'local').
+     * Default value: [].
+     *
+     * @var array
+     */
+    private $data = [];
+
+    /**
+     * The string of data when datatype parameter is set to xmlstring or jsonstring.
+     * Default value: ''.
+     *
+     * @var string
+     */
+    private $datastr = '';
+
+    /**
+     * Data type.
+     * Allowed values: xml, xmlstring, json, jsonstring, local, javascript, function, clientSide.
+     * Default value: 'json'.
+     *
+     * @var string
+     */
+    private $dataType = 'json';
+
+
+
+
 
     /**
      * CSS-фреймворк, используемый для стилизации таблиц.
@@ -39,22 +200,6 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @var string
      */
     private $guiStyle = '';
-
-    /**
-     * The column name which used by default sorting on table load.
-     *
-     * @var string
-     */
-    private $sortname = '';
-
-    /**
-     * Sort order for default sort column on table load.
-     * Allowed values: 'asc', 'desc'.
-     * Default value: 'asc'.
-     *
-     * @var string
-     */
-    private $sortorder = 'asc';
 
     /**
      * Specify to use another font that used by default at the table.
@@ -73,21 +218,6 @@ class JqGrid implements ConfigurationDefinitionInterface
     private $idPrefix = '';
 
     /**
-     * Show row numbers.
-     * Default value: false.
-     *
-     * @var boolean
-     */
-    private $rownumbers = false;
-
-    /**
-     * Table caption.
-     *
-     * @var string
-     */
-    private $caption = '';
-
-    /**
      * Show the pager navigation bar on top of the grid.
      * Default value: false.
      *
@@ -104,44 +234,12 @@ class JqGrid implements ConfigurationDefinitionInterface
     private $pager = true;
 
     /**
-     * Rows numbers per page.
-     * Default value: 25.
-     *
-     * @var integer
-     */
-    private $rowNum = 25;
-
-    /**
-     * Show the status of the page in the right part of the pager navigation bar.
-     * Default value: true.
-     *
-     * @var boolean
-     */
-    private $viewrecords = true;
-
-    /**
      * The comparing of strings is case insensitive on sorting operations.
      * Default value: true.
      *
      * @var boolean
      */
     private $ignoreCase = true;
-
-    /**
-     * Allow three state sorting (asc, desc, none).
-     * Default value: true.
-     *
-     * @var boolean
-     */
-    private $threeStateSort = true;
-
-    /**
-     * Show sort icons before the table header text.
-     * Default value: false.
-     *
-     * @var boolean
-     */
-    private $sortIconsBeforeText = false;
 
     /**
      * Create tooltips on column headers.
@@ -159,15 +257,415 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     private $multiSort = false;
 
-    private $searching = ['defaultSearch' => 'cn'];
+    /**
+     * Determines the position of the record information in the pager.
+     * Allowed values: left, center, right.
+     * Default value: right.
+     *
+     * @var string
+     */
+    private $recordpos = 'right';
 
+    /**
+     * An array to construct a select box element in the pager in which we can change the number of the visible rows.
+     * When changed during the execution, this parameter replaces the rowNum parameter that is passed to the url.
+     * If the array is empty, this element does not appear in the pager.
+     * Default value: [5, 10, 15, 25, 50, 100, 250, 500, 1000, 1500].
+     *
+     * @var array
+     */
+    private $rowList = [5, 10, 15, 25, 50, 100, 250, 500, 1000, 1500];
+
+    /**
+     * Show row numbers.
+     * Default value: false.
+     *
+     * @var boolean
+     */
+    private $rownumbers = false;
+
+    /**
+     * Rows numbers per page.
+     * Default value: 25.
+     *
+     * @var integer
+     */
+    private $rowNum = 25;
+
+    /**
+     * Show sort icons before the table header text.
+     * Default value: false.
+     *
+     * @var boolean
+     */
+    private $sortIconsBeforeText = false;
+
+    /**
+     * The column name which used by default sorting on table load.
+     *
+     * @var string
+     */
+    private $sortname = '';
+
+    /**
+     * Sort order for default sort column on table load.
+     * Allowed values: 'asc', 'desc'.
+     * Default value: 'asc'.
+     *
+     * @var string
+     */
+    private $sortorder = 'asc';
+
+    /**
+     * Allow three state sorting (asc, desc, none).
+     * Default value: true.
+     *
+     * @var boolean
+     */
+    private $threeStateSort = true;
+
+    /**
+     * URL to retrive table data.
+     *
+     * @var string
+     */
+    private $url = '';
+
+    /**
+     * Show the status of the page in the pager navigation bar.
+     * Default value: true.
+     *
+     * @var boolean
+     */
+    private $viewrecords = true;
+
+
+
+//     private $searching = ['defaultSearch' => 'cn'];
+
+    /**
+     * The string of data when datatype parameter is set to xmlstring or jsonstring.
+     * Default value: ''.
+     *
+     * @return string
+     */
+    public function getDataStr()
+    {
+        return $this->datastr;
+    }
+
+    /**
+     * The string of data when datatype parameter is set to xmlstring or jsonstring.
+     * Default value: ''.
+     *
+     * @param string $dataStr
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setDataStr($dataStr)
+    {
+        $this->datastr = $dataStr;
+        return $this;
+    }
+
+    /**
+     * An array in which we place the names of the columns. This is the text that appears in the head of the grid (header layer).
+     * The names are separated with commas. Note that the number of elements in this array
+     * should be equal of the number elements in the colModel array.
+     * Default value: [].
+     *
+     * @return array
+     */
+    public function getColNames()
+    {
+        return $this->colNames;
+    }
+
+    /**
+     * An array in which we place the names of the columns. This is the text that appears in the head of the grid (header layer).
+     * The names are separated with commas. Note that the number of elements in this array
+     * should be equal of the number elements in the colModel array.
+     * Default value: [].
+     *
+     * @param array $colNames
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setColNames($colNames)
+    {
+        $this->colNames = $colNames;
+    }
+
+    /**
+     * Defines a set of properties which override the default values in colModel.
+     * For example if you want to make all columns not sortable, then only one propery here can be specified
+     * instead of specifying it in all columns in colModel.
+     * Default value: [].
+     *
+     * @return object
+     */
+    public function getCmTemplate()
+    {
+        return $this->cmTemplate;
+    }
+
+
+    /**
+     * Defines a set of properties which override the default values in colModel.
+     * For example if you want to make all columns not sortable, then only one propery here can be specified
+     * instead of specifying it in all columns in colModel.
+     * Default value: [].
+     *
+     * @param object $cmTemplate
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setCmTemplate($cmTemplate)
+    {
+        $this->cmTemplate = $cmTemplate;
+    }
+
+    /**
+     * The URL where the cell is to be saved.
+     * Default value: ''.
+     * See {@see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
+     *
+     * @return string
+     */
+    public function getCellSaveUrl()
+    {
+        return $this->cellurl;
+    }
+
+    /**
+     * The URL where the cell is to be saved.
+     * Default value: ''.
+     * See {@see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
+     *
+     * @param string $cellUrl
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setCellSaveUrl($cellUrl)
+    {
+        $this->cellurl = $cellUrl;
+        return $this;
+    }
+
+    /**
+     * Determines where the contents of the cell are saved.
+     * Allowed values: '', 'remote', 'clientArray'.
+     * Default value: ''.
+     * See {@see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
+     *
+     * @return string
+     */
+    public function getCellsubmit()
+    {
+        return $this->cellsubmit;
+    }
+
+    /**
+     * Determines where the contents of the cell are saved.
+     * Allowed values: '', 'remote', 'clientArray'.
+     * Default value: ''.
+     * See {@see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
+     *
+     * @param string $cellsubmit
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setCellsubmit($cellsubmit)
+    {
+        $this->cellsubmit = $cellsubmit;
+        return $this;
+    }
+
+    /**
+     * Enables or disables cell editing.
+     * Default value: false.
+     * See {@see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
+     *
+     * @return boolean
+     */
+    public function getIsCellEditAllowed()
+    {
+        return $this->cellEdit;
+    }
+
+    /**
+     * Enables or disables cell editing.
+     * Default value: false.
+     * See {@see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
+     *
+     * @param boolean $cellEdit
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setIsCellEditAllowed($cellEdit)
+    {
+        $this->cellEdit = $cellEdit;
+        return $this;
+    }
+
+    /**
+     * This option determines the padding + border width of the cell. Usually this should not be changed,
+     * but if custom changes to the td element are made in the grid css file, this will need to be changed.
+     * The initial value of 5 means paddingLef(2) + paddingRight (2) + borderLeft (1) = 5.
+     * Default value: 5.
+     *
+     * @return integer
+     */
+    public function getCellLayout()
+    {
+        return $this->cellLayout;
+    }
+
+    /**
+     * This option determines the padding + border width of the cell. Usually this should not be changed,
+     * but if custom changes to the td element are made in the grid css file, this will need to be changed.
+     * The initial value of 5 means paddingLef(2) + paddingRight (2) + borderLeft (1) = 5.
+     * Default value: 5.
+     *
+     * @param integer $cellLayout
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setCellLayout($cellLayout)
+    {
+        $this->cellLayout = $cellLayout;
+        return $this;
+    }
+
+    /**
+     * When set to true, the grid width is recalculated automatically to the width of the parent element.
+     * This is done only initially when the grid is created. In order to resize the grid when the parent element
+     * changes width you should apply custom JS-code and use the setGridWidth method for this purpose.
+     * Default value: true.
+     *
+     * @return boolean
+     */
+    public function getIsAutoWidth()
+    {
+        return $this->autowidth;
+    }
+
+    /**
+     * When set to true, the grid width is recalculated automatically to the width of the parent element.
+     * This is done only initially when the grid is created. In order to resize the grid when the parent element
+     * changes width you should apply custom JS-code and use the setGridWidth method for this purpose.
+     * Default value: true.
+     *
+     * @param boolean $autoWidth
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setIsAutoWidth($autoWidth)
+    {
+        $this->autowidth = $autoWidth;
+        return $this;
+    }
+
+    /**
+     * When set to true encodes (html encode) the incoming (from server) and posted data (from editing modules).
+     * For example < will be converted to &lt;.
+     * Default value: false.
+     *
+     * @return boolean
+     */
+    public function getIsAutoEncode()
+    {
+        return $this->autoencode;
+    }
+
+    /**
+     * When set to true encodes (html encode) the incoming (from server) and posted data (from editing modules).
+     * For example < will be converted to &lt;.
+     * Default value: false.
+     *
+     * @param boolean $autoEncode
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setIsAutoEncode($autoEncode)
+    {
+        $this->autoencode = $autoEncode;
+        return $this;
+    }
+
+    /**
+     * Set a zebra-striped grid (alternate rows have different styles).
+     * Default value: false.
+     *
+     * @return boolean
+     */
+    public function getIsAltRows()
+    {
+        return $this->altRows;
+    }
+
+    /**
+     * Set a zebra-striped grid (alternate rows have different styles).
+     * Default value: false.
+     *
+     * @param boolean $altRows
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setIsAltRows($altRows)
+    {
+        $this->altRows = $altRows;
+        return $this;
+    }
+
+    /**
+     * The class that is used for applying different styles to alternate (zebra) rows in the grid.
+     * This option is valid only if the altRows option is set to true.
+     * Default value: ''.
+     *
+     * @return string
+     */
+    public function getAltClass()
+    {
+        return $this->altclass;
+    }
+
+    /**
+     * The class that is used for applying different styles to alternate (zebra) rows in the grid.
+     * This option is valid only if the altRows option is set to true.
+     * Default value: ''.
+     *
+     * @param string $altClass
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setAltClass($altClass)
+    {
+        $this->altclass = $altClass;
+        return $this;
+    }
+
+    /**
+     * Determines the position of the record information in the pager.
+     * Allowed values: left, center, right.
+     * Default value: right.
+     *
+     * @return string
+     */
+    public function getRecordInfoPos()
+    {
+        return $this->recordpos;
+    }
+
+    /**
+     * Determines the position of the record information in the pager.
+     * Allowed values: left, center, right.
+     * Default value: right.
+     *
+     * @param string $recordInfoPos
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setRecordInfoPos($recordInfoPos)
+    {
+        $this->recordpos = $recordInfoPos;
+        return $this;
+    }
 
     /**
      * Columns definition array.
      *
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition[]
      */
-    public function getColumnsModels()
+    public function getColModels()
     {
         return $this->colModel;
     }
@@ -176,9 +674,9 @@ class JqGrid implements ConfigurationDefinitionInterface
      * Columns definition array.
      *
      * @param \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition[] $colModels
-     * @return void
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setColumnsModels($colModels)
+    public function setColModels($colModels)
     {
         $this->colModel = $colModels;
         return $this;
@@ -578,9 +1076,105 @@ class JqGrid implements ConfigurationDefinitionInterface
         return $this;
     }
 
+    /**
+     * URL to retrive table data.
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
 
+    /**
+     * URL to retrive table data.
+     *
+     * @param string $url
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+        return $this;
+    }
 
+    /**
+     * Data type.
+     * Allowed values: xml, xmlstring, json, jsonstring, local, javascript, function, clientSide.
+     * Default value: 'json'.
+     *
+     * @return string
+     */
+    public function getDataType()
+    {
+        return $this->dataType;
+    }
 
+    /**
+     * Data type.
+     * Allowed values: xml, xmlstring, json, jsonstring, local, javascript, function, clientSide.
+     * Default value: 'json'.
+     *
+     * @param string $dataType
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setDataType($dataType)
+    {
+        $this->dataType = $dataType;
+        return $this;
+    }
+
+    /**
+     * Local array of the data wich must be shown at the table (dataType = 'local').
+     * Default value: [].
+     *
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Local array of the data wich must be shown at the table (dataType = 'local').
+     * Default value: [].
+     *
+     * @param array $data
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+        return $this;
+    }
+
+    /**
+     * An array to construct a select box element in the pager in which we can change the number of the visible rows.
+     * When changed during the execution, this parameter replaces the rowNum parameter that is passed to the url.
+     * If the array is empty, this element does not appear in the pager.
+     * Default value: [5, 10, 15, 25, 50, 100, 250, 500, 1000, 1500].
+     *
+     * @return array
+     */
+    public function getRowList()
+    {
+        return $this->rowList;
+    }
+
+    /**
+     * An array to construct a select box element in the pager in which we can change the number of the visible rows.
+     * When changed during the execution, this parameter replaces the rowNum parameter that is passed to the url.
+     * If the array is empty, this element does not appear in the pager.
+     * Default value: [5, 10, 15, 25, 50, 100, 250, 500, 1000, 1500].
+     *
+     * @param array $rowList
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setRowList($rowList)
+    {
+        $this->rowList = $rowList;
+        return $this;
+    }
 
 
 //     /**
@@ -687,122 +1281,6 @@ class JqGrid implements ConfigurationDefinitionInterface
 //      * @var string
 //      */
 //     public $tableId = '#list';
-
-//     /**
-//      * Задает признак необходимости задать двухстрочное оформление сетки таблицы (для четных и нечетных строк используются свои стили).
-//      * Значение по умолчанию: false.
-//      *
-//      * @var boolean
-//      */
-//     public $altRows = false;
-
-//     /**
-//      * Имя css-класса, используемого для оформления четных строк при двухстрочном оформлении сетки таблицы.
-//      * Данный параметр имеет действие если altRows=true. Значение по умолчнию: '' (не задано).
-//      *
-//      * @var string
-//      */
-//     public $altClass = '';
-
-//     /**
-//      * Призак необходимости автоматического задания ширины таблицы и ширины столбцов в зависимости от ширины родительского контейнера.
-//      * Значение по умолчанию: true.
-//      *
-//      * @var bool
-//      */
-//     public $autoWidth = true;
-
-//     /**
-//      * Задает заголовок таблицы. Значение по умолчанию: '' (не задано).
-//      *
-//      * @var string
-//      */
-//     public $caption = '';
-
-//     /**
-//      * Данная опция определяет отступы слева и справа в ячейке + ширина границы клетки.
-//      * Данное свойство следует менять только в том случае, если изменяется css-свойство для элемента td таблицы.
-//      * Значение по умолчанию: -1 (не задано).
-//      *
-//      * @var int
-//      */
-//     public $cellLayout = -1;
-
-//     /**
-//      * Разрешает или запрещает редактирование отдельных ячеек при одинарном клике по ней.
-//      * Требует задания свойств cellSubmit и cellUrl. Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $cellEdit = false;
-
-//     /**
-//      * Задает контекст сохранения ячейки. Данный параметр имеет действие если cellEdit=true.
-//      * Возможные значения: remote (новое значение будет отправлено на сервер) и clientArray (новое значение будет сохранено локально).
-//      * Значение по умолчанию: 'remote'.
-//      *
-//      * @var string
-//      */
-//     public $cellSubmit = 'remote';
-
-//     /**
-//      * URL-адрес, на который будет отправлено новое знчение ячейки. Данный параметр имеет действие если cellEdit=true.
-//      * Значение по умолчанию: '' (не задано).
-//      *
-//      * @var string
-//      */
-//     public $cellUrl = '';
-
-//     /**
-//      * Задает массив названий всех выводимых полей. Число записей в данном массиве должно соответсвовать
-//      * числу записей в массиве свойства colModel. В качестве альтернативы, названия столбцов можно задавать
-//      * в конфигурационном массиве colModel. Данное свойство имеет силу, если задано свойство colModel.
-//      * Значение по умолчанию: [] (не задано).
-//      *
-//      * @var array
-//      */
-//     public $colNames = [];
-
-//     /**
-//      * Тип данных, которые необходимо отобразить в таблице. Доступные значения: xml, xmlstring (xml-данные, представленые строкой),
-//      * json, jsonstring (json-данные, представленые строкой), local (данные, определенные на стороне киента массивом данных),
-//      * javascript (данные, представленные как javascript), function (пользовательская функция для получения данных), clientSide
-//      * (ручная загрузка данных через массив данных). Значение по умолчанию: 'json'.
-//      *
-//      * @var string
-//      */
-//     public $dataType = 'json';
-
-//     /**
-//      * Массив данных, которые необходимо разместить в таблице. Значение по умолчанию: [] (данные не определены).
-//      *
-//      * @var array
-//      */
-//     public $data = [];
-
-//     /**
-//      * Строка данных, которая представляет массив данных в формате xml или json, которые должны быть размещены в таблице.
-//      * Данный параметр действителен в том случае, если значение свойства dataType равны xmlstring или jsonstring.
-//      * Значение по умолчанию: '' (данные не определены).
-//      *
-//      * @var string
-//      */
-//     public $dataStr = '';
-
-//     /**
-//      * Задает URL адрес для отправки отредактированных данных на сервер при построчном редактировании или редактировании данных в форме.
-//      * Значение по умолчанию: ''.
-//      *
-//      * @var string
-//      */
-//     public $editUrl = '';
-
-//     /**
-//      * Признак того, что при изменении ширины столбца, размер граничного столбца будет уменьшатся вместо смещения. Значение по умолчнию: false.
-//      *
-//      * @var bool
-//      */
-//     public $forceFit = false;
 
 
 //     /**
@@ -1065,13 +1543,6 @@ class JqGrid implements ConfigurationDefinitionInterface
 //     public $treeRootLevel = 0;
 
 //     /**
-//      * Задает URL адрес, который вернет данные для таблицы. Значение по умолчанию: '' (не определено).
-//      *
-//      * @var string
-//      */
-//     public $url = '';
-
-//     /**
 //      * Задает признак того, что кнопки сортировки должны отображаться у каждого столбца, по которому возможна сортировка данных.
 //      * Значение по умолчанию: true.
 //      *
@@ -1153,7 +1624,7 @@ class JqGrid implements ConfigurationDefinitionInterface
                     if ($_subVal instanceof ConfigurationDefinitionInterface) {
                         $_config[$_key][] = $_subVal->getConfig();
                     } else {
-                        $_config[$_key][$_subKey] = $_val;
+                        $_config[$_key][$_subKey] = $_subVal;
                     }
                 }
             } elseif ($_val instanceof ConfigurationDefinitionInterface) {
@@ -1164,6 +1635,8 @@ class JqGrid implements ConfigurationDefinitionInterface
                     if (!empty($_val)) {
                         $_config[$_key] = $_val;
                     }
+                } elseif (is_null($_val)) {
+                    continue;
                 } else {
                     $_config[$_key] = $_val;
                 }
@@ -1231,19 +1704,10 @@ class JqGrid implements ConfigurationDefinitionInterface
 //                 $_config['altclass'] = $this->altClass;
 //             }
 //         }
-//         $_config['autowidth'] = $this->autoWidth;
 //         if (!empty($this->caption)) {
 //             $_config['caption'] = $this->caption;
 //             $_config['hiddengrid'] = $this->hiddenGrid;
 //             $_config['hidegrid'] = $this->hideGrid;
-//         }
-//         if ($this->cellLayout !== -1) {
-//             $_config['cellLayout'] = $this->cellLayout;
-//         }
-//         if ($this->cellEdit) {
-//             $_config['cellEdit'] = true;
-//             $_config['cellsubmit'] = $this->cellSubmit;
-//             $_config['cellurl'] = $this->cellUrl;
 //         }
 //         $_config['datatype'] = $this->dataType;
 //         if ((($this->dataType === 'xmlstring') || ($this->dataType === 'jsonstring')) && !empty($this->dataStr)) {
@@ -1251,43 +1715,16 @@ class JqGrid implements ConfigurationDefinitionInterface
 //         } elseif (count($this->data) > 0) {
 //             $_config['data'] = $this->data;
 //         }
-//         if (!empty($this->editUrl)) {
-//             $_config['editurl'] = $this->editUrl;
-//         }
-//         if ($this->forceFit) {
-//             $_config['forceFit'] = true;
-//         }
-//         if ($this->grouping) {
-//             $_config['grouping'] = true;
-//         }
-//         $_config['height'] = $this->height;
-//         if ($this->hoverRows === false) {
-//             $_config['hoverrows'] = $this->hoverRows;
-//         }
-//         if ($this->loadOnce) {
-//             $_config['loadonce'] = true;
-//         }
-//         $_config['loadui'] = $this->loadui;
-//         $_config['mtype'] = $this->mType;
 //         if ($this->multiSelect) {
 //             $_config['multiselect'] = true;
 //             $_config['multiboxonly'] = $this->multiBoxOnly;
 //             $_config['multiselectWidth'] = $this->multiSelectWidth;
-//         }
-//         if (!empty($this->resizeClass)) {
-//             $_config['resizeclass'] = $this->resizeClass;
-//         }
-//         if ($this->rowNumbers) {
-//             $_config['rownumWidth'] = $this->rowNumWidth;
 //         }
 //         if ($this->scroll) {
 //             $_config['scroll'] = true;
 //             $_config['scrollOffset'] = $this->scrollOffset;
 //             $_config['scrollTimeout'] = $this->scrollTimeout;
 //             $_config['scrollrows'] = $this->scrollRows;
-//         }
-//         if ($this->shrinkToFit === false) {
-//             $_config['shrinkToFit'] = false;
 //         }
 //         if ($this->sortable) {
 //             $_config['sortable'] = true;
@@ -1317,24 +1754,12 @@ class JqGrid implements ConfigurationDefinitionInterface
 //             }
 //             $_config['tree_root_level'] = $this->treeRootLevel;
 //         }
-//         if (!empty($this->url)) {
-//             $_config['url'] = $this->url;
-//         }
-//         $_config['viewsortcols'] = [$this->viewSortColsVisibleIcons, 'vertical', $this->viewSortColsClickableHeaders];
-//         if ($this->width > 0) {
-//             $_config['width'] = $this->width;
-//         }
 //         if ($this->headerForm) {
 //             $_config['headerForm']['htmlID'] = $this->headerFormHtmlID;
 //             if (!empty($this->headerFormCompleteFunction)) {
 //                 $_config['headerForm']['completeFunction'] = $this->headerFormCompleteFunction;
 //             }
 //         }
-
-//         // Формируем дополнительные параметры
-//         $_config['tableId'] = $this->tableId;
-//         $_config['existsDateCol'] = $this->existsDateCol;
-//         $_config['dateColIndexes'] = $this->dateColIndexes;
 
 //         // Добавляем конфигурационные данные, формируемые другими классами
 //         $_config = array_merge($_config, $this->pager->getConfig());
