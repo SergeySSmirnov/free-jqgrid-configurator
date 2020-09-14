@@ -1705,7 +1705,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     {
         $_config = [];
 
-        if (!is_array($list)) {
+        if (is_array($list)) {
             if (count($list)) {
                 $_paramVal = '';
                 foreach ($list as $_key => $_val) {
@@ -1739,45 +1739,6 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
         throw new \Exception('Not implemented.');
     }
 
-//     /**
-//      * Помощник формирует конфигурационный массив для столбца числовых идентификаторов. Данный столбец будет скрыт и не будет участвовать в поиске.
-//      *
-//      * @param string $name Имя столбца.
-//      * @return ColumnDefinition Конфигурационный массив для указанного столбца.
-//      */
-//     public static function columnNumberId($name) {
-//         $e = new ColumnDefinition();
-//         $e->name = $name;
-//         $e->label = '';
-//         $e->search = false;
-//         $e->is_primary_key = true;
-//         $e->hidden = $e->hiddenDlg = true;
-//         $e->sortable = false;
-//         $e->viewable = false;
-//         return $e;
-//     }
-
-//     /**
-//      * Помощник формирует конфигурационный массив для столбца главных текстовых значений с возможностью полного поиска.
-//      * Данный столбец имеет возможность заморозки (при нажатии на соответствующую кнопку).
-//      *
-//      * @param string $name Имя столбца.
-//      * @param string $label Заголовок столбца.
-//      * @param int $width Ширина столбца в пикселах. Значение по умолчанию: 250.
-//      * @param string $align Выравнивание текста в ячейке. Возможные значения: left, center, right. Значение по умолчанию: 'left'.
-//      * @return ColumnDefinition Конфигурационный массив для указанного столбца.
-//      */
-//     public static function columnMainTextVal($name, $label, $width = 250, $align = 'left') {
-//         $e = new ColumnDefinition();
-//         $e->name = $name;
-//         $e->label = $label;
-//         $e->editType = 'text';
-//         $e->frozen = true;
-//         $e->width = $width;
-//         $e->align = $align;
-//         return $e;
-//     }
-
     /**
      * Helper generates column config for which contains text data.
      *
@@ -1794,7 +1755,8 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
             ->setLabel($label)
             ->setWidth($width)
             ->setAlign($align)
-            ->setIsEditable(true);
+            ->setIsEditable(true)
+            ->setEditType('text');
     }
 
     /**
@@ -1818,31 +1780,31 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
             ->setFormatter('date')
             ->setFormatOptions(self::formatOptionsDate($srcFormat, $newFormat))
             ->setDateFormat($srcFormat)
-            ->setIsEditable(true);
+            ->setIsEditable(true)
+            ->setEditType('text');
     }
 
-//     /**
-//      * Помощник формирует конфигурационный массив для столбца из списка значений без возможности поиска.
-//      *
-//      * @param string $name Имя столбца.
-//      * @param string $label Заголовок столбца.
-//      * @param array/string $val Массив значений (где ключ - идентификатор) или адрес URL, откуда загружаются соответствующие данные (для автоматического преобразования ID в значение из списка необходимо передавать массив значений, а не URL, т.к. данные не подгружаются автоматически).
-//      * @param int $width Ширина столбца в пикселах. Значение по умолчанию: 250.
-//      * @param string $align Выравнивание текста в ячейке. Возможные значения: left, center, right. Значение по умолчанию: 'left'.
-//      * @return ColumnDefinition Конфигурационный массив для указанного столбца.
-//      */
-//     public static function columnSelectVal($name, $label, $val, $width = 250, $align = 'left') {
-//         $e = new ColumnDefinition();
-//         $e->name = $name;
-//         $e->label = $label;
-//         $e->width = $width;
-//         $e->align = $align;
-//         $e->search = false;
-//         $e->formatter = 'select'; // Вызов formatSelect() не нужен, т.к. select не имеет опций форматирования
-//         $e->editType = 'select';
-//         $e->editOptions = ColumnDefinition::editOptionsSelect($val);
-//         return $e;
-//     }
+    /**
+     * Помощник формирует конфигурационный массив для столбца из списка значений без возможности поиска.
+     *
+     * @param string $name Column name.
+     * @param string $label Column label.
+     * @param array|string $list An array of Key-Value (Input-Output) pairs. Also can be presented as a string in format: 'Key1:Value1;Key2:Value2;...'.
+     * @param integer $width Column width in pixels.
+     * @param string $align Text align. Allowed values: 'left', 'center', 'right'.
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     * @throws \Exception Thrown when {@link $name} is empty.
+     */
+    public static function columnSelect($name, $label, $list, $width = 250, $align = 'left') {
+        return self::createInstance($name)
+            ->setLabel($label)
+            ->setWidth($width)
+            ->setAlign($align)
+            ->setFormatter('select')
+            ->setFormatOptions(self::formatOptionsSelect($list))
+            ->setIsEditable(true)
+            ->setEditType('select');
+    }
 
 //     /**
 //      * Помощник формирует конфигурационный массив для столбца из списка значений с возможностью поиска.
