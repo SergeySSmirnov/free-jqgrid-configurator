@@ -4,9 +4,10 @@ namespace Rusproj\FreeJqGridConfigurator;
 use Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface;
 use Rusproj\FreeJqGridConfigurator\JqGrid\CustomButton;
 use Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons;
+use Rusproj\FreeJqGridConfigurator\JqGrid\JqgridEvents;
 
 /**
- * Класс, который представляет основную конфигурацию таблицы jqGrid.
+ * Main config of the jqGrid.
  *
  * @author Sergei S. Smirnov
  * @copyright (c) 2020, RUSproj, Sergei S. Smirnov
@@ -56,6 +57,13 @@ class JqGrid implements ConfigurationDefinitionInterface
     {
         return isset($this->{$prop});
     }
+
+    /**
+     * A list of the jqGrid event handlers.
+     *
+     * @var []
+     */
+    private $__eventHandlers;
 
 
     /**
@@ -1603,7 +1611,7 @@ class JqGrid implements ConfigurationDefinitionInterface
 
 
     /**
-     * Конструктор класса JqGrid.
+     * Initialize instance of the JqGrid.
      */
     function __construct() {
 //         $this->recButtonsConfig = new RecButtons();
@@ -1767,5 +1775,744 @@ class JqGrid implements ConfigurationDefinitionInterface
 
         return $_config;
     }
+
+    /**
+     * This event fires after every inserted row.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>rowid is the id of the inserted row;</li>
+     *  <li>rowdata is an array of the data to be inserted into the row. This is array of type name: value, where the name is a name from colModel;</li>
+     *  <li>rowelem is the element from the response. If the data is xml this is the xml element of the row; if the data is json this is array containing all the data for the row.</li>
+     * </ul>
+     *
+     *  Note: this event does not fire if gridview option is set to true.
+     *
+     * @return string
+     */
+    public function getAfterInsertRow()
+    {
+        return $this->__eventHandlers['afterInsertRow'] ?? null;
+    }
+
+    /**
+     * This event fires after every inserted row.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>rowid is the id of the inserted row;</li>
+     *  <li>rowdata is an array of the data to be inserted into the row. This is array of type name: value, where the name is a name from colModel;</li>
+     *  <li>rowelem is the element from the response. If the data is xml this is the xml element of the row; if the data is json this is array containing all the data for the row.</li>
+     * </ul>
+     *
+     *  Note: this event does not fire if gridview option is set to true.
+     *
+     * @param string $afterInsertRow
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setAfterInsertRow($afterInsertRow)
+    {
+        $this->__eventHandlers['afterInsertRow'] = $afterInsertRow;
+        return $this;
+    }
+
+    /**
+     * This event fire before proccesing the data from the server.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>data;</li>
+     *  <li>status;</li>
+     *  <li>xhr.</li>
+     * </ul>
+     *
+     * Note that the data is formatted depended on the value of the datatype parameter - i.e if the datatype is 'json' for example the data is JavaScript object.
+     *
+     * @return string
+     */
+    public function getBeforeProcessing()
+    {
+        return $this->__eventHandlers['beforeProcessing'] ?? null;
+    }
+
+    /**
+     * This event fire before proccesing the data from the server.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>data;</li>
+     *  <li>status;</li>
+     *  <li>xhr.</li>
+     * </ul>
+     *
+     * Note that the data is formatted depended on the value of the datatype parameter - i.e if the datatype is 'json' for example the data is JavaScript object.
+     *
+     * @param string $beforeProcessing
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setBeforeProcessing($beforeProcessing)
+    {
+        $this->__eventHandlers['beforeProcessing'] = $beforeProcessing;
+        return $this;
+    }
+
+    /**
+     * This event fire before requesting any data. Also does not fire if datatype is function. If the event return false the request is not made to the server.
+     *
+     * Parameters: none.
+     *
+     * @return string
+     */
+    public function getBeforeRequest()
+    {
+        return $this->__eventHandlers['beforeRequest'] ?? null;
+    }
+
+    /**
+     * This event fire before requesting any data. Also does not fire if datatype is function. If the event return false the request is not made to the server.
+     *
+     * Parameters: none.
+     *
+     * @param string $beforeRequest
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setBeforeRequest($beforeRequest)
+    {
+        $this->__eventHandlers['beforeRequest'] = $beforeRequest;
+        return $this;
+    }
+
+    /**
+     * This event fire when the user click on the row, but before select them.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>e is the event object.</li>
+     * </ul>
+     *
+     * This event should return boolean true or false. If the event return true the selection is done.
+     * If the event return false the row is not selected and any other action if defined does not occur.
+     *
+     * @return string
+     */
+    public function getBeforeSelectRow()
+    {
+        return $this->__eventHandlers['beforeSelectRow'] ?? null;
+    }
+
+    /**
+     * This event fire when the user click on the row, but before select them.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>e is the event object.</li>
+     * </ul>
+     *
+     * This event should return boolean true or false. If the event return true the selection is done.
+     * If the event return false the row is not selected and any other action if defined does not occur.
+     *
+     * @param string $beforeSelectRow
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setBeforeSelectRow($beforeSelectRow)
+    {
+        $this->__eventHandlers['beforeSelectRow'] = $beforeSelectRow;
+        return $this;
+    }
+
+    /**
+     * This fires after all the data is loaded into the grid and all other processes are complete.
+     * Also the event fires independent from the datatype parameter and after sorting paging and etc.
+     *
+     * Parameters: none.
+     *
+     * @return string
+     */
+    public function getGridComplete()
+    {
+        return $this->__eventHandlers['gridComplete'] ?? null;
+    }
+
+    /**
+     * This fires after all the data is loaded into the grid and all other processes are complete.
+     * Also the event fires independent from the datatype parameter and after sorting paging and etc.
+     *
+     * Parameters: none.
+     *
+     * @param string $gridComplete
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setGridComplete($gridComplete)
+    {
+        $this->__eventHandlers['gridComplete'] = $gridComplete;
+        return $this;
+    }
+
+    /**
+     * A pre-callback to modify the XMLHttpRequest object (xhr) before it is sent. Use this to set custom headers etc.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>xhr;</li>
+     *  <li>settings.</li>
+     * </ul>
+     *
+     * Returning false will cancel the request.
+     *
+     * @return string
+     */
+    public function getLoadBeforeSend()
+    {
+        return $this->__eventHandlers['loadBeforeSend'] ?? null;
+    }
+
+    /**
+     * A pre-callback to modify the XMLHttpRequest object (xhr) before it is sent. Use this to set custom headers etc.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>xhr;</li>
+     *  <li>settings.</li>
+     * </ul>
+     *
+     * Returning false will cancel the request.
+     *
+     * @param string $loadBeforeSend
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setLoadBeforeSend($loadBeforeSend)
+    {
+        $this->__eventHandlers['loadBeforeSend'] = $loadBeforeSend;
+        return $this;
+    }
+
+    /**
+     * This event is executed immediately after every server request.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>data Data from the response depending on datatype grid parameter.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    public function getLoadComplete()
+    {
+        return $this->__eventHandlers['loadComplete'] ?? null;
+    }
+
+    /**
+     * This event is executed immediately after every server request.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>data Data from the response depending on datatype grid parameter.</li>
+     * </ul>
+     *
+     * @param string $loadComplete
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setLoadComplete($loadComplete)
+    {
+        $this->__eventHandlers['loadComplete'] = $loadComplete;
+        return $this;
+    }
+
+    /**
+     * A function to be called if the request fails.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>xhr - XMLHttpRequest object;</li>
+     *  <li>status - a string describing the type of error;</li>
+     *  <li>error - an optional exception object.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    public function getLoadError()
+    {
+        return $this->__eventHandlers['loadError'] ?? null;
+    }
+
+    /**
+     * A function to be called if the request fails.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>xhr - XMLHttpRequest object;</li>
+     *  <li>status - a string describing the type of error;</li>
+     *  <li>error - an optional exception object.</li>
+     * </ul>
+     *
+     * @param string $loadError
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setLoadError($loadError)
+    {
+        $this->__eventHandlers['loadError'] = $loadError;
+        return $this;
+    }
+
+    /**
+     * Fires when click on particular cell in the grid.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>iCol is the index of the cell;</li>
+     *  <li>cellcontent is the content of the cell;</li>
+     *  <li>e is the event object.</li>
+     * </ul>
+     *
+     * Note that this available when we not use cell editing module and is disabled when using cell editing.
+     *
+     * @return string
+     */
+    public function getOnCellSelect()
+    {
+        return $this->__eventHandlers['onCellSelect'] ?? null;
+    }
+
+    /**
+     * Fires when click on particular cell in the grid.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>iCol is the index of the cell;</li>
+     *  <li>cellcontent is the content of the cell;</li>
+     *  <li>e is the event object.</li>
+     * </ul>
+     *
+     * Note that this available when we not use cell editing module and is disabled when using cell editing.
+     *
+     * @param string $onCellSelect
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setOnCellSelect($onCellSelect)
+    {
+        $this->__eventHandlers['onCellSelect'] = $onCellSelect;
+        return $this;
+    }
+
+    /**
+     * Raised immediately after row was double clicked.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>iRow is the index of the row (do not mix this with the rowid);</li>
+     *  <li>iCol is the index of the cell;</li>
+     *  <li>e is the event object.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    public function getOnDblClickRow()
+    {
+        return $this->__eventHandlers['ondblClickRow'] ?? null;
+    }
+
+    /**
+     * Raised immediately after row was double clicked.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>iRow is the index of the row (do not mix this with the rowid);</li>
+     *  <li>iCol is the index of the cell;</li>
+     *  <li>e is the event object.</li>
+     * </ul>
+     *
+     * @param string $ondblClickRow
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setOnDblClickRow($ondblClickRow)
+    {
+        $this->__eventHandlers['ondblClickRow'] = $ondblClickRow;
+        return $this;
+    }
+
+    /**
+     * Fire after clicking to hide or show grid (hidegrid:true).
+     *
+     * Parameters:
+     * <ul>
+     *  <li>gridstate is the state of the grid - can have two values - visible or hidden.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    public function getOnHeaderClick()
+    {
+        return $this->__eventHandlers['onHeaderClick'] ?? null;
+    }
+
+    /**
+     * Fire after clicking to hide or show grid (hidegrid:true).
+     *
+     * Parameters:
+     * <ul>
+     *  <li>gridstate is the state of the grid - can have two values - visible or hidden.</li>
+     * </ul>
+     *
+     * @param string $onHeaderClick
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setOnHeaderClick($onHeaderClick)
+    {
+        $this->__eventHandlers['onHeaderClick'] = $onHeaderClick;
+        return $this;
+    }
+
+    /**
+     * This event fires after click on [page button] and before populating the data.
+     * Also works when the user enters a new page number in the page input box (and presses [Enter])
+     * and when the number of requested records is changed via the select box.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>pgButton.</li>
+     * </ul>
+     *
+     * If this event return 'stop' the processing is stopped and you can define your own custom paging.
+     *
+     * @return string
+     */
+    public function getOnPaging()
+    {
+        return $this->__eventHandlers['onPaging'] ?? null;
+    }
+
+    /**
+     * This event fires after click on [page button] and before populating the data.
+     * Also works when the user enters a new page number in the page input box (and presses [Enter])
+     * and when the number of requested records is changed via the select box.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>pgButton.</li>
+     * </ul>
+     *
+     * If this event return 'stop' the processing is stopped and you can define your own custom paging.
+     *
+     * @param string $onPaging
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setOnPaging($onPaging)
+    {
+        $this->__eventHandlers['onPaging'] = $onPaging;
+        return $this;
+    }
+
+    /**
+     * Raised immediately after row was right clicked.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>iRow is the index of the row (do not mix this with the rowid);</li>
+     *  <li>iCol is the index of the cell;</li>
+     *  <li>e is the event object.</li>
+     * </ul>
+     *
+     * Note - this event does not work in Opera browsers, since Opera does not support oncontextmenu event.
+     *
+     * @return string
+     */
+    public function getOnRightClickRow()
+    {
+        return $this->__eventHandlers['onRightClickRow'] ?? null;
+    }
+
+    /**
+     * Raised immediately after row was right clicked.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>iRow is the index of the row (do not mix this with the rowid);</li>
+     *  <li>iCol is the index of the cell;</li>
+     *  <li>e is the event object.</li>
+     * </ul>
+     *
+     * Note - this event does not work in Opera browsers, since Opera does not support oncontextmenu event.
+     *
+     * @param string $onRightClickRow
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setOnRightClickRow($onRightClickRow)
+    {
+        $this->__eventHandlers['onRightClickRow'] = $onRightClickRow;
+        return $this;
+    }
+
+    /**
+     * This event fires when multiselect option is true and you click on the header checkbox.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>aRowids array of the selected rows (rowid's);</li>
+     *  <li>status - boolean variable determining the status of the header check box - true if checked, false if not checked.</li>
+     * </ul>
+     *
+     * Note that the aRowids alway contain the ids when header checkbox is checked or unchecked.
+     *
+     * @return string
+     */
+    public function getOnSelectAll()
+    {
+        return $this->__eventHandlers['onSelectAll'] ?? null;
+    }
+
+    /**
+     * This event fires when multiselect option is true and you click on the header checkbox.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>aRowids array of the selected rows (rowid's);</li>
+     *  <li>status - boolean variable determining the status of the header check box - true if checked, false if not checked.</li>
+     * </ul>
+     *
+     * Note that the aRowids alway contain the ids when header checkbox is checked or unchecked.
+     *
+     * @param string $onSelectAll
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setOnSelectAll($onSelectAll)
+    {
+        $this->__eventHandlers['onSelectAll'] = $onSelectAll;
+        return $this;
+    }
+
+    /**
+     * Raised immediately after row was clicked.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>status is the status of the selection;</li>
+     *  <li>e is the event object. Can be used when multiselect is set to true. true if the row is selected, false if the row is deselected.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    public function getOnSelectRow()
+    {
+        return $this->__eventHandlers['onSelectRow'] ?? null;
+    }
+
+    /**
+     * Raised immediately after row was clicked.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>status is the status of the selection;</li>
+     *  <li>e is the event object. Can be used when multiselect is set to true. true if the row is selected, false if the row is deselected.</li>
+     * </ul>
+     *
+     * @param string $onSelectRow
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setOnSelectRow($onSelectRow)
+    {
+        $this->__eventHandlers['onSelectRow'] = $onSelectRow;
+        return $this;
+    }
+
+    /**
+     * Raised immediately after sortable column was clicked and before sorting the data.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>index is the index name from colModel;</li>
+     *  <li>iCol is the index of column;</li>
+     *  <li>sortorder is the new sorting order - can be 'asc' or 'desc'.</li>
+     * </ul>
+     *
+     * If this event return 'stop' the sort processing is stopped and you can define your own custom sorting.
+     *
+     * @return string
+     */
+    public function getOnSortCol()
+    {
+        return $this->__eventHandlers['onSortCol'] ?? null;
+    }
+
+    /**
+     * Raised immediately after sortable column was clicked and before sorting the data.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>index is the index name from colModel;</li>
+     *  <li>iCol is the index of column;</li>
+     *  <li>sortorder is the new sorting order - can be 'asc' or 'desc'.</li>
+     * </ul>
+     *
+     * If this event return 'stop' the sort processing is stopped and you can define your own custom sorting.
+     *
+     * @param string $onSortCol
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setOnSortCol($onSortCol)
+    {
+        $this->__eventHandlers['onSortCol'] = $onSortCol;
+        return $this;
+    }
+
+    /**
+     * This event is called when the new table row is inserted.
+     * It can be used to set additional style and class attributes of the row dynamically.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>rowData is array with the cell data;</li>
+     *  <li>currObj is the current row represented in the source like json or xml;</li>
+     *  <li>rowId is the id of the row.</li>
+     * </ul>
+     *
+     * The event should return a object something like this {“style” : “somestyle”, “class”: “someclass”}.
+     *
+     * Note that you can set any attribute to the row. It is important to note that the event does fire only
+     * when a new row is inserted - this mean that it can not be used with methods which updated the row like setRowData.
+     *
+     * @return string
+     */
+    public function getRowAttr()
+    {
+        return $this->__eventHandlers['rowattr'] ?? null;
+    }
+
+    /**
+     * This event is called when the new table row is inserted.
+     * It can be used to set additional style and class attributes of the row dynamically.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>rowData is array with the cell data;</li>
+     *  <li>currObj is the current row represented in the source like json or xml;</li>
+     *  <li>rowId is the id of the row.</li>
+     * </ul>
+     *
+     * The event should return a object something like this {“style” : “somestyle”, “class”: “someclass”}.
+     *
+     * Note that you can set any attribute to the row. It is important to note that the event does fire only
+     * when a new row is inserted - this mean that it can not be used with methods which updated the row like setRowData.
+     *
+     * @param string $rowattr
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setRowAttr($rowattr)
+    {
+        $this->__eventHandlers['rowattr'] = $rowattr;
+        return $this;
+    }
+
+    /**
+     * Event which is called when we start resize a column.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>event is the event object;</li>
+     *  <li>index is the index of the column in colModel.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    public function getResizeStart()
+    {
+        return $this->__eventHandlers['resizeStart'] ?? null;
+    }
+
+    /**
+     * Event which is called when we start resize a column.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>event is the event object;</li>
+     *  <li>index is the index of the column in colModel.</li>
+     * </ul>
+     *
+     * @param string $resizeStart
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setResizeStart($resizeStart)
+    {
+        $this->__eventHandlers['resizeStart'] = $resizeStart;
+        return $this;
+    }
+
+    /**
+     * Event which is called after the column is resized.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>newwidth is the is the new width of the column;</li>
+     *  <li>index is the index of the column in colModel.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    public function getResizeStop()
+    {
+        return $this->__eventHandlers['resizeStop'] ?? null;
+    }
+
+    /**
+     * Event which is called after the column is resized.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>newwidth is the is the new width of the column;</li>
+     *  <li>index is the index of the column in colModel.</li>
+     * </ul>
+     *
+     * @param string $resizeStart
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setResizeStop($resizeStart)
+    {
+        $this->__eventHandlers['resizeStop'] = $resizeStart;
+        return $this;
+    }
+
+    /**
+     * If set this event can serialize the data passed to the ajax request. The function should return the serialized data.
+     * This event can be used when a custom data should be passed to the server - e.g - JSON string, XML string and etc.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>postData.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    public function getSerializeGridData()
+    {
+        return $this->__eventHandlers['serializeGridData'] ?? null;
+    }
+
+    /**
+     * If set this event can serialize the data passed to the ajax request. The function should return the serialized data.
+     * This event can be used when a custom data should be passed to the server - e.g - JSON string, XML string and etc.
+     *
+     * Parameters:
+     * <ul>
+     *  <li>postData.</li>
+     * </ul>
+     *
+     * @param string $serializeGridData
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setSerializeGridData($serializeGridData)
+    {
+        $this->__eventHandlers['serializeGridData'] = $serializeGridData;
+        return $this;
+    }
+
 
 }
