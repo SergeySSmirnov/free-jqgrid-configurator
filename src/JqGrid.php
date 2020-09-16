@@ -4,7 +4,6 @@ namespace Rusproj\FreeJqGridConfigurator;
 use Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface;
 use Rusproj\FreeJqGridConfigurator\JqGrid\CustomButton;
 use Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons;
-use Rusproj\FreeJqGridConfigurator\JqGrid\JqgridEvents;
 
 /**
  * Main config of the jqGrid.
@@ -63,18 +62,19 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @var []
      */
-    private $__eventHandlers;
-
+    private $__eventHandlers = [];
 
     /**
      * The class that is used for applying different styles to alternate (zebra) rows in the grid.
      * This option is valid only if the altRows option is set to true.
+     *
      * Default value: ''.
      */
     private $altclass = '';
 
     /**
      * Set a zebra-striped grid (alternate rows have different styles).
+     *
      * Default value: false.
      *
      * @var boolean
@@ -84,6 +84,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * When set to true encodes (html encode) the incoming (from server) and posted data (from editing modules).
      * For example < will be converted to &lt;.
+     *
      * Default value: false.
      *
      * @var boolean
@@ -94,6 +95,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * When set to true, the grid width is recalculated automatically to the width of the parent element.
      * This is done only initially when the grid is created. In order to resize the grid when the parent element
      * changes width you should apply custom JS-code and use the setGridWidth method for this purpose.
+     *
      * Default value: true.
      *
      * @var boolean
@@ -103,6 +105,8 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Table caption.
      *
+     * Default value: ''.
+     *
      * @var string
      */
     private $caption = '';
@@ -111,6 +115,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * This option determines the padding + border width of the cell. Usually this should not be changed,
      * but if custom changes to the td element are made in the grid css file, this will need to be changed.
      * The initial value of 5 means paddingLef(2) + paddingRight (2) + borderLeft (1) = 5.
+     *
      * Default value: 5.
      *
      * @var integer
@@ -119,8 +124,9 @@ class JqGrid implements ConfigurationDefinitionInterface
 
     /**
      * Enables or disables cell editing.
+     * See {@link http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
+     *
      * Default value: false.
-     * See {@see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
      *
      * @var boolean
      */
@@ -129,8 +135,9 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Determines where the contents of the cell are saved.
      * Allowed values: '', 'remote', 'clientArray'.
+     * See {@link http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
+     *
      * Default value: ''.
-     * See {@see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
      *
      * @var string
      */
@@ -138,8 +145,9 @@ class JqGrid implements ConfigurationDefinitionInterface
 
     /**
      * The URL where the cell is to be saved.
+     * See {@link http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
+     *
      * Default value: ''.
-     * See {@see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:cell_editing} for more details.
      *
      * @var string
      */
@@ -149,6 +157,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * Defines a set of properties which override the default values in colModel.
      * For example if you want to make all columns not sortable, then only one propery here can be specified
      * instead of specifying it in all columns in colModel.
+     *
      * Default value: null.
      *
      * @var object
@@ -166,6 +175,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * An array in which we place the names of the columns. This is the text that appears in the head of the grid (header layer).
      * The names are separated with commas. Note that the number of elements in this array
      * should be equal of the number elements in the colModel array.
+     *
      * Default value: [].
      *
      * @var array
@@ -174,6 +184,7 @@ class JqGrid implements ConfigurationDefinitionInterface
 
     /**
      * Local array of the data wich must be shown at the table (dataType = 'local').
+     *
      * Default value: [].
      *
      * @var array
@@ -182,6 +193,7 @@ class JqGrid implements ConfigurationDefinitionInterface
 
     /**
      * The string of data when datatype parameter is set to xmlstring or jsonstring.
+     *
      * Default value: ''.
      *
      * @var string
@@ -191,15 +203,148 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Data type.
      * Allowed values: xml, xmlstring, json, jsonstring, local, javascript, function, clientSide.
+     *
      * Default value: 'json'.
      *
      * @var string
      */
     private $dataType = 'json';
 
+//     /**
+//      * This option should be set to true if an event or a plugin is attached to the table cell.
+//      * The option uses jQuery empty for the the row and all its children elements.
+//      * This of course has speed overhead, but prevents memory leaks.
+//      * This option should be set to true if a sortable rows and/or columns are activated.
+//      *
+//      * Default value: false.
+//      *
+//      * @var boolean
+//      */
+//     private $deepempty = false;
 
+//     /**
+//      * Deselects currently selected row(s) when a sort is applied.
+//      * Applicable only when used datatype : local.
+//      *
+//      * Default value: true.
+//      *
+//      * @var boolean
+//      */
+//     private $deselectAfterSort = true;
 
+//     /**
+//      * Determines the direction of text in the grid.
+//      * When set to rtl (Right To Left) the grid automatically changes the direction of the text.
+//      * It is important to note that in one page we can have two (or more) grids
+//      * where the one can have direction ltr while the other can have direction rtl.
+//      * This option works only in Firefox 3.x versions and Internet Explorer versions >=6.
+//      * Currently Safari, Google Chrome and Opera do not completely support changing the direction to rtl.
+//      * The most common problem in Firefox is that the default settings of the browser do not support rtl.
+//      *
+//      * Default value: 'ltr'.
+//      *
+//      * @var string
+//      */
+//     private $direction = 'ltr';
 
+//     /**
+//      * Defines the url for inline and form editing.
+//      * May be set to clientArray to manually post data to server.
+//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:inline_editing_s_clientarray
+//      *
+//      * @var string
+//      */
+//     private $editurl = '';
+
+//     /**
+//      * The string to display when the returned (or the current) number of records in the grid is zero.
+//      * This option is valid only if viewrecords option is set to true.
+//      *
+//      * Default value: '' (See lang file).
+//      *
+//      * @var string
+//      */
+//     private $emptyrecords = '';
+
+//     /**
+//      * When true, the tree grid (see treeGrid) is expanded and/or collapsed when we click anywhere on the text in the expanded column.
+//      * In this case it is not necessary to click exactly on the icon.
+//      *
+//      * Default value: true.
+//      *
+//      * @var string
+//      */
+//     private $ExpandColClick = true;
+
+//     /**
+//      * Indicates which column (name from colModel) should be used to expand the tree grid.
+//      * If not set the first one is used. Valid only when the treeGrid option is set to true.
+//      *
+//      * Default value: ''.
+//      *
+//      * @var string
+//      */
+//     private $ExpandColumn = '';
+
+//     /**
+//      * If set to true this will place a footer table with one row below the gird records and above the pager.
+//      * The number of columns equal those specified in colModel.
+//      *
+//      * Default value: false.
+//      *
+//      * @var boolean
+//      */
+//     private $footerrow = false;
+
+//     /**
+//      * If set to true, and a column's width is changed, the adjacent column (to the right)
+//      * will resize so that the overall grid width is maintained (e.g., reducing the width of
+//      * column 2 by 30px will increase the size of column 3 by 30px).
+//      * In this case there is no horizontal scrollbar.
+//      * Note: This option is not compatible with shrinkToFit option - i.e if shrinkToFit is set to false, forceFit is ignored.
+//      *
+//      * Default value: false.
+//      *
+//      * @var boolean
+//      */
+//     private $forceFit = false;
+
+//     /**
+//      * Determines the current state of the grid (i.e. when used with hiddengrid, hidegrid and caption options). 4
+//      * Can have either of two states: visible or hidden.
+//      *
+//      * Default value: 'visible'.
+//      *
+//      * @var string
+//      */
+//     private $gridstate = 'visible';
+
+//     /**
+//      * In the previous versions of jqGrid including 3.4.X, reading a relatively large data set (number of rows >= 100 ) caused speed problems.
+//      * The reason for this was that as every cell was inserted into the grid we applied about 5 to 6 jQuery calls to it.
+//      * Now this problem is resolved; we now insert the entry row at once with a jQuery append.
+//      * The result is impressive - about 3 to 5 times faster. What will be the result if we insert all the data at once?
+//      * Yes, this can be done with a help of gridview option (set it to true). The result is a grid that is 5 to 10 times faster.
+//      * Of course, when this option is set to true we have some limitations.
+//      * If set to true we can not use treeGrid, subGrid, or the afterInsertRow event.
+//      * If you do not use these three options in the grid you can set this option to true and enjoy the speed.
+//      *
+//      * Default value: false.
+//      *
+//      * @var boolean
+//      */
+//     private $gridview = false;
+
+//     /**
+//      * Enables grouping in grid.
+//      *
+//      * Default value: false.
+//      *
+//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:grouping
+//      *
+//      * @var boolean
+//      */
+//     private $grouping = false;
 
     /**
      * CSS-фреймворк, используемый для стилизации таблиц.
@@ -210,46 +355,6 @@ class JqGrid implements ConfigurationDefinitionInterface
     private $guiStyle = '';
 
     /**
-     * Specify to use another font that used by default at the table.
-     * Allowed values: '', 'fontAwesome', 'glyph', 'jQueryUI'.
-     * Default value: 'fontAwesome'.
-     *
-     * @var string
-     */
-    private $iconSet = 'fontAwesome';
-
-    /**
-     * The prefix of the row identifier (id attribute of the tr-element.
-     *
-     * @var string
-     */
-    private $idPrefix = '';
-
-    /**
-     * Show the pager navigation bar on top of the grid.
-     * Default value: false.
-     *
-     * @var boolean
-     */
-    private $toppager = false;
-
-    /**
-     * Show the pager navigation bar on bottom of the grid.
-     * Default value: true.
-     *
-     * @var boolean
-     */
-    private $pager = true;
-
-    /**
-     * The comparing of strings is case insensitive on sorting operations.
-     * Default value: true.
-     *
-     * @var boolean
-     */
-    private $ignoreCase = true;
-
-    /**
      * Create tooltips on column headers.
      * Default value: false.
      *
@@ -257,22 +362,286 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     private $headertitles = false;
 
+//     /**
+//      * The height of the grid. Can be set as number (in this case we mean pixels) or
+//      * as percentage (only 100% is acceped) or value of auto is acceptable.
+//      *
+//      * Default value: 150.
+//      *
+//      * @var integer
+//      */
+//     private $height = 150;
+
+//     /**
+//      * If set to true the grid is initially is hidden.
+//      * The data is not loaded (no request is sent) and only the caption layer is shown.
+//      * When the show/hide button is clicked for the first time to show grid,
+//      * the request is sent to the server, the data is loaded, and grid is shown.
+//      * From this point we have a regular grid. This option has effect only if
+//      * the caption property is not empty and the hidegrid property (see below) is set to true.
+//      *
+//      * Default value: false.
+//      *
+//      * @var boolean
+//      */
+//     private $hiddengrid = false;
+
+//     /**
+//      * Enables or disables the show/hide grid button, which appears on the right side of the caption layer.
+//      * Takes effect only if the caption property is not an empty string.
+//      *
+//      * Default value: true.
+//      *
+//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:how_it_works
+//      *
+//      * @var boolean
+//      */
+//     private $hidegrid = true;
+
+//     /**
+//      * When set to false the effect of mouse hovering over the grid data rows is disabled.
+//      *
+//      * Default value: true.
+//      *
+//      * @var boolean
+//      */
+//     private $hoverrows = true;
+
     /**
-     * Allow sorting by multiples columns.
+     * Specify to use another font that used by default at the table.
+     *
+     * Allowed values: '', 'fontAwesome', 'glyph', 'jQueryUI'.
+     *
+     * Default value: 'fontAwesome'.
+     *
+     * @var string
+     */
+    private $iconSet = 'fontAwesome';
+
+    /**
+     * The prefix of the row identifier (id attribute of the tr-element).
+     *
+     * Default value: ''.
+     *
+     * @var string
+     */
+    private $idPrefix = '';
+
+    /**
+     * The comparing of strings is case insensitive on sorting operations.
+     *
+     * Default value: true.
+     *
+     * @var boolean
+     */
+    private $ignoreCase = true;
+
+//     /**
+//      * An array used to add content to the data posted to the server when we are in inline editing.
+//      *
+//      * @var object
+//      */
+//     private $inlineData = (object)[];
+
+//     /**
+//      * An array which describes the structure of the expected json data.
+//      *
+//      * Default value: [].
+//      *
+//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:retrieving_data#json_data
+//      *
+//      * @var array
+//      */
+//     private $jsonReader = []
+
+//     /**
+//      * If this flag is set to true, the grid loads the data from the server only once (using the appropriate datatype).
+//      * After the first request, the datatype parameter is automatically changed to local and all further
+//      * manipulations are done on the client side. The functions of the pager (if present) are disabled.
+//      *
+//      * Default value: false.
+//      *
+//      * @var boolean
+//      */
+//     private $loadonce = false;
+
+//     /**
+//      * This option controls what to do when an ajax operation is in progress.
+//      *
+//      * Allowed values:
+//      *  <ul>
+//      *   <li>disable - disables the jqGrid progress indicator. This way you can use your own indicator.</li>
+//      *   <li>enable (default) - shows the text set in the loadtext property (default value is Loading…) in the center of the grid.</li>
+//      *   <li>block - displays the text set in the loadtext property and blocks all actions in the grid until the ajax request completes. Note that this disables paging, sorting and all actions on toolbar, if any.</li>
+//      *  </ul>
+//      *
+//      * Default value: 'enable'.
+//      *
+//      * @var string
+//      */
+//     private $loadui = 'enable';
+
+//     /**
+//      * Defines the type of request to make.
+//      *
+//      * Allowed values:
+//      *  <ul>
+//      *   <li>GET</li>
+//      *   <li>POST</li>
+//      *  <ul>
+//      *
+//      * Default value: 'GET'.
+//      *
+//      * @var string
+//      */
+//     private $mtype = 'GET';
+
+//     /**
+//      * This parameter makes sense only when the multiselect option is set to true.
+//      * Defines the key which should be pressed when we make multiselection.
+//      *
+//      * Allowed values:
+//      *  <ul>
+//      *   <li>shiftKey - the user should press Shift Key;</li>
+//      *   <li>altKey - the user should press Alt Key;</li>
+//      *   <li>ctrlKey - the user should press Ctrl Key.</li>
+//      *  <ul>
+//      *
+//      * Default value: ''.
+//      *
+//      * @var string
+//      */
+//     private $multikey = '';
+
+//     /**
+//      * This option works only when the multiselect option is set to true.
+//      * When multiselect is set to true, clicking anywhere on a row selects that row;
+//      * when multiboxonly is also set to true, the multiselection is done only when the checkbox is clicked (Yahoo style).
+//      * Clicking in any other row (suppose the checkbox is not clicked) deselects all rows and selects the current row.
+//      *
+//      * Default value: false.
+//      *
+//      * @var boolean
+//      */
+//     private $multiboxonly = false;
+
+//     /**
+//      * If this flag is set to true a multi selection of rows is enabled.
+//      * A new column at left side containing checkboxes is added. Can be used with any datatype option.
+//      *
+//      * Default value: false.
+//      *
+//      * @var boolean
+//      */
+//     private $multiselect = false;
+
+//     /**
+//      * Determines the width of the checkbox column created when the multiselect option is enabled.
+//      *
+//      * Default value: 20.
+//      *
+//      * @var integer
+//      */
+//     private $multiselectWidth = 20;
+
+    /**
+     * If set to true enables the multisorting. The options work if the datatype is local.
+     * In case when the data is obtained from the server the sidx parameter contain the order clause.
+     * It is a comma separated string in format field1 asc, field2 desc …, fieldN. Note that the last field does not not have asc or desc.
+     * It should be obtained from sord parameter when the option is true the behavior is a s follow.
+     * The first click of the header field sort the field depending on the firstsortoption parameter in colModel or sortorder grid parameter.
+     * The next click sort it in reverse order. The third click removes the sorting from this field.
+     *
      * Default value: false.
      *
      * @var boolean
      */
     private $multiSort = false;
 
+//     /**
+//      * Set the initial page number when we make the request.
+//      * This parameter is passed to the url for use by the server routine retrieving the data.
+//      *
+//      * Default value: 1.
+//      *
+//      * @var integer
+//      */
+//     private $page = 1;
+
+    /**
+     * Defines that we want to use a pager bar to navigate through the records.
+     * This must be a valid HTML element or True (in this case pager will be located after table wrapper).
+     * Note that the navigation layer (the “pager” div) can be positioned anywhere you want, determined by your HTML.
+     *
+     * Default value: true.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:pager
+     *
+     * @var boolean|string
+     */
+    private $pager = true;
+
+//     /**
+//      * Determines the position of the pager in the grid.
+//      * By default the pager element when created is divided in 3 parts
+//      * (one part for pager, one part for navigator buttons and one part for record information).
+//      *
+//      * Default value: 'center'.
+//      *
+//      * @var string
+//      */
+//     private $pagerpos = 'center';
+
+//     /**
+//      * Determines if the Pager buttons should be shown if pager is available.
+//      * Also valid only if pager is set correctly. The buttons are placed in the pager bar.
+//      *
+//      * Default value: true.
+//      *
+//      * @var boolean
+//      */
+//     private $pgbuttons = true;
+
+//     /**
+//      * Determines if the input box, where the user can change the number of the requested page, should be available.
+//      * The input box appears in the pager bar.
+//      *
+//      * Default value: true.
+//      *
+//      * @var boolean
+//      */
+//     private $pginput = true;
+
+//     /**
+//      * This array is appended directly to the url.
+//      * This is an associative array and can be used this way: {name1:value1…}.
+//      * See API methods for manipulation.
+//      *
+//      * Default value: [].
+//      *
+//      * @var array
+//      */
+//     private $postData = [];
+
     /**
      * Determines the position of the record information in the pager.
-     * Allowed values: left, center, right.
-     * Default value: right.
+     *
+     * Allowed values: 'left', 'center', 'right'.
+     *
+     * Default value: 'right'.
      *
      * @var string
      */
     private $recordpos = 'right';
+
+//     /**
+//      * Assigns a class to columns that are resizable so that we can show a resize handle only for ones that are resizable.
+//      *
+//      * Default value: ''
+//      *
+//      * @var string
+//      */
+//     private $resizeclass = '';
 
     /**
      * An array to construct a select box element in the pager in which we can change the number of the visible rows.
@@ -300,6 +669,119 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     private $rowNum = 25;
 
+//     /**
+//      * When set this parameter can instruct the server to load the total number of rows needed to work on.
+//      * Note that rowNum determines the total records displayed in the grid,
+//      * while rowTotal determines the total number of rows on which we can operate.
+//      * When this parameter is set, we send an additional parameter to the server named totalrows.
+//      * You can check for this parameter, and if it is available you can replace the rows parameter with this one.
+//      * Mostly this parameter can be combined with loadonce parameter set to true.
+//      *
+//      * Default value: ''.
+//      *
+//      * @var integer
+//      */
+//     private $rowTotal = '';
+
+//     /**
+//      * Determines the width of the row number column if rownumbers option is set to true.
+//      *
+//      * Default value: 25.
+//      *
+//      * @var integer
+//      */
+//     private $rownumWidth = 25;
+
+//     /**
+//      * Creates dynamic scrolling grids. When enabled, the pager elements are disabled and we can
+//      * use the vertical scrollbar to load data. When set to true the grid will always hold all the
+//      * items from the start through to the latest point ever visited.
+//      * When scroll is set to an integer value (example 1), the grid will just hold the visible lines.
+//      * This allow us to load the data in portions whitout caring about memory leaks.
+//      * In addition to this we have an optional extension to the server protocol: npage (see prmNames array).
+//      * If you set the npage option in prmNames, then the grid will sometimes request more than
+//      * one page at a time; if not, it will just perform multiple GET requests.
+//      * Note that this option is not compatible when a grid parameter height is set to auto or 100%.
+//      *
+//      * Default value: false.
+//      *
+//      * @var boolean
+//      */
+//     private $scroll = false;
+
+//     /**
+//      * Determines the width of the vertical scrollbar.
+//      * Since different browsers interpret this width differently (and it is difficult to calculate it in all browsers) this can be changed.
+//      *
+//      * Default value: 18.
+//      *
+//      * @var integer
+//      */
+//     private $scrollOffset = 18;
+
+//     /**
+//      * This controls the timeout handler when scroll is set to 1.
+//      *
+//      * Default value: 200.
+//      *
+//      * @var integer
+//      */
+//     private $scrollTimeout = 200;
+
+//     /**
+//      * When enabled, selecting a row with setSelection scrolls the grid so that the selected row is visible.
+//      * This is especially useful when we have a verticall scrolling grid and we use form editing with navigation buttons (next or previous row).
+//      * On navigating to a hidden row, the grid scrolls so that the selected row becomes visible.
+//      *
+//      * Default value: false.
+//      *
+//      * @var boolean
+//      */
+//     private $scrollrows = false;
+
+//     /**
+//      *
+//      *
+//      * @var array
+//      */
+//     private $searching = ['defaultSearch' => 'cn'];
+
+//     /**
+//      * This option, if set, defines how the the width of the columns of the grid should be re-calculated,
+//      * taking into consideration the width of the grid. If this value is true, and the width of the columns
+//      * is also set, then every column is scaled in proportion to its width. For example, if we define
+//      * two columns with widths 80 and 120 pixels, but want the grid to have a width of 300 pixels,
+//      * then the columns will stretch to fit the entire grid, and the extra width assigned to them will
+//      * depend on the width of the columns themselves and the extra width available. The re-calculation is
+//      * done as follows: the first column gets the width (300(new width)/200(sum of all widths))*80(first column width) = 120 pixels,
+//      * and the second column gets the width (300(new width)/200(sum of all widths))*120(second column width) = 180 pixels.
+//      * Now the widths of the columns sum up to 300 pixels, which is the width of the grid.
+//      * If the value is false and the value in width option is set, then no re-sizing happens whatsoever.
+//      * So in this example, if shrinkToFit is set to false, column one will have a width of 80 pixels,
+//      * column two will have a width of 120 pixels and the grid will retain the width of 300 pixels.
+//      * If the value of shrinkToFit is an integer, the width is calculated according to it.
+//      * FIXME - The effect of using an integer can be elaborated.
+//      *
+//      * Default value: true.
+//      *
+//      * @var boolean
+//      */
+//     private $shrinkToFit = true;
+
+//     /**
+//      * When set to true, this option allows reordering columns by dragging and dropping them with the mouse.
+//      * Since this option uses the jQuery UI sortable widget, be sure to load this widget and its related
+//      * files in the HTML head tag of the page. Also, be sure to select the jQuery UI Addons option under
+//      * the jQuery UI Addon Methods section while downloading jqGrid if you want to use this facility.
+//      * Note: The colModel object also has a property called sortable, which specifies if the grid
+//      * data can be sorted on a particular column or not.
+//      *
+//      * Default value: false.
+//      *
+//      * @var boolean
+//      */
+//     private $sortable = false;
+
     /**
      * Show sort icons before the table header text.
      * Default value: false.
@@ -324,6 +806,95 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     private $sortorder = 'asc';
 
+//     /**
+//      * If set to true this enables using a sub-grid. If the subGrid option is enabled, an additional
+//      * column at left side is added to the basic grid. This column contains a 'plus' image which
+//      * indicates that the user can click on it to expand the row. By default all rows are collapsed.
+//      *
+//      * Default value: false.
+//      *
+//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:subgrid
+//      *
+//      * @var boolean
+//      */
+//     private $subGrid = false;
+
+//     /**
+//      * A set of additional options for the subgrid.
+//      *
+//      * Default value: [].
+//      *
+//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:subgrid
+//      *
+//      * @var array
+//      */
+//     private $subGridOptions = [];
+
+//     /**
+//      * This property, which describes the model of the subgrid, has an effect only if the subGrid property is set to true.
+//      * It is an array in which we describe the column model for the subgrid data.
+//      *
+//      * Default value: [].
+//      *
+//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:subgrid
+//      *
+//      * @var array
+//      */
+//     private $subGridModel = [];
+
+//     /**
+//      * This option allows loading a subgrid as a service. If not set, the datatype parameter of the parent grid is used.
+//      *
+//      * Default value: null.
+//      *
+//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:subgrid
+//      *
+//      * @var mixed
+//      */
+//     private $subGridType = null;
+
+//     /**
+//      * This option has effect only if the subGrid option is set to true.
+//      * This option points to the url from which we get the data for the subgrid.
+//      * jqGrid adds the id of the row to this url as parameter.
+//      * If there is a need to pass additional parameters, use the params option in subGridModel.
+//      *
+//      * Default value: ''.
+//      *
+//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:subgrid
+//      *
+//      * @var string
+//      */
+//     private $subGridUrl = '';
+
+//     /**
+//      * Defines the width of the sub-grid column if subgrid is enabled.
+//      *
+//      * Default value: 20.
+//      *
+//      * @var integer
+//      */
+//     private $subGridWidth = 20;
+
+//     /**
+//      * This option defines the toolbar of the grid.
+//      * This is an array with two elements in which the first element's value enables the toolbar
+//      * and the second defines the position relative to the body layer (table data).
+//      * Possible values are top, bottom, and both.
+//      * When we set it like toolbar: [true,“both”] two toolbars are created – one on the top
+//      * of table data and the other at the bottom of the table data. When we have two toolbars,
+//      * then we create two elements (div). The id of the top bar is constructed by concatenating
+//      * the string “t_” and the id of the grid, like “t_” + id_of_the_grid and the id of the bottom
+//      * toolbar is constructed by concatenating the string “tb_” and the id of the grid, like “tb_” + id_of_the grid.
+//      * In the case where only one toolbar is created, we have the id as “t_” + id_of_the_grid,
+//      * independent of where this toolbar is located (top or bottom).
+//      *
+//      * Default value: [false, ''].
+//      *
+//      * @var array
+//      */
+//     private $toolbar = [false, ''];
+
     /**
      * Allow three state sorting (asc, desc, none).
      * Default value: true.
@@ -333,11 +904,109 @@ class JqGrid implements ConfigurationDefinitionInterface
     private $threeStateSort = true;
 
     /**
+     * Show the pager navigation bar on top of the grid.
+     * Default value: false.
+     *
+     * @var boolean
+     */
+    private $toppager = false;
+
+//     /**
+//      * Gives the initial datatype (see datatype option).
+//      * Usually this should not be changed. During the reading process this option is equal to the datatype option.
+//      *
+//      * Default value: null.
+//      *
+//      * @var mixed
+//      */
+//     private $treedatatype = null;
+
+//     /**
+//      * Enables (disables) the tree grid format.
+//      *
+//      * Default value: false.
+//      *
+//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:treegrid
+//      *
+//      * @var boolean
+//      */
+//     private $treeGrid = false;
+
+//     /**
+//      * Deteremines the method used for the treeGrid.
+//      *
+//      * Allowed values:
+//      * <ul>
+//      *  <li>'nested';</li>
+//      *  <li>'adjacency'.</li>
+//      * </ul>
+//      *
+//      * Default value: 'nested'.
+//      *
+//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:treegrid
+//      *
+//      * @var string
+//      */
+//     private $treeGridModel = 'nested';
+
+//     /**
+//      * This array sets the icons used in the tree grid.
+//      * The icons should be a valid names from UI theme roller images.
+//      *
+//      * The default values are: {plus:'ui-icon-triangle-1-e',minus:'ui-icon-triangle-1-s',leaf:'ui-icon-radio-off'}.
+//      *
+//      * @var array
+//      */
+//     private $treeIcons = [];
+
+//     /**
+//      * Extends the colModel defined in the basic grid. The fields described here are appended to end of the colModel array and are hidden.
+//      * This means that the data returned from the server should have values for these fields.
+//      *
+//      * Default value: [].
+//      *
+//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:treegrid
+//      *
+//      * @var array
+//      */
+//     private $treeReader = [];
+
+//     /**
+//      * Defines the level where the root element begins when treeGrid is enabled.
+//      *
+//      * Default value: 0.
+//      *
+//      * @var integer
+//      */
+//     private $tree_root_level = 0;
+
+    /**
      * URL to retrive table data.
      *
      * @var string
      */
     private $url = '';
+
+//     /**
+//      * This array contains custom information from the request. Can be used at any time.
+//      *
+//      * Default value: [].
+//      *
+//      * @var array
+//      */
+//     private $userData = [];
+
+//     /**
+//      * When set to true we directly place the user data array userData in the footer.
+//      * The rules are as follows: If the userData array contains a name which matches any name defined in colModel,
+//      * then the value is placed in that column. If there are no such values nothing is placed.
+//      * Note that if this option is used we use the current formatter options (if available) for that column.
+//      *
+//      * Default value: false.
+//      *
+//      * @var boolean
+//      */
+//     private $userDataOnFooter = false;
 
     /**
      * Show the status of the page in the pager navigation bar.
@@ -347,9 +1016,51 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     private $viewrecords = true;
 
+//     /**
+//      * The purpose of this parameter is to define a different look and behavior for the
+//      * sorting icons (up/down arrows) that appear in the column headers.
+//      * This parameter is an array with the following default options viewsortcols : [false,'vertical',true].
+//      * The first parameter determines if sorting icons should be visible on all the columns
+//      * that have the sortable property set to true. Setting this value to true could be useful
+//      * if you want to indicate to the user that (s)he can sort on that particular column.
+//      * The default of false sets the icon to be visible only on the column on which that data
+//      * has been last sorted. Setting this parameter to true causes all icons in all sortable columns to be visible.
+//      * The second parameter determines how icons should be placed - vertical means that the sorting
+//      * arrows are one under the other. 'horizontal' means that the arrows should be next to one another.
+//      * The third parameter determines the click functionality. If set to true the data is sorted if
+//      * the user clicks anywhere in the column's header, not only the icons. If set to false the data
+//      * is sorted only when the sorting icons in the headers are clicked.
+//      * Important: If you are setting the third element to false, make sure that you set the first element to true;
+//      * if you don't, the icons will not be visible and the user will not know where to click to be able to
+//      * sort since clicking just anywhere in the header will not guarantee a sort.
+//      *
+//      * Default value: [].
+//      *
+//      * @var array
+//      */
+//     private $viewsortcols = [];
 
+//     /**
+//      * If this option is not set, the width of the grid is the sum of the widths of the columns defined in the colModel (in pixels).
+//      * If this option is set, the initial width of each column is set according to the value of the shrinkToFit option.
+//      *
+//      * Default value: ''.
+//      *
+//      * @var string
+//      */
+//     private $width = '';
 
-//     private $searching = ['defaultSearch' => 'cn'];
+//     /**
+//      * An array which describes the structure of the expected xml data.
+//      *
+//      * Default value: [].
+//      *
+//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:retrieving_data#xml_data
+//      *
+//      * @var array
+//      */
+//     private $xmlReader = [];
+
 
     /**
      * The string of data when datatype parameter is set to xmlstring or jsonstring.
@@ -644,8 +1355,10 @@ class JqGrid implements ConfigurationDefinitionInterface
 
     /**
      * Determines the position of the record information in the pager.
-     * Allowed values: left, center, right.
-     * Default value: right.
+     *
+     * Allowed values: 'left', 'center', 'right'.
+     *
+     * Default value: 'right'.
      *
      * @return string
      */
@@ -656,8 +1369,10 @@ class JqGrid implements ConfigurationDefinitionInterface
 
     /**
      * Determines the position of the record information in the pager.
-     * Allowed values: left, center, right.
-     * Default value: right.
+     *
+     * Allowed values: 'left', 'center', 'right'.
+     *
+     * Default value: 'right'.
      *
      * @param string $recordInfoPos
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
@@ -893,24 +1608,34 @@ class JqGrid implements ConfigurationDefinitionInterface
     }
 
     /**
-     * Show the pager navigation bar on bottom of the grid.
+     * Defines that we want to use a pager bar to navigate through the records.
+     * This must be a valid HTML element or True (in this case pager will be located after table wrapper).
+     * Note that the navigation layer (the “pager” div) can be positioned anywhere you want, determined by your HTML.
+     *
      * Default value: true.
      *
-     * @return boolean
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:pager
+     *
+     * @return boolean|string
      */
-    public function getShowBottomPager()
+    public function getPager()
     {
         return $this->pager;
     }
 
     /**
-     * Show the pager navigation bar on bottom of the grid.
+     * Defines that we want to use a pager bar to navigate through the records.
+     * This must be a valid HTML element or True (in this case pager will be located after table wrapper).
+     * Note that the navigation layer (the “pager” div) can be positioned anywhere you want, determined by your HTML.
+     *
      * Default value: true.
      *
-     * @param boolean $pager
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:pager
+     *
+     * @param boolean|string $pager
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setShowBottomPager($pager)
+    public function setPager($pager)
     {
         $this->pager = $pager;
         return $this;
@@ -1061,7 +1786,13 @@ class JqGrid implements ConfigurationDefinitionInterface
     }
 
     /**
-     * Allow sorting by multiples columns.
+     * If set to true enables the multisorting. The options work if the datatype is local.
+     * In case when the data is obtained from the server the sidx parameter contain the order clause.
+     * It is a comma separated string in format field1 asc, field2 desc …, fieldN. Note that the last field does not not have asc or desc.
+     * It should be obtained from sord parameter when the option is true the behavior is a s follow.
+     * The first click of the header field sort the field depending on the firstsortoption parameter in colModel or sortorder grid parameter.
+     * The next click sort it in reverse order. The third click removes the sorting from this field.
+     *
      * Default value: false.
      *
      * @return boolean
@@ -1072,7 +1803,13 @@ class JqGrid implements ConfigurationDefinitionInterface
     }
 
     /**
-     * Allow sorting by multiples columns.
+     * If set to true enables the multisorting. The options work if the datatype is local.
+     * In case when the data is obtained from the server the sidx parameter contain the order clause.
+     * It is a comma separated string in format field1 asc, field2 desc …, fieldN. Note that the last field does not not have asc or desc.
+     * It should be obtained from sord parameter when the option is true the behavior is a s follow.
+     * The first click of the header field sort the field depending on the firstsortoption parameter in colModel or sortorder grid parameter.
+     * The next click sort it in reverse order. The third click removes the sorting from this field.
+     *
      * Default value: false.
      *
      * @param boolean $multiSort
@@ -1292,330 +2029,17 @@ class JqGrid implements ConfigurationDefinitionInterface
 
 
 //     /**
-//      * Признак того, что в таблице разрешена группировка столбцов. Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $grouping = false;
-
-//     /**
-//      * Высота таблицы. Допустимые значения: число (высота в пикселах), '100%', 'auto'. Значение по умолчанию: '100%'.
-//      *
-//      * @var int|string
-//      */
-//     public $height = '100%';
-
-//     /**
-//      * Признак необходимости первоначально таблицу отобразить в свернутом в заголовок виде, при этом данные будут
-//      * загружены только после первого отображения таблицы. Данный параметр имеет место в том случае,
-//      * если задано свойство Caption. Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $hiddenGrid = false;
-
-//     /**
-//      * Признак необходимости отобразить в заголовке кнопку сворачивания/разворачивания таблицы.
-//      * Данный параметр имеет место в том случае, если задано свойство Caption. Значение по умолчанию: true.
-//      *
-//      * @var bool
-//      */
-//     public $hideGrid = true;
-
-//     /**
-//      * Признак необходимости отображения подсветки строки, над которой в текущий момент находится курсор мыши.
-//      * Значение по умолчанию: true.
-//      *
-//      * @var bool
-//      */
-//     public $hoverRows = true;
-
-//     /**
-//      * Признак того, что данные загружаются в таблицу только один раз. После загрузки параметр datatype устанавливается
-//      * в значение local. Все последующие операции с данными производятся локально. Если задано разбиение на страницы,
-//      * то оно будет недоступно. Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $loadOnce = false;
-
-//     /**
-//      * Определяет поведение jqGrid во время запроса данных. Возможные значения: disable (отключить индикатор прогресса,
-//      * можно задать свой индикатор), enable (отображать надпись, опеределенную в языковом файле), block (отображать надпись,
-//      * опеределенную в языковом файле, но при этом заблокировать все элементы управления). Значение по умолчанию: 'block'.
-//      *
-//      * @var string
-//      */
-//     public $loadui = 'block';
-
-//     /**
-//      * Тип запроса. Допустимые значения: POST или GET. Значение по умолчанию: POST.
-//      *
-//      * @var string
-//      */
-//     public $mType = 'POST';
-
-//     /**
-//      * Признак необходимости разрешить возможность множественного выбора строк. Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $multiSelect = false;
-
-//     /**
-//      * Признак необходимости разрешить выбор строки только при щелчке по соответствующему полю, в противном случае щелчок по любой
-//      * строке обнулит выбор (стиль yahoo). Данный параметр имеет место в том случае, если значение свойства multiSelect установлено
-//      * в true. Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $multiBoxOnly = false;
-
-//     /**
-//      * Ширина столбца с элементами управления для выбора строк. Данный параметр имеет место в том случае, если значение свойства
-//      * multiSelect установлено в true. Значение по умолчанию: 20.
-//      *
-//      * @var int
-//      */
-//     public $multiSelectWidth = 20;
-
-//     /**
 //      * Конфигурационные параметры кнопок управления записями.
 //      *
 //      * @var \Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons
 //      */
 //     public $recButtonsConfig = null;
 
-//     /**
-//      * Конфигурационные параметры панели постраничной навигации.
-//      *
-//      * @var \Rusproj\FreeJqGridConfigurator\JqGrid\Pager
-//      */
-//     public $pager = null;
-
-//     /**
-//      * Название css-класса, который добавляется к заголовкам колонок таблицы, которые могут менять свой размер.
-//      * Значение по умолчнию: '' (не задано).
-//      *
-//      * @var string
-//      */
-//     public $resizeClass = '';
-
-//     /**
-//      * Задает ширину столбца, отображающего номера строк. Данный параметр имеет действие в том случае,
-//      * если свойство rownNmbers равно true. Значение по умолчанию: 30.
-//      *
-//      * @var int
-//      */
-//     public $rowNumWidth = 30;
-
-//     /**
-//      * Задает признак необходимости использовать динамическую прокрутку. При этом будет отключена панель навигации.
-//      * Кроме того, значение свойства Height таблицы должно быть задано в пикселах, а не процентах или 'auto'.
-//      * Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $scroll = false;
-
-//     /**
-//      * Ширина вертикальной полосы прокрутки. Данный параметр имеет место в том случае, если свойство scroll установлено в true.
-//      * Значение по умолчанию: 18.
-//      *
-//      * @var int
-//      */
-//     public $scrollOffset = 18;
-
-//     /**
-//      * Временная задержка до запроса данных. Данный параметр имеет место в том случае, если свойство scroll установлено в true.
-//      * Значение по умолчанию: 200.
-//      *
-//      * @var int
-//      */
-//     public $scrollTimeout = 100;
-
-//     /**
-//      * Задает признак того, что необходимо выполнить прокрутку к выбранной строке при использовании метода setSelection.
-//      * Данный параметр имеет место в том случае, если свойство scroll установлено в true. Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $scrollRows = false;
-
-//     /**
-//      * Задает признак необходимости подгонять ширину столбцов пропорционально их заданной ширине в пикселах в соответствии с
-//      * шириной таблицы. Значение по умолчнию: true.
-//      *
-//      * @var bool
-//      */
-//     public $shrinkToFit = true;
-
-//     /**
-//      * Задает признак возможности менять порядок столбцов за счет их перетаскивания за заголовок. Значение по умолчнию: false.
-//      *
-//      * @var bool
-//      */
-//     public $sortable = false;
-
-//     /**
-//      * Задает признак возмжности использовать субтаблицы (вложенные таблицы). При этом слева появится дополнительный столбец,
-//      * который позволит скрывать или отображать субтаблицы для каждой записи основной таблицы. Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $subGrid = false;
-
-//     /**
-//      * Массив дополнительных параметров субтаблиц. Данный параметр имеет место, если значение свойства sortOrder установлено в true.
-//      * Значение по умолчанию: [] (не задано).
-//      *
-//      * @var array
-//      */
-//     public $subGridOptions = [];
-
-//     /**
-//      * Массив, описывающий модель вложенных субтаблиц. Для задания параметров отдельных столбцов удобно пользваться
-//      * статическими методами класса ColumnConfig или задав необходимые свойства экземпляру класса и вызвав метод getConfig().
-//      * Данный параметр имеет место, если значение свойства sortOrder установлено в true. Значение по умолчанию: [] (не задано).
-//      *
-//      * @var array
-//      */
-//     public $subGridModel = [];
-
-//     /**
-//      * Задает URL адрес для получения данных субтаблиц. В результате будет добавлен (как параметр) id строки к данному адресу.
-//      * Если необходимо передавать дополнительные параметры, необходимо определить их в свойстве subGridModel.
-//      * Данный параметр имеет место, если значение свойства sortOrder установлено в true. Значение по умолчанию: '' (не задано).
-//      *
-//      * @var string
-//      */
-//     public $subGridUrl = '';
-
-//     /**
-//      * Задает ширину субтаблицы. Данный параметр имеет место, если значение свойства sortOrder установлено в true.
-//      * Значение по умолчанию: 20 (не задано).
-//      *
-//      * @var int
-//      */
-//     public $subGridWidth = 20;
-
-//     /**
-//      * Задает расположение панели инструментов. Первый параметр массива определяет признак необходимости включить панель инструментов.
-//      * Второй определяет место создания панели. Возможные значения: top (наверху, перед таблицей), bottom (внизу, после таблицы),
-//      * both (вверху и внизу). Значение по умолчанию: [false, 'both'].
-//      *
-//      * @var array
-//      */
-//     public $toolbar = [false, 'both'];
-
-//     /**
-//      * Задает признак необходимости представления данных в виде дерева. Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $treeGrid = false;
-
-//     /**
-//      * Задает метод, используемый treeGreed. Возможные значения: nested (вложенный) или adjacency (смежный).
-//      * Данный параметр имеет место, если значение свойства treeGred установлено в true. Значение по умолчанию: nested.
-//      *
-//      * @var string
-//      */
-//     public $treeGridModel = 'nested';
-
-//     /**
-//      * Задает значки, используемые для представления дерева. Необходима следующая структура массива:
-//      * {plus:'ui-icon-triangle-1-e',minus:'ui-icon-triangle-1-s',leaf:'ui-icon-radio-off'}.
-//      * Данный параметр имеет место, если значение свойства treeGred установлено в true.
-//      * Значение по умолчанию: [] (не определено).
-//      *
-//      * @var array
-//      */
-//     public $treeIcons = [];
-
-//     /**
-//      * Расширяет свойство colModel в базовой таблице. Описанные здесь поля добавляются в конец свойства colModel и скрываются.
-//      * Это означает, что данные, возвращаемые с сервера должны иметь значения для этих полей. Данный параметр имеет место,
-//      * если значение свойства treeGred установлено в true. Значение по умолчанию: [] (не определено).
-//      *
-//      * @var array
-//      */
-//     public $treeReader = [];
-
-//     /**
-//      * Определят уровень, с которого начинается корень treeGreed. Данный параметр имеет место,
-//      * если значение свойства treeGred установлено в true. Значение по умолчанию: 0.
-//      *
-//      * @var int
-//      */
-//     public $treeRootLevel = 0;
-
-//     /**
-//      * Задает признак того, что кнопки сортировки должны отображаться у каждого столбца, по которому возможна сортировка данных.
-//      * Значение по умолчанию: true.
-//      *
-//      * @var bool
-//      */
-//     public $viewSortColsVisibleIcons = true;
-
-//     /**
-//      * Задает признакт того, что столбец будет отсортирован при щелчке по любому месту заголовка. Значение по умолчанию: true.
-//      *
-//      * @var bool
-//      */
-//     public $viewSortColsClickableHeaders = true;
-
-//     /**
-//      * Задает конечную ширину таблицы. Если значение не задано, то ширина таблицы будет складываться из суммы ширин всех столбцов,
-//      * в противном случае на основе свойства shrinkToFit. Значение по умолчанию: 0 (не задано).
-//      *
-//      * @var int
-//      */
-//     public $width = 0;
-
-//     /**
-//      * Признак необходимости добавить форму перед таблицей. Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $headerForm = false;
-
-//     /**
-//      * Задает действительный идентификатор html-элемента, который будет содержать подгружаемую форму,
-//      * расположенную перед таблицей. Значение по умолчанию: '#hForm'.
-//      *
-//      * @var string
-//      */
-//     public $headerFormHtmlID = '#hForm';
-
-//     /**
-//      * Название функции, осуществляющей загрузку и отрисовку формы. Значение по умолчанию: '' (не определено).
-//      *
-//      * @var string
-//      */
-//     public $headerFormCompleteFunction = '';
-
-//     /**
-//      *
-//      *
-//      * @var bool
-//      */
-//     public $existsDateCol = false;
-
-//     /**
-//      *
-//      *
-//      * @var string
-//      */
-//     public $dateColIndexes = '';
-
-
     /**
      * Initialize instance of the JqGrid.
      */
     function __construct() {
 //         $this->recButtonsConfig = new RecButtons();
-//         $this->pager = new Pager();
     }
 
     /**
@@ -1650,6 +2074,101 @@ class JqGrid implements ConfigurationDefinitionInterface
                 }
             }
         }
+
+        if (!$this->altRows) {
+            unset($_config['altRows'], $_config['altclass']);
+        }
+
+        if (empty($this->caption)) {
+            unset($_config['caption'], $_config['hiddengrid'], $_config['hidegrid']);
+        }
+
+        if (!$this->cellEdit) {
+            unset($_config['cellEdit'], $_config['cellLayout'], $_config['cellsubmit'], $_config['cellurl'], $_config['ajaxCellOptions']);
+        }
+
+        if (count($this->colNames) !== count($this->colModel)) {
+            unset($_config['colNames']);
+        }
+
+        switch ($this->dataType) {
+            case 'xml':
+                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['jsonReader']);
+                break;
+            case 'xmlstring':
+                unset($_config['deselectAfterSort'], $_config['jsonReader']);
+                break;
+            case 'json':
+                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['xmlReader']);
+                break;
+            case 'jsonstring':
+                unset($_config['deselectAfterSort'], $_config['xmlReader']);
+                break;
+            case 'local':
+                unset($_config['datastr'], $_config['jsonReader'], $_config['xmlReader']);
+                break;
+            case 'javascript':
+                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['jsonReader'], $_config['xmlReader']);
+                break;
+            case 'function':
+                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['jsonReader'], $_config['xmlReader']);
+                break;
+            case 'clientSide':
+                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['jsonReader'], $_config['xmlReader']);
+                break;
+        }
+
+        if (count($this->data) > 0) {
+            $_config['data'] = $this->data;
+        }
+
+        if (!$this->hidegrid) {
+            unset($_config['hiddengrid']);
+        }
+
+        if (!$this->multiselect) {
+            unset($_config['multiselect'], $_config['multikey'], $_config['multiboxonly'], $_config['multiselectWidth']);
+        }
+
+        if (empty($this->pager) || $this->pager === false) {
+            unset($_config['pager'], $_config['pagerpos'], $_config['pgbuttons'], $_config['pginput'], $_config['rowList'], $_config['rowNum'], $_config['recordpos'], $_config['viewrecords']);
+        }
+
+        if (!$this->rownumbers) {
+            unset($_config['rownumbers'], $_config['rownumWidth']);
+        }
+
+        if ($this->scroll === false) {
+            unset($_config['scroll'], $_config['scrollOffset'], $_config['scrollTimeout'], $_config['scrollrows']);
+        }
+
+        if (!$this->sortable) {
+            unset($_config['sortable']);
+        }
+
+        if (!$this->subGrid) {
+            unset($_config['subGrid'], $_config['subGridOptions'], $_config['subGridModel'], $_config['subGridType'], $_config['subGridUrl'], $_config['subGridWidth']);
+        }
+
+//         if (!$this->toolbar[0]) {
+//             unset($_config['toolbar']);
+//         }
+
+        if (!$this->treeGrid) {
+            unset($_config['treeGrid'], $_config['ExpandColumn'], $_config['treedatatype'], $_config['treeIcons'], $_config['treeReader'], $_config['tree_root_level']);
+        }
+
+        if (!$this->viewrecords) {
+            unset($_config['viewrecords'], $_config['recordpos']);
+        }
+
+        if (!$this->userDataOnFooter) {
+            unset($_config['userDataOnFooter'], $_config['userData']);
+        }
+
+
+
+
 
 
 
@@ -1704,73 +2223,14 @@ class JqGrid implements ConfigurationDefinitionInterface
 //         $_config['plugins']['css'][] = $this->jqGridURL . 'jqGrid.min.css';
 //         $_config['plugins']['js'][] = $this->jqGridURL . 'jqGrid.locale-ru.js';
 
-//         // Формируем массив основной конфигурации
-//         $_config = [];
-//         if ($this->altRows) {
-//             $_config['altRows'] = true;
-//             if (!empty($this->altClass)) {
-//                 $_config['altclass'] = $this->altClass;
-//             }
-//         }
-//         if (!empty($this->caption)) {
-//             $_config['caption'] = $this->caption;
-//             $_config['hiddengrid'] = $this->hiddenGrid;
-//             $_config['hidegrid'] = $this->hideGrid;
-//         }
-//         $_config['datatype'] = $this->dataType;
-//         if ((($this->dataType === 'xmlstring') || ($this->dataType === 'jsonstring')) && !empty($this->dataStr)) {
-//             $_config['datastr'] = $this->dataStr;
-//         } elseif (count($this->data) > 0) {
-//             $_config['data'] = $this->data;
-//         }
-//         if ($this->multiSelect) {
-//             $_config['multiselect'] = true;
-//             $_config['multiboxonly'] = $this->multiBoxOnly;
-//             $_config['multiselectWidth'] = $this->multiSelectWidth;
-//         }
-//         if ($this->scroll) {
-//             $_config['scroll'] = true;
-//             $_config['scrollOffset'] = $this->scrollOffset;
-//             $_config['scrollTimeout'] = $this->scrollTimeout;
-//             $_config['scrollrows'] = $this->scrollRows;
-//         }
 //         if ($this->sortable) {
 //             $_config['sortable'] = true;
 //             if (!in_array('multiselect', $_config['plugins'])) {
 //                 $_config['plugins'][] = 'multiselect';
 //             }
 //         }
-//         if ($this->subGrid) {
-//             $_config['subGrid'] = true;
-//             $_config['subGridOptions'] = $this->subGridOptions;
-//             $_config['subGridModel'] = $this->subGridModel;
-//             $_config['subGridUrl'] = $this->subGridUrl;
-//             $_config['subGridWidth'] = $this->subGridWidth;
-//             $_config['subGridWidth'] = $this->subGridWidth;
-//         }
-//         if ($this->toolbar[0]) {
-//             $_config['toolbar'] = $this->toolbar;
-//         }
-//         if ($this->treeGrid) {
-//             $_config['$treeGrid'] = true;
-//             $_config['treeGridModel'] = $this->treeGridModel;
-//             if (count($this->treeIcons) > 0) {
-//                 $_config['treeIcons'] = $this->treeIcons;
-//             }
-//             if (count($this->treeReader) > 0) {
-//                 $_config['treeReader'] = $this->treeReader;
-//             }
-//             $_config['tree_root_level'] = $this->treeRootLevel;
-//         }
-//         if ($this->headerForm) {
-//             $_config['headerForm']['htmlID'] = $this->headerFormHtmlID;
-//             if (!empty($this->headerFormCompleteFunction)) {
-//                 $_config['headerForm']['completeFunction'] = $this->headerFormCompleteFunction;
-//             }
-//         }
 
 //         // Добавляем конфигурационные данные, формируемые другими классами
-//         $_config = array_merge($_config, $this->pager->getConfig());
 //         $_config = array_merge($_config, $this->recButtonsConfig->getConfig());
 
         return $_config;
@@ -1779,7 +2239,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * This event fires after every inserted row.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>rowid is the id of the inserted row;</li>
      *  <li>rowdata is an array of the data to be inserted into the row. This is array of type name: value, where the name is a name from colModel;</li>
@@ -1790,7 +2250,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getAfterInsertRow()
+    public function getAfterInsertRowEventHandler()
     {
         return $this->__eventHandlers['afterInsertRow'] ?? null;
     }
@@ -1798,7 +2258,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * This event fires after every inserted row.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>rowid is the id of the inserted row;</li>
      *  <li>rowdata is an array of the data to be inserted into the row. This is array of type name: value, where the name is a name from colModel;</li>
@@ -1810,7 +2270,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $afterInsertRow
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setAfterInsertRow($afterInsertRow)
+    public function setAfterInsertRowEventHandler($afterInsertRow)
     {
         $this->__eventHandlers['afterInsertRow'] = $afterInsertRow;
         return $this;
@@ -1819,7 +2279,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * This event fire before proccesing the data from the server.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>data;</li>
      *  <li>status;</li>
@@ -1830,7 +2290,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getBeforeProcessing()
+    public function getBeforeProcessingEventHandler()
     {
         return $this->__eventHandlers['beforeProcessing'] ?? null;
     }
@@ -1838,7 +2298,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * This event fire before proccesing the data from the server.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>data;</li>
      *  <li>status;</li>
@@ -1850,7 +2310,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $beforeProcessing
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setBeforeProcessing($beforeProcessing)
+    public function setBeforeProcessingEventHandler($beforeProcessing)
     {
         $this->__eventHandlers['beforeProcessing'] = $beforeProcessing;
         return $this;
@@ -1859,11 +2319,11 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * This event fire before requesting any data. Also does not fire if datatype is function. If the event return false the request is not made to the server.
      *
-     * Parameters: none.
+     * JS-function parameters: none.
      *
      * @return string
      */
-    public function getBeforeRequest()
+    public function getBeforeRequestEventHandler()
     {
         return $this->__eventHandlers['beforeRequest'] ?? null;
     }
@@ -1871,12 +2331,12 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * This event fire before requesting any data. Also does not fire if datatype is function. If the event return false the request is not made to the server.
      *
-     * Parameters: none.
+     * JS-function parameters: none.
      *
      * @param string $beforeRequest
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setBeforeRequest($beforeRequest)
+    public function setBeforeRequestEventHandler($beforeRequest)
     {
         $this->__eventHandlers['beforeRequest'] = $beforeRequest;
         return $this;
@@ -1885,7 +2345,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * This event fire when the user click on the row, but before select them.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>rowid is the id of the row;</li>
      *  <li>e is the event object.</li>
@@ -1896,7 +2356,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getBeforeSelectRow()
+    public function getBeforeSelectRowEventHandler()
     {
         return $this->__eventHandlers['beforeSelectRow'] ?? null;
     }
@@ -1904,7 +2364,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * This event fire when the user click on the row, but before select them.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>rowid is the id of the row;</li>
      *  <li>e is the event object.</li>
@@ -1916,7 +2376,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $beforeSelectRow
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setBeforeSelectRow($beforeSelectRow)
+    public function setBeforeSelectRowEventHandler($beforeSelectRow)
     {
         $this->__eventHandlers['beforeSelectRow'] = $beforeSelectRow;
         return $this;
@@ -1926,11 +2386,11 @@ class JqGrid implements ConfigurationDefinitionInterface
      * This fires after all the data is loaded into the grid and all other processes are complete.
      * Also the event fires independent from the datatype parameter and after sorting paging and etc.
      *
-     * Parameters: none.
+     * JS-function parameters: none.
      *
      * @return string
      */
-    public function getGridComplete()
+    public function getGridCompleteEventHandler()
     {
         return $this->__eventHandlers['gridComplete'] ?? null;
     }
@@ -1939,12 +2399,12 @@ class JqGrid implements ConfigurationDefinitionInterface
      * This fires after all the data is loaded into the grid and all other processes are complete.
      * Also the event fires independent from the datatype parameter and after sorting paging and etc.
      *
-     * Parameters: none.
+     * JS-function parameters: none.
      *
      * @param string $gridComplete
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setGridComplete($gridComplete)
+    public function setGridCompleteEventHandler($gridComplete)
     {
         $this->__eventHandlers['gridComplete'] = $gridComplete;
         return $this;
@@ -1953,7 +2413,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * A pre-callback to modify the XMLHttpRequest object (xhr) before it is sent. Use this to set custom headers etc.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>xhr;</li>
      *  <li>settings.</li>
@@ -1963,7 +2423,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getLoadBeforeSend()
+    public function getLoadBeforeSendEventHandler()
     {
         return $this->__eventHandlers['loadBeforeSend'] ?? null;
     }
@@ -1971,7 +2431,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * A pre-callback to modify the XMLHttpRequest object (xhr) before it is sent. Use this to set custom headers etc.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>xhr;</li>
      *  <li>settings.</li>
@@ -1982,7 +2442,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $loadBeforeSend
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setLoadBeforeSend($loadBeforeSend)
+    public function setLoadBeforeSendEventHandler($loadBeforeSend)
     {
         $this->__eventHandlers['loadBeforeSend'] = $loadBeforeSend;
         return $this;
@@ -1991,14 +2451,14 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * This event is executed immediately after every server request.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>data Data from the response depending on datatype grid parameter.</li>
      * </ul>
      *
      * @return string
      */
-    public function getLoadComplete()
+    public function getLoadCompleteEventHandler()
     {
         return $this->__eventHandlers['loadComplete'] ?? null;
     }
@@ -2006,7 +2466,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * This event is executed immediately after every server request.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>data Data from the response depending on datatype grid parameter.</li>
      * </ul>
@@ -2014,7 +2474,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $loadComplete
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setLoadComplete($loadComplete)
+    public function setLoadCompleteEventHandler($loadComplete)
     {
         $this->__eventHandlers['loadComplete'] = $loadComplete;
         return $this;
@@ -2023,7 +2483,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * A function to be called if the request fails.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>xhr - XMLHttpRequest object;</li>
      *  <li>status - a string describing the type of error;</li>
@@ -2032,7 +2492,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getLoadError()
+    public function getLoadErrorEventHandler()
     {
         return $this->__eventHandlers['loadError'] ?? null;
     }
@@ -2040,7 +2500,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * A function to be called if the request fails.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>xhr - XMLHttpRequest object;</li>
      *  <li>status - a string describing the type of error;</li>
@@ -2050,7 +2510,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $loadError
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setLoadError($loadError)
+    public function setLoadErrorEventHandler($loadError)
     {
         $this->__eventHandlers['loadError'] = $loadError;
         return $this;
@@ -2059,7 +2519,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Fires when click on particular cell in the grid.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>rowid is the id of the row;</li>
      *  <li>iCol is the index of the cell;</li>
@@ -2071,7 +2531,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getOnCellSelect()
+    public function getOnCellSelectEventHandler()
     {
         return $this->__eventHandlers['onCellSelect'] ?? null;
     }
@@ -2079,7 +2539,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Fires when click on particular cell in the grid.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>rowid is the id of the row;</li>
      *  <li>iCol is the index of the cell;</li>
@@ -2092,7 +2552,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $onCellSelect
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setOnCellSelect($onCellSelect)
+    public function setOnCellSelectEventHandler($onCellSelect)
     {
         $this->__eventHandlers['onCellSelect'] = $onCellSelect;
         return $this;
@@ -2101,7 +2561,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Raised immediately after row was double clicked.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>rowid is the id of the row;</li>
      *  <li>iRow is the index of the row (do not mix this with the rowid);</li>
@@ -2111,7 +2571,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getOnDblClickRow()
+    public function getOnDblClickRowEventHandler()
     {
         return $this->__eventHandlers['ondblClickRow'] ?? null;
     }
@@ -2119,7 +2579,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Raised immediately after row was double clicked.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>rowid is the id of the row;</li>
      *  <li>iRow is the index of the row (do not mix this with the rowid);</li>
@@ -2130,7 +2590,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $ondblClickRow
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setOnDblClickRow($ondblClickRow)
+    public function setOnDblClickRowEventHandler($ondblClickRow)
     {
         $this->__eventHandlers['ondblClickRow'] = $ondblClickRow;
         return $this;
@@ -2139,14 +2599,14 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Fire after clicking to hide or show grid (hidegrid:true).
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>gridstate is the state of the grid - can have two values - visible or hidden.</li>
      * </ul>
      *
      * @return string
      */
-    public function getOnHeaderClick()
+    public function getOnHeaderClickEventHandler()
     {
         return $this->__eventHandlers['onHeaderClick'] ?? null;
     }
@@ -2154,7 +2614,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Fire after clicking to hide or show grid (hidegrid:true).
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>gridstate is the state of the grid - can have two values - visible or hidden.</li>
      * </ul>
@@ -2162,7 +2622,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $onHeaderClick
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setOnHeaderClick($onHeaderClick)
+    public function setOnHeaderClickEventHandler($onHeaderClick)
     {
         $this->__eventHandlers['onHeaderClick'] = $onHeaderClick;
         return $this;
@@ -2173,7 +2633,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * Also works when the user enters a new page number in the page input box (and presses [Enter])
      * and when the number of requested records is changed via the select box.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>pgButton.</li>
      * </ul>
@@ -2182,7 +2642,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getOnPaging()
+    public function getOnPagingEventHandler()
     {
         return $this->__eventHandlers['onPaging'] ?? null;
     }
@@ -2192,7 +2652,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * Also works when the user enters a new page number in the page input box (and presses [Enter])
      * and when the number of requested records is changed via the select box.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>pgButton.</li>
      * </ul>
@@ -2202,7 +2662,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $onPaging
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setOnPaging($onPaging)
+    public function setOnPagingEventHandler($onPaging)
     {
         $this->__eventHandlers['onPaging'] = $onPaging;
         return $this;
@@ -2211,7 +2671,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Raised immediately after row was right clicked.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>rowid is the id of the row;</li>
      *  <li>iRow is the index of the row (do not mix this with the rowid);</li>
@@ -2223,7 +2683,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getOnRightClickRow()
+    public function getOnRightClickRowEventHandler()
     {
         return $this->__eventHandlers['onRightClickRow'] ?? null;
     }
@@ -2231,7 +2691,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Raised immediately after row was right clicked.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>rowid is the id of the row;</li>
      *  <li>iRow is the index of the row (do not mix this with the rowid);</li>
@@ -2244,7 +2704,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $onRightClickRow
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setOnRightClickRow($onRightClickRow)
+    public function setOnRightClickRowEventHandler($onRightClickRow)
     {
         $this->__eventHandlers['onRightClickRow'] = $onRightClickRow;
         return $this;
@@ -2253,7 +2713,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * This event fires when multiselect option is true and you click on the header checkbox.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>aRowids array of the selected rows (rowid's);</li>
      *  <li>status - boolean variable determining the status of the header check box - true if checked, false if not checked.</li>
@@ -2263,7 +2723,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getOnSelectAll()
+    public function getOnSelectAllEventHandler()
     {
         return $this->__eventHandlers['onSelectAll'] ?? null;
     }
@@ -2271,7 +2731,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * This event fires when multiselect option is true and you click on the header checkbox.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>aRowids array of the selected rows (rowid's);</li>
      *  <li>status - boolean variable determining the status of the header check box - true if checked, false if not checked.</li>
@@ -2282,7 +2742,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $onSelectAll
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setOnSelectAll($onSelectAll)
+    public function setOnSelectAllEventHandler($onSelectAll)
     {
         $this->__eventHandlers['onSelectAll'] = $onSelectAll;
         return $this;
@@ -2291,7 +2751,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Raised immediately after row was clicked.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>rowid is the id of the row;</li>
      *  <li>status is the status of the selection;</li>
@@ -2300,7 +2760,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getOnSelectRow()
+    public function getOnSelectRowEventHandler()
     {
         return $this->__eventHandlers['onSelectRow'] ?? null;
     }
@@ -2308,7 +2768,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Raised immediately after row was clicked.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>rowid is the id of the row;</li>
      *  <li>status is the status of the selection;</li>
@@ -2318,7 +2778,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $onSelectRow
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setOnSelectRow($onSelectRow)
+    public function setOnSelectRowEventHandler($onSelectRow)
     {
         $this->__eventHandlers['onSelectRow'] = $onSelectRow;
         return $this;
@@ -2327,7 +2787,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Raised immediately after sortable column was clicked and before sorting the data.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>index is the index name from colModel;</li>
      *  <li>iCol is the index of column;</li>
@@ -2338,7 +2798,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getOnSortCol()
+    public function getOnSortColEventHandler()
     {
         return $this->__eventHandlers['onSortCol'] ?? null;
     }
@@ -2346,7 +2806,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Raised immediately after sortable column was clicked and before sorting the data.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>index is the index name from colModel;</li>
      *  <li>iCol is the index of column;</li>
@@ -2358,7 +2818,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $onSortCol
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setOnSortCol($onSortCol)
+    public function setOnSortColEventHandler($onSortCol)
     {
         $this->__eventHandlers['onSortCol'] = $onSortCol;
         return $this;
@@ -2368,7 +2828,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * This event is called when the new table row is inserted.
      * It can be used to set additional style and class attributes of the row dynamically.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>rowData is array with the cell data;</li>
      *  <li>currObj is the current row represented in the source like json or xml;</li>
@@ -2382,7 +2842,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getRowAttr()
+    public function getRowAttrEventHandler()
     {
         return $this->__eventHandlers['rowattr'] ?? null;
     }
@@ -2391,7 +2851,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * This event is called when the new table row is inserted.
      * It can be used to set additional style and class attributes of the row dynamically.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>rowData is array with the cell data;</li>
      *  <li>currObj is the current row represented in the source like json or xml;</li>
@@ -2406,7 +2866,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $rowattr
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setRowAttr($rowattr)
+    public function setRowAttrEventHandler($rowattr)
     {
         $this->__eventHandlers['rowattr'] = $rowattr;
         return $this;
@@ -2415,7 +2875,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Event which is called when we start resize a column.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>event is the event object;</li>
      *  <li>index is the index of the column in colModel.</li>
@@ -2423,7 +2883,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getResizeStart()
+    public function getResizeStartEventHandler()
     {
         return $this->__eventHandlers['resizeStart'] ?? null;
     }
@@ -2431,7 +2891,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Event which is called when we start resize a column.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>event is the event object;</li>
      *  <li>index is the index of the column in colModel.</li>
@@ -2440,7 +2900,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $resizeStart
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setResizeStart($resizeStart)
+    public function setResizeStartEventHandler($resizeStart)
     {
         $this->__eventHandlers['resizeStart'] = $resizeStart;
         return $this;
@@ -2449,7 +2909,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Event which is called after the column is resized.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>newwidth is the is the new width of the column;</li>
      *  <li>index is the index of the column in colModel.</li>
@@ -2457,7 +2917,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
-    public function getResizeStop()
+    public function getResizeStopEventHandler()
     {
         return $this->__eventHandlers['resizeStop'] ?? null;
     }
@@ -2465,7 +2925,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Event which is called after the column is resized.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>newwidth is the is the new width of the column;</li>
      *  <li>index is the index of the column in colModel.</li>
@@ -2474,7 +2934,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $resizeStart
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setResizeStop($resizeStart)
+    public function setResizeStopEventHandler($resizeStart)
     {
         $this->__eventHandlers['resizeStop'] = $resizeStart;
         return $this;
@@ -2484,14 +2944,14 @@ class JqGrid implements ConfigurationDefinitionInterface
      * If set this event can serialize the data passed to the ajax request. The function should return the serialized data.
      * This event can be used when a custom data should be passed to the server - e.g - JSON string, XML string and etc.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>postData.</li>
      * </ul>
      *
      * @return string
      */
-    public function getSerializeGridData()
+    public function getSerializeGridDataEventHandler()
     {
         return $this->__eventHandlers['serializeGridData'] ?? null;
     }
@@ -2500,7 +2960,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * If set this event can serialize the data passed to the ajax request. The function should return the serialized data.
      * This event can be used when a custom data should be passed to the server - e.g - JSON string, XML string and etc.
      *
-     * Parameters:
+     * JS-function parameters:
      * <ul>
      *  <li>postData.</li>
      * </ul>
@@ -2508,11 +2968,10 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $serializeGridData
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setSerializeGridData($serializeGridData)
+    public function setSerializeGridDataEventHandler($serializeGridData)
     {
         $this->__eventHandlers['serializeGridData'] = $serializeGridData;
         return $this;
     }
-
 
 }

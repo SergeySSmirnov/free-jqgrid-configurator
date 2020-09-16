@@ -106,6 +106,10 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
             }
         }
 
+        if (!$this->search) {
+            unset($_config['search'], $_config['stype'], $_config['searchoptions'], $_config['searchrules']);
+        }
+
         return $_config;
     }
 
@@ -365,6 +369,8 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      * Column can be used in search.
      *
      * Default value: true.
+     *
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:search_config
      *
      * @var bool
      */
@@ -1560,10 +1566,18 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      * @param string $dataUrl URL to download select list. This URL must return rendered HTML select.
      * @param array $sopt Operators used to build search queries. Allowed values: eq, ne, lt, le, gt, ge, bw, bn, in, ni, ew, en, cn, nc, nu, nn.
      * @param string $defaultValue Search field default value.
-     * @param array $value An array of allowed values represented by the select list.
+     * @param array $value The option is used only for stype select and defines the select options in the search dialogs.
+     *          When set for stype select and dataUrl option is not set, the value can be a string or object.
+     *          If the option is a string it must contain a set of value:label pairs with the value separated from
+     *          the label with a colon (:) and ended with(;).
+     *          The string should not end with a (;)- editoptions:{value:“1:One;2:Two”}.
+     *          If set as object it should be defined as pair value:name - editoptions:{value:{1:'One',2:'Two'}}.
+     * @param boolean $searchHidden By default hidden elements in the grid are not searchable.
+     *          In order to enable searching when the field is hidden set this option to true.
+     * @param string $title Title of the field label.
      * @return array
      */
-    public static function generateSearchOptions($dataUrl = '', $sopt = ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en', 'cn', 'nc', 'nu', 'nn'], $defaultValue = '', $value = [])
+    public static function generateSearchOptions($dataUrl = '', $sopt = ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en', 'cn', 'nc', 'nu', 'nn'], $defaultValue = '', $value = [], $searchHidden = false, $title = '')
     {
         $_config = [];
 
@@ -1580,7 +1594,20 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
         }
 
         if (count($value) > 0) {
-            $_config['value'] = $value;
+            $_tempStr = '';
+            foreach ($value as $_key => $_val) {
+                $_tempStr .= $_key.':'.$_val.';';
+            }
+
+            $_config['value'] =  trim($_tempStr, ';');
+        }
+
+        if ($searchHidden) {
+            $_config['searchhidden'] = true;
+        }
+
+        if (!empty($title)) {
+            $_config['attr'] = (object)['title' => $title];
         }
 
         return $_config;
@@ -1678,9 +1705,31 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      * @param string $idName The first parameter that is added after the {@link $showAction}. By default, this is id.
      * @return array
      */
-    public static function formatOptionsShowlink($baseLinkUrl = '', $showAction = '', $addParam = '', $target = '', $idName = '')
+    public static function formatOptionsShowLink($baseLinkUrl = '', $showAction = '', $addParam = '', $target = '', $idName = '')
     {
-        return ['baseLinkUrl' => $baseLinkUrl, 'showAction' => $showAction, 'addParam' => $addParam, 'target' => $target, 'idName' => $idName];
+        $_config = [];
+
+        if (!empty($baseLinkUrl)) {
+            $_config['baseLinkUrl'] = $baseLinkUrl;
+        }
+
+        if (!empty($showAction)) {
+            $_config['showAction'] = $showAction;
+        }
+
+        if (!empty($addParam)) {
+            $_config['addParam'] = $addParam;
+        }
+
+        if (!empty($target)) {
+            $_config['target'] = $target;
+        }
+
+        if (!empty($idName)) {
+            $_config['idName'] = $idName;
+        }
+
+        return $_config;
     }
 
     /**
@@ -1689,7 +1738,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      * @param string $disabled Determines if the checkbox can be changed. If set to false, the values in checkbox can be changed.
      * @return array
      */
-    public static function formatCheckbox($disabled = true)
+    public static function formatOptionsCheckbox($disabled = true)
     {
         return ['disabled' => $disabled];
     }
@@ -1740,7 +1789,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     }
 
     /**
-     * Helper generates column config for which contains text data.
+     * Helper generates column config which contains text data.
      *
      * @param string $name Column name.
      * @param string $label Column label.
@@ -1760,7 +1809,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     }
 
     /**
-     * Helper generates column config for which contains date data.
+     * Helper generates column config which contains date data.
      *
      * @param string $name Column name.
      * @param string $label Column label.
@@ -1785,6 +1834,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     }
 
     /**
+     * Helper generates column config which contains date data.
      * Помощник формирует конфигурационный массив для столбца из списка значений без возможности поиска.
      *
      * @param string $name Column name.
@@ -1803,7 +1853,33 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
             ->setFormatter('select')
             ->setFormatOptions(self::formatOptionsSelect($list))
             ->setIsEditable(true)
-            ->setEditType('select');
+            ->setEditType('select')
+            ->setSearchType('select')
+            ->setSearchOptions(self::generateSearchOptions('', ['eq', 'ne'], '', $list));
+    }
+
+    /**
+     * Helper generates column config which contains boolean data.
+     *
+     * @param string $name Column name.
+     * @param string $label Column label.
+     * @param integer $width Column width in pixels.
+     * @param string $align Text align. Allowed values: 'left', 'center', 'right'.
+     * @param array $valuesList A list of values equals to the states (for search operations).
+     * @return ColumnDefinition
+     */
+    public static function columnCheckbox($name, $label, $width = 50, $align = 'center', $valuesList = []) {
+        return self::createInstance($name)
+            ->setLabel($label)
+            ->setWidth($width)
+            ->setAlign($align)
+            ->setFormatter('checkbox')
+            ->setFormatOptions(self::formatOptionsCheckbox(false))
+            ->setSearchType('select')
+            ->setSearchOptions(self::generateSearchOptions('', ['eq', 'ne'], '', empty($valuesList) ? [0 => 'Not checked', 1 => 'Checked'] : $valuesList));
+//             ->editType = 'checkbox';
+//             ->editOptions = ColumnDefinition::editOptionsCheckbox('1', '0');
+
     }
 
 //     /**
@@ -1827,32 +1903,6 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
 //             $e->searchOptions = ColumnDefinition::searchOptions($sval, ['eq', 'ne']);
 //         }
 //         $e->hidden = $hidden;
-//         return $e;
-//     }
-
-//     /**
-//      * Помощник формирует конфигурационный массив для столбца из флагов без возможности поиска.
-//      *
-//      * @param string $name Имя столбца.
-//      * @param string $label Заголовок столбца.
-//      * @param int $width Ширина столбца в пикселах. Значение по умолчанию: 50.
-//      * @param string $align Выравнивание текста в ячейке. Возможные значения: left, center, right. Значение по умолчанию: 'center'.
-//      * @param bool $canEdit Признак того, что данное поле можно редактировать. Значение по умолчанию: true.
-//      * @return ColumnDefinition Конфигурационный массив для указанного столбца.
-//      */
-//     public static function columnCheckboxVal($name, $label, $width = 50, $align = 'center', $canEdit = true) {
-//         $e = new ColumnDefinition();
-//         $e->name = $name;
-//         $e->label = $label;
-//         $e->width = $width;
-//         $e->align = $align;
-//         $e->formatter = 'checkbox';
-//         $e->formatOptions = ColumnDefinition::formatCheckbox('0');
-//         if ($canEdit) {
-//             $e->editType = 'checkbox';
-//             $e->editOptions = ColumnDefinition::editOptionsCheckbox('1', '0');
-//         }
-//         $e->search = false;
 //         return $e;
 //     }
 
