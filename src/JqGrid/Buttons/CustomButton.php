@@ -1,5 +1,5 @@
 <?php
-namespace Rusproj\FreeJqGridConfigurator\JqGrid;
+namespace Rusproj\FreeJqGridConfigurator\JqGrid\Buttons;
 
 /**
  * Класс, который представляет конфигурацию пользовательской кнопки, добавляемой на панель инструментов jqGrid.

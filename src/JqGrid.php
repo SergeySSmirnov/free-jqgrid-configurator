@@ -2,8 +2,7 @@
 namespace Rusproj\FreeJqGridConfigurator;
 
 use Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface;
-use Rusproj\FreeJqGridConfigurator\JqGrid\CustomButton;
-use Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons;
+use Rusproj\FreeJqGridConfigurator\JqGrid\NavigatorButtons;
 
 /**
  * Main config of the jqGrid.
@@ -56,6 +55,13 @@ class JqGrid implements ConfigurationDefinitionInterface
     {
         return isset($this->{$prop});
     }
+
+    /**
+     * Config of the buttons located at the navigator panel.
+     *
+     * @var \Rusproj\FreeJqGridConfigurator\JqGrid\NavigatorButtons
+     */
+    private $__navigatorButtons = null;
 
     /**
      * A list of the jqGrid event handlers.
@@ -2020,27 +2026,6 @@ class JqGrid implements ConfigurationDefinitionInterface
 //      */
 //     public $addButtonSortColumns = true;
 
-//     /**
-//      * Задает идентификатор элемента, который будет содержать табличную часть. Значение по умолчанию: '#list'.
-//      *
-//      * @var string
-//      */
-//     public $tableId = '#list';
-
-
-//     /**
-//      * Конфигурационные параметры кнопок управления записями.
-//      *
-//      * @var \Rusproj\FreeJqGridConfigurator\JqGrid\RecButtons
-//      */
-//     public $recButtonsConfig = null;
-
-    /**
-     * Initialize instance of the JqGrid.
-     */
-    function __construct() {
-//         $this->recButtonsConfig = new RecButtons();
-    }
 
     /**
      * Returns configuration as an array of key-value pairs.
@@ -2131,7 +2116,8 @@ class JqGrid implements ConfigurationDefinitionInterface
         }
 
         if (empty($this->pager) || $this->pager === false) {
-            unset($_config['pager'], $_config['pagerpos'], $_config['pgbuttons'], $_config['pginput'], $_config['rowList'], $_config['rowNum'], $_config['recordpos'], $_config['viewrecords']);
+            unset($_config['pager'], $_config['pagerpos'], $_config['pgbuttons'], $_config['pginput'],
+                    $_config['rowList'], $_config['rowNum'], $_config['recordpos'], $_config['viewrecords'], $_config['__navigatorButtons']);
         }
 
         if (!$this->rownumbers) {
@@ -2147,7 +2133,8 @@ class JqGrid implements ConfigurationDefinitionInterface
         }
 
         if (!$this->subGrid) {
-            unset($_config['subGrid'], $_config['subGridOptions'], $_config['subGridModel'], $_config['subGridType'], $_config['subGridUrl'], $_config['subGridWidth']);
+            unset($_config['subGrid'], $_config['subGridOptions'], $_config['subGridModel'], $_config['subGridType'],
+                    $_config['subGridUrl'], $_config['subGridWidth']);
         }
 
 //         if (!$this->toolbar[0]) {
@@ -2234,6 +2221,32 @@ class JqGrid implements ConfigurationDefinitionInterface
 //         $_config = array_merge($_config, $this->recButtonsConfig->getConfig());
 
         return $_config;
+    }
+
+    /**
+     * Config of the buttons located at the navigator panel.
+     *
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\NavigatorButtons
+     */
+    public function getNavigatorButtons()
+    {
+        if (is_null($this->__navigatorButtons)) {
+            $this->__navigatorButtons = new NavigatorButtons();
+        }
+
+        return $this->__navigatorButtons;
+    }
+
+    /**
+     * Config of the buttons located at the navigator panel.
+     *
+     * @param \Rusproj\FreeJqGridConfigurator\JqGrid\NavigatorButtons $navigatorButtons
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setNavigatorButtons($navigatorButtons)
+    {
+        $this->__navigatorButtons = $navigatorButtons;
+        return $this;
     }
 
     /**
