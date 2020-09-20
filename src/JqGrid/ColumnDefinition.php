@@ -1063,7 +1063,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      *
      * @return boolean
      */
-    public function getIsResizable()
+    public function getCanResizable()
     {
         return $this->resizable;
     }
@@ -1071,12 +1071,12 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     /**
      * Column width can be sized.
      *
-     * @param boolean $isResizable
+     * @param boolean $canResizable
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
      */
-    public function setIsResizable($isResizable)
+    public function setCanResizable($canResizable)
     {
-        $this->resizable = $isResizable;
+        $this->resizable = $canResizable;
         return $this;
     }
 
@@ -1087,7 +1087,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      *
      * @return boolean
      */
-    public function getIsCanSearch()
+    public function getCanSearch()
     {
         return $this->search;
     }
@@ -1098,7 +1098,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      * @param boolean $search
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
      */
-    public function setIsCanSearch($search)
+    public function setCanSearch($search)
     {
         $this->search = $search;
         return $this;
@@ -1804,6 +1804,8 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
             ->setLabel($label)
             ->setWidth($width)
             ->setAlign($align)
+            ->setSearchType('text')
+            ->setSearchOptions(self::generateSearchOptions('', ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'ew', 'en', 'cn', 'nc']))
             ->setIsEditable(true)
             ->setEditType('text');
     }
@@ -1826,6 +1828,8 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
             ->setLabel($label)
             ->setWidth($width)
             ->setAlign($align)
+            ->setSearchType('text')
+            ->setSearchOptions(self::generateSearchOptions('', ['eq', 'ne', 'lt', 'le', 'gt', 'ge']))
             ->setFormatter('date')
             ->setFormatOptions(self::formatOptionsDate($srcFormat, $newFormat))
             ->setDateFormat($srcFormat)

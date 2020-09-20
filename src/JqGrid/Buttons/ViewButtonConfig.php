@@ -1,6 +1,8 @@
 <?php
 namespace Rusproj\FreeJqGridConfigurator\JqGrid\Buttons;
 
+use Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface;
+
 /**
  * Config of the "View selected row" button.
  *
@@ -11,13 +13,23 @@ class ViewButtonConfig implements ConfigurationDefinitionInterface
 {
 
     /**
+     * Initialize a new instance of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\ViewButtonConfig} class.
+     *
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\ViewButtonConfig
+     */
+    public static function createInstance()
+    {
+        return new ViewButtonConfig();
+    }
+
+    /**
      * Set a icon to be displayed if the search action is enabled. Note that currently only icons from UI theme images can be used.
      *
-     * Default value: '' (from language file).
+     * Default value: 'ui-icon ui-icon-document' (from language file).
      *
      * @var string
      */
-    private $viewicon = '';
+    private $viewicon = 'ui-icon ui-icon-document';
 
     /**
      * The text that can be set in the view button.
@@ -31,11 +43,11 @@ class ViewButtonConfig implements ConfigurationDefinitionInterface
     /**
      * The title that appear when we mouse over to the view button.
      *
-     * Default value: '' (from language file).
+     * Default value: 'View selected row' (from language file).
      *
      * @var string
      */
-    private $viewtitle = '';
+    private $viewtitle = 'View selected row';
 
     /**
      * Determine if the alert dialog can be closed if the user pres ESC key.
@@ -50,7 +62,7 @@ class ViewButtonConfig implements ConfigurationDefinitionInterface
      * {@inheritDoc}
      * @see \Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface::getConfig()
      */
-    public function getConfig($cfg) {
+    public function getConfig() {
         $_config = [];
 
         foreach ($this as $_key => $_val) {
@@ -72,7 +84,7 @@ class ViewButtonConfig implements ConfigurationDefinitionInterface
             'viewicon' => $this->viewicon,
             'viewtext' => $this->viewtext,
             'viewtitle' => $this->viewtitle,
-            '__viewButtonConfig' => []
+            '__viewButtonConfig' => (object)[]
         ];
     }
 

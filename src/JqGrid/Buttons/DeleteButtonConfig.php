@@ -13,13 +13,23 @@ class DeleteButtonConfig implements ConfigurationDefinitionInterface
 {
 
     /**
+     * Initialize a new instance of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\DeleteButtonConfig} class.
+     *
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\DeleteButtonConfig
+     */
+    public static function createInstance()
+    {
+        return new DeleteButtonConfig();
+    }
+
+    /**
      * Set a icon to be displayed if the delete action is enabled. Note that currently only icons from UI theme images can be used.
      *
-     * Default value: '' (from language file).
+     * Default value: 'ui-icon ui-icon-trash' (from language file).
      *
      * @var string
      */
-    private $delicon = '';
+    private $delicon = 'ui-icon ui-icon-trash';
 
     /**
      * The text than can be set in the delete button.
@@ -33,11 +43,11 @@ class DeleteButtonConfig implements ConfigurationDefinitionInterface
     /**
      * The title that appear when we mouse over to the delete button.
      *
-     * Default value: '' (from language file).
+     * Default value: 'Delete selected row' (from language file).
      *
      * @var string
      */
-    private $deltitle = '';
+    private $deltitle = 'Delete selected row';
 
     /**
      * If defined replaces the build in del function. Parameter passed to this function is the id of the edited row.
@@ -46,7 +56,7 @@ class DeleteButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $__delfunc = '';
+    private $__eventHandler__delfunc = '';
 
     /**
      * Determine if the alert dialog can be closed if the user pres ESC key.
@@ -77,13 +87,14 @@ class DeleteButtonConfig implements ConfigurationDefinitionInterface
             }
         }
 
-        unset($_config['delicon'], $_config['deltext'], $_config['deltitle']);
+        unset($_config['delicon'], $_config['deltext'], $_config['deltitle'], $_config['__eventHandler__delfunc']);
 
         return [
             'delicon' => $this->delicon,
             'deltext' => $this->deltext,
             'deltitle' => $this->deltitle,
-            '__delButtonConfig' => $_config
+            '__eventHandler__delfunc' => $this->__eventHandler__delfunc,
+            '__delButtonConfig' => (object)$_config
         ];
     }
 
@@ -174,7 +185,7 @@ class DeleteButtonConfig implements ConfigurationDefinitionInterface
      */
     public function getDelFunc()
     {
-        return $this->__delfunc;
+        return $this->__eventHandler__delfunc;
     }
 
     /**
@@ -187,7 +198,7 @@ class DeleteButtonConfig implements ConfigurationDefinitionInterface
      */
     public function setDelFunc($delFunc)
     {
-        $this->__delfunc = $delFunc;
+        $this->__eventHandler__delfunc = $delFunc;
         return $this;
     }
 

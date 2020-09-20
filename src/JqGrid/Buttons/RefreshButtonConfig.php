@@ -1,6 +1,8 @@
 <?php
 namespace Rusproj\FreeJqGridConfigurator\JqGrid\Buttons;
 
+use Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface;
+
 /**
  * Config of the "Refresh grid data" button.
  *
@@ -11,13 +13,23 @@ class RefreshButtonConfig implements ConfigurationDefinitionInterface
 {
 
     /**
+     * Initialize a new instance of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\RefreshButtonConfig} class.
+     *
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\RefreshButtonConfig
+     */
+    public static function createInstance()
+    {
+        return new RefreshButtonConfig();
+    }
+
+    /**
      * Set a icon to be displayed if the refresh action is enabled. Note that currently only icons from UI theme images can be used.
      *
-     * Default value: '' (from language file).
+     * Default value: 'ui-icon ui-icon-refresh' (from language file).
      *
      * @var string
      */
-    private $refreshicon = '';
+    private $refreshicon = 'ui-icon ui-icon-refresh';
 
     /**
      * The text than can be set in the refresh button.
@@ -31,11 +43,11 @@ class RefreshButtonConfig implements ConfigurationDefinitionInterface
     /**
      * The title that appear when we mouse over to the refresh button.
      *
-     * Default value: '' (from language file).
+     * Default value: 'Reload Grid' (from language file).
      *
      * @var string
      */
-    private $refreshtitle = '';
+    private $refreshtitle = 'Reload Grid';
 
     /**
      * Determines how the grid should be reloaded.
@@ -59,7 +71,7 @@ class RefreshButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $__afterRefresh = '';
+    private $__eventHandler__afterRefresh = '';
 
     /**
      * If defined this event fire before the refresh button is clicked.
@@ -68,13 +80,13 @@ class RefreshButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $__beforeRefresh = '';
+    private $__eventHandler__beforeRefresh = '';
 
     /**
      * {@inheritDoc}
      * @see \Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface::getConfig()
      */
-    public function getConfig($cfg) {
+    public function getConfig() {
         $_config = [];
 
         foreach ($this as $_key => $_val) {
@@ -90,16 +102,16 @@ class RefreshButtonConfig implements ConfigurationDefinitionInterface
             }
         }
 
-        unset($_config['__afterRefresh'], $_config['__beforeRefresh'], $_config['refreshicon'], $_config['refreshstate'], $_config['refreshtext'], $_config['refreshtitle']);
+        unset($_config['__eventHandler__afterRefresh'], $_config['__eventHandler__beforeRefresh'], $_config['refreshicon'], $_config['refreshstate'], $_config['refreshtext'], $_config['refreshtitle']);
 
         return [
-            '__afterRefresh' => $this->__afterRefresh,
-            '__beforeRefresh' => $this->__beforeRefresh,
+            '__eventHandler__afterRefresh' => $this->__eventHandler__afterRefresh,
+            '__eventHandler__beforeRefresh' => $this->__eventHandler__beforeRefresh,
             'refreshicon' => $this->refreshicon,
             'refreshstate' => $this->refreshstate,
             'refreshtext' => $this->refreshtext,
             'refreshtitle' => $this->refreshtitle,
-            '__refreshButtonConfig' => []
+            '__refreshButtonConfig' => (object)[]
         ];
     }
 
@@ -228,7 +240,7 @@ class RefreshButtonConfig implements ConfigurationDefinitionInterface
      */
     public function getAfterRefresh()
     {
-        return $this->__afterRefresh;
+        return $this->__eventHandler__afterRefresh;
     }
 
     /**
@@ -241,7 +253,7 @@ class RefreshButtonConfig implements ConfigurationDefinitionInterface
      */
     public function setAfterRefresh($afterRefresh)
     {
-        $this->__afterRefresh = $afterRefresh;
+        $this->__eventHandler__afterRefresh = $afterRefresh;
         return $this;
     }
 
@@ -254,7 +266,7 @@ class RefreshButtonConfig implements ConfigurationDefinitionInterface
      */
     public function getBeforeRefresh()
     {
-        return $this->__beforeRefresh;
+        return $this->__eventHandler__beforeRefresh;
     }
 
     /**
@@ -267,7 +279,7 @@ class RefreshButtonConfig implements ConfigurationDefinitionInterface
      */
     public function setBeforeRefresh($beforeRefresh)
     {
-        $this->__beforeRefresh = $beforeRefresh;
+        $this->__eventHandler__beforeRefresh = $beforeRefresh;
         return $this;
     }
 

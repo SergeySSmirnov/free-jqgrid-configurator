@@ -13,13 +13,23 @@ class EditButtonConfig implements ConfigurationDefinitionInterface
 {
 
     /**
+     * Initialize a new instance of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\EditButtonConfig} class.
+     *
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\EditButtonConfig
+     */
+    public static function createInstance()
+    {
+        return new EditButtonConfig();
+    }
+
+    /**
      * Set a icon to be displayed if the edit action is enabled. Note that currently only icons from UI theme images can be used.
      *
-     * Default value: '' (from language file).
+     * Default value: 'ui-icon ui-icon-pencil' (from language file).
      *
      * @var string
      */
-    private $editicon = '';
+    private $editicon = 'ui-icon ui-icon-pencil';
 
     /**
      * The text than can be set in the edit button.
@@ -33,11 +43,11 @@ class EditButtonConfig implements ConfigurationDefinitionInterface
     /**
      * The title that appear when we mouse over to the edit button.
      *
-     * Default value: '' (from language file).
+     * Default value: 'Edit selected row' (from language file).
      *
      * @var string
      */
-    private $edittitle = '';
+    private $edittitle = 'Edit selected row';
 
     /**
      * If defined replaces the build in edit function. Parameter passed to this function is the id of the edited row.
@@ -46,7 +56,7 @@ class EditButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $__editfunc = '';
+    private $__eventHandler__editfunc = '';
 
     /**
      * Determine if the alert dialog can be closed if the user pres ESC key.
@@ -61,7 +71,7 @@ class EditButtonConfig implements ConfigurationDefinitionInterface
      * {@inheritDoc}
      * @see \Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface::getConfig()
      */
-    public function getConfig($cfg) {
+    public function getConfig() {
         $_config = [];
 
         foreach ($this as $_key => $_val) {
@@ -77,13 +87,14 @@ class EditButtonConfig implements ConfigurationDefinitionInterface
             }
         }
 
-        unset($_config['editicon'], $_config['edittext'], $_config['edittitle']);
+        unset($_config['editicon'], $_config['edittext'], $_config['edittitle'], $_config['__eventHandler__editfunc']);
 
         return [
             'editicon' => $this->editicon,
             'edittext' => $this->edittext,
             'edittitle' => $this->edittitle,
-            '__editButtonConfig' => $_config
+            '__eventHandler__editfunc' => $this->__eventHandler__editfunc,
+            '__editButtonConfig' => (object)$_config
         ];
     }
 
@@ -174,7 +185,7 @@ class EditButtonConfig implements ConfigurationDefinitionInterface
      */
     public function getEditFunc()
     {
-        return $this->__editfunc;
+        return $this->__eventHandler__editfunc;
     }
 
     /**
@@ -187,7 +198,7 @@ class EditButtonConfig implements ConfigurationDefinitionInterface
      */
     public function setEditFunc($editFunc)
     {
-        $this->__editfunc = $editFunc;
+        $this->__eventHandler__editfunc = $editFunc;
         return $this;
     }
 

@@ -29,7 +29,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $prop Property name.
      * @return mixed
      */
-    public function __get($prop)
+    public function __eventHandler__get($prop)
     {
         return isset($this->{$prop}) ? $this->{$prop} : null;
     }
@@ -40,7 +40,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $prop Property name.
      * @param mixed $value Property value.
      */
-    public function __set($prop, $value)
+    public function __eventHandler__set($prop, $value)
     {
         $this->{$prop} = $value;
     }
@@ -51,7 +51,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $prop Property name.
      * @return boolean
      */
-    public function __isset($prop)
+    public function __eventHandler__isset($prop)
     {
         return isset($this->{$prop});
     }
@@ -63,12 +63,6 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     private $__navigatorButtons = null;
 
-    /**
-     * A list of the jqGrid event handlers.
-     *
-     * @var []
-     */
-    private $__eventHandlers = [];
 
     /**
      * The class that is used for applying different styles to alternate (zebra) rows in the grid.
@@ -2107,51 +2101,51 @@ class JqGrid implements ConfigurationDefinitionInterface
             $_config['data'] = $this->data;
         }
 
-        if (!$this->hidegrid) {
-            unset($_config['hiddengrid']);
-        }
+//         if (!$this->hidegrid) {
+//             unset($_config['hiddengrid']);
+//         }
 
-        if (!$this->multiselect) {
-            unset($_config['multiselect'], $_config['multikey'], $_config['multiboxonly'], $_config['multiselectWidth']);
-        }
+//         if (!$this->multiselect) {
+//             unset($_config['multiselect'], $_config['multikey'], $_config['multiboxonly'], $_config['multiselectWidth']);
+//         }
 
         if (empty($this->pager) || $this->pager === false) {
             unset($_config['pager'], $_config['pagerpos'], $_config['pgbuttons'], $_config['pginput'],
-                    $_config['rowList'], $_config['rowNum'], $_config['recordpos'], $_config['viewrecords'], $_config['__navigatorButtons']);
+                    $_config['rowList'], $_config['rowNum'], $_config['recordpos'], $_config['viewrecords'], $_config['__eventHandler__navigatorButtons']);
         }
 
         if (!$this->rownumbers) {
             unset($_config['rownumbers'], $_config['rownumWidth']);
         }
 
-        if ($this->scroll === false) {
-            unset($_config['scroll'], $_config['scrollOffset'], $_config['scrollTimeout'], $_config['scrollrows']);
-        }
+//         if ($this->scroll === false) {
+//             unset($_config['scroll'], $_config['scrollOffset'], $_config['scrollTimeout'], $_config['scrollrows']);
+//         }
 
-        if (!$this->sortable) {
-            unset($_config['sortable']);
-        }
+//         if (!$this->sortable) {
+//             unset($_config['sortable']);
+//         }
 
-        if (!$this->subGrid) {
-            unset($_config['subGrid'], $_config['subGridOptions'], $_config['subGridModel'], $_config['subGridType'],
-                    $_config['subGridUrl'], $_config['subGridWidth']);
-        }
+//         if (!$this->subGrid) {
+//             unset($_config['subGrid'], $_config['subGridOptions'], $_config['subGridModel'], $_config['subGridType'],
+//                     $_config['subGridUrl'], $_config['subGridWidth']);
+//         }
 
 //         if (!$this->toolbar[0]) {
 //             unset($_config['toolbar']);
 //         }
 
-        if (!$this->treeGrid) {
-            unset($_config['treeGrid'], $_config['ExpandColumn'], $_config['treedatatype'], $_config['treeIcons'], $_config['treeReader'], $_config['tree_root_level']);
-        }
+//         if (!$this->treeGrid) {
+//             unset($_config['treeGrid'], $_config['ExpandColumn'], $_config['treedatatype'], $_config['treeIcons'], $_config['treeReader'], $_config['tree_root_level']);
+//         }
 
         if (!$this->viewrecords) {
             unset($_config['viewrecords'], $_config['recordpos']);
         }
 
-        if (!$this->userDataOnFooter) {
-            unset($_config['userDataOnFooter'], $_config['userData']);
-        }
+//         if (!$this->userDataOnFooter) {
+//             unset($_config['userDataOnFooter'], $_config['userData']);
+//         }
 
 
 
@@ -2263,9 +2257,298 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return string
      */
+    private $__eventHandler__afterInsertRow = '';
+
+    /**
+     * This event fire before proccesing the data from the server.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>data;</li>
+     *  <li>status;</li>
+     *  <li>xhr.</li>
+     * </ul>
+     *
+     * Note that the data is formatted depended on the value of the datatype parameter - i.e if the datatype is 'json' for example the data is JavaScript object.
+     *
+     * @return string
+     */
+    private $__eventHandler__beforeProcessing = '';
+
+    /**
+     * This event fire before requesting any data. Also does not fire if datatype is function. If the event return false the request is not made to the server.
+     *
+     * JS-function parameters: none.
+     *
+     * @return string
+     */
+    private $__eventHandler__beforeRequest = '';
+
+    /**
+     * This event fire when the user click on the row, but before select them.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>e is the event object.</li>
+     * </ul>
+     *
+     * This event should return boolean true or false. If the event return true the selection is done.
+     * If the event return false the row is not selected and any other action if defined does not occur.
+     *
+     * @return string
+     */
+    private $__eventHandler__beforeSelectRow = '';
+
+    /**
+     * This fires after all the data is loaded into the grid and all other processes are complete.
+     * Also the event fires independent from the datatype parameter and after sorting paging and etc.
+     *
+     * JS-function parameters: none.
+     *
+     * @return string
+     */
+    private $__eventHandler__gridComplete = '';
+
+    /**
+     * A pre-callback to modify the XMLHttpRequest object (xhr) before it is sent. Use this to set custom headers etc.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>xhr;</li>
+     *  <li>settings.</li>
+     * </ul>
+     *
+     * Returning false will cancel the request.
+     *
+     * @return string
+     */
+    private $__eventHandler__loadBeforeSend = '';
+
+    /**
+     * This event is executed immediately after every server request.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>data Data from the response depending on datatype grid parameter.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    private $__eventHandler__loadComplete = '';
+
+    /**
+     * A function to be called if the request fails.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>xhr - XMLHttpRequest object;</li>
+     *  <li>status - a string describing the type of error;</li>
+     *  <li>error - an optional exception object.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    private $__eventHandler__loadError = '';
+
+    /**
+     * Fires when click on particular cell in the grid.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>iCol is the index of the cell;</li>
+     *  <li>cellcontent is the content of the cell;</li>
+     *  <li>e is the event object.</li>
+     * </ul>
+     *
+     * Note that this available when we not use cell editing module and is disabled when using cell editing.
+     *
+     * @return string
+     */
+    private $__eventHandler__onCellSelect = '';
+
+    /**
+     * Raised immediately after row was double clicked.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>iRow is the index of the row (do not mix this with the rowid);</li>
+     *  <li>iCol is the index of the cell;</li>
+     *  <li>e is the event object.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    private $__eventHandler__ondblClickRow = '';
+
+    /**
+     * Fire after clicking to hide or show grid (hidegrid:true).
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>gridstate is the state of the grid - can have two values - visible or hidden.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    private $__eventHandler__onHeaderClick = '';
+
+    /**
+     * This event fires after click on [page button] and before populating the data.
+     * Also works when the user enters a new page number in the page input box (and presses [Enter])
+     * and when the number of requested records is changed via the select box.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>pgButton.</li>
+     * </ul>
+     *
+     * If this event return 'stop' the processing is stopped and you can define your own custom paging.
+     *
+     * @return string
+     */
+    private $__eventHandler__onPaging = '';
+
+    /**
+     * Raised immediately after row was right clicked.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>iRow is the index of the row (do not mix this with the rowid);</li>
+     *  <li>iCol is the index of the cell;</li>
+     *  <li>e is the event object.</li>
+     * </ul>
+     *
+     * Note - this event does not work in Opera browsers, since Opera does not support oncontextmenu event.
+     *
+     * @return string
+     */
+    private $__eventHandler__onRightClickRow = '';
+
+    /**
+     * This event fires when multiselect option is true and you click on the header checkbox.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>aRowids array of the selected rows (rowid's);</li>
+     *  <li>status - boolean variable determining the status of the header check box - true if checked, false if not checked.</li>
+     * </ul>
+     *
+     * Note that the aRowids alway contain the ids when header checkbox is checked or unchecked.
+     *
+     * @return string
+     */
+    private $__eventHandler__onSelectAll = '';
+
+    /**
+     * Raised immediately after row was clicked.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>rowid is the id of the row;</li>
+     *  <li>status is the status of the selection;</li>
+     *  <li>e is the event object. Can be used when multiselect is set to true. true if the row is selected, false if the row is deselected.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    private $__eventHandler__onSelectRow = '';
+
+    /**
+     * Raised immediately after sortable column was clicked and before sorting the data.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>index is the index name from colModel;</li>
+     *  <li>iCol is the index of column;</li>
+     *  <li>sortorder is the new sorting order - can be 'asc' or 'desc'.</li>
+     * </ul>
+     *
+     * If this event return 'stop' the sort processing is stopped and you can define your own custom sorting.
+     *
+     * @return string
+     */
+    private $__eventHandler__onSortCol = '';
+
+    /**
+     * This event is called when the new table row is inserted.
+     * It can be used to set additional style and class attributes of the row dynamically.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>rowData is array with the cell data;</li>
+     *  <li>currObj is the current row represented in the source like json or xml;</li>
+     *  <li>rowId is the id of the row.</li>
+     * </ul>
+     *
+     * The event should return a object something like this {“style” : “somestyle”, “class”: “someclass”}.
+     *
+     * Note that you can set any attribute to the row. It is important to note that the event does fire only
+     * when a new row is inserted - this mean that it can not be used with methods which updated the row like setRowData.
+     *
+     * @return string
+     */
+    private $__eventHandler__rowattr = '';
+
+    /**
+     * Event which is called when we start resize a column.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>event is the event object;</li>
+     *  <li>index is the index of the column in colModel.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    private $__eventHandler__resizeStart = '';
+
+    /**
+     * Event which is called after the column is resized.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>newwidth is the is the new width of the column;</li>
+     *  <li>index is the index of the column in colModel.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    private $__eventHandler__resizeStop = '';
+
+    /**
+     * If set this event can serialize the data passed to the ajax request. The function should return the serialized data.
+     * This event can be used when a custom data should be passed to the server - e.g - JSON string, XML string and etc.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>postData.</li>
+     * </ul>
+     *
+     * @return string
+     */
+    private $__eventHandler__serializeGridData = '';
+
+    /**
+     * This event fires after every inserted row.
+     *
+     * JS-function parameters:
+     * <ul>
+     *  <li>rowid is the id of the inserted row;</li>
+     *  <li>rowdata is an array of the data to be inserted into the row. This is array of type name: value, where the name is a name from colModel;</li>
+     *  <li>rowelem is the element from the response. If the data is xml this is the xml element of the row; if the data is json this is array containing all the data for the row.</li>
+     * </ul>
+     *
+     *  Note: this event does not fire if gridview option is set to true.
+     *
+     * @return string
+     */
     public function getAfterInsertRowEventHandler()
     {
-        return $this->__eventHandlers['afterInsertRow'] ?? null;
+        return $this->__eventHandler__afterInsertRow;
     }
 
     /**
@@ -2285,7 +2568,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setAfterInsertRowEventHandler($afterInsertRow)
     {
-        $this->__eventHandlers['afterInsertRow'] = $afterInsertRow;
+        $this->__eventHandler__afterInsertRow = $afterInsertRow;
         return $this;
     }
 
@@ -2305,7 +2588,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getBeforeProcessingEventHandler()
     {
-        return $this->__eventHandlers['beforeProcessing'] ?? null;
+        return $this->__eventHandler__beforeProcessing;
     }
 
     /**
@@ -2325,7 +2608,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setBeforeProcessingEventHandler($beforeProcessing)
     {
-        $this->__eventHandlers['beforeProcessing'] = $beforeProcessing;
+        $this->__eventHandler__beforeProcessing = $beforeProcessing;
         return $this;
     }
 
@@ -2338,7 +2621,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getBeforeRequestEventHandler()
     {
-        return $this->__eventHandlers['beforeRequest'] ?? null;
+        return $this->__eventHandler__beforeRequest;
     }
 
     /**
@@ -2351,7 +2634,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setBeforeRequestEventHandler($beforeRequest)
     {
-        $this->__eventHandlers['beforeRequest'] = $beforeRequest;
+        $this->__eventHandler__beforeRequest = $beforeRequest;
         return $this;
     }
 
@@ -2371,7 +2654,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getBeforeSelectRowEventHandler()
     {
-        return $this->__eventHandlers['beforeSelectRow'] ?? null;
+        return $this->__eventHandler__beforeSelectRow;
     }
 
     /**
@@ -2391,7 +2674,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setBeforeSelectRowEventHandler($beforeSelectRow)
     {
-        $this->__eventHandlers['beforeSelectRow'] = $beforeSelectRow;
+        $this->__eventHandler__beforeSelectRow = $beforeSelectRow;
         return $this;
     }
 
@@ -2405,7 +2688,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getGridCompleteEventHandler()
     {
-        return $this->__eventHandlers['gridComplete'] ?? null;
+        return $this->__eventHandler__gridComplete;
     }
 
     /**
@@ -2419,7 +2702,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setGridCompleteEventHandler($gridComplete)
     {
-        $this->__eventHandlers['gridComplete'] = $gridComplete;
+        $this->__eventHandler__gridComplete = $gridComplete;
         return $this;
     }
 
@@ -2438,7 +2721,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getLoadBeforeSendEventHandler()
     {
-        return $this->__eventHandlers['loadBeforeSend'] ?? null;
+        return $this->__eventHandler__loadBeforeSend;
     }
 
     /**
@@ -2457,7 +2740,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setLoadBeforeSendEventHandler($loadBeforeSend)
     {
-        $this->__eventHandlers['loadBeforeSend'] = $loadBeforeSend;
+        $this->__eventHandler__loadBeforeSend = $loadBeforeSend;
         return $this;
     }
 
@@ -2473,7 +2756,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getLoadCompleteEventHandler()
     {
-        return $this->__eventHandlers['loadComplete'] ?? null;
+        return $this->__eventHandler__loadComplete;
     }
 
     /**
@@ -2489,7 +2772,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setLoadCompleteEventHandler($loadComplete)
     {
-        $this->__eventHandlers['loadComplete'] = $loadComplete;
+        $this->__eventHandler__loadComplete = $loadComplete;
         return $this;
     }
 
@@ -2507,7 +2790,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getLoadErrorEventHandler()
     {
-        return $this->__eventHandlers['loadError'] ?? null;
+        return $this->__eventHandler__loadError;
     }
 
     /**
@@ -2525,7 +2808,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setLoadErrorEventHandler($loadError)
     {
-        $this->__eventHandlers['loadError'] = $loadError;
+        $this->__eventHandler__loadError = $loadError;
         return $this;
     }
 
@@ -2546,7 +2829,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getOnCellSelectEventHandler()
     {
-        return $this->__eventHandlers['onCellSelect'] ?? null;
+        return $this->__eventHandler__onCellSelect;
     }
 
     /**
@@ -2567,7 +2850,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setOnCellSelectEventHandler($onCellSelect)
     {
-        $this->__eventHandlers['onCellSelect'] = $onCellSelect;
+        $this->__eventHandler__onCellSelect = $onCellSelect;
         return $this;
     }
 
@@ -2586,7 +2869,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getOnDblClickRowEventHandler()
     {
-        return $this->__eventHandlers['ondblClickRow'] ?? null;
+        return $this->__eventHandler__ondblClickRow;
     }
 
     /**
@@ -2605,7 +2888,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setOnDblClickRowEventHandler($ondblClickRow)
     {
-        $this->__eventHandlers['ondblClickRow'] = $ondblClickRow;
+        $this->__eventHandler__ondblClickRow = $ondblClickRow;
         return $this;
     }
 
@@ -2621,7 +2904,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getOnHeaderClickEventHandler()
     {
-        return $this->__eventHandlers['onHeaderClick'] ?? null;
+        return $this->__eventHandler__onHeaderClick;
     }
 
     /**
@@ -2637,7 +2920,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setOnHeaderClickEventHandler($onHeaderClick)
     {
-        $this->__eventHandlers['onHeaderClick'] = $onHeaderClick;
+        $this->__eventHandler__onHeaderClick = $onHeaderClick;
         return $this;
     }
 
@@ -2657,7 +2940,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getOnPagingEventHandler()
     {
-        return $this->__eventHandlers['onPaging'] ?? null;
+        return $this->__eventHandler__onPaging;
     }
 
     /**
@@ -2677,7 +2960,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setOnPagingEventHandler($onPaging)
     {
-        $this->__eventHandlers['onPaging'] = $onPaging;
+        $this->__eventHandler__onPaging = $onPaging;
         return $this;
     }
 
@@ -2698,7 +2981,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getOnRightClickRowEventHandler()
     {
-        return $this->__eventHandlers['onRightClickRow'] ?? null;
+        return $this->__eventHandler__onRightClickRow;
     }
 
     /**
@@ -2719,7 +3002,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setOnRightClickRowEventHandler($onRightClickRow)
     {
-        $this->__eventHandlers['onRightClickRow'] = $onRightClickRow;
+        $this->__eventHandler__onRightClickRow = $onRightClickRow;
         return $this;
     }
 
@@ -2738,7 +3021,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getOnSelectAllEventHandler()
     {
-        return $this->__eventHandlers['onSelectAll'] ?? null;
+        return $this->__eventHandler__onSelectAll;
     }
 
     /**
@@ -2757,7 +3040,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setOnSelectAllEventHandler($onSelectAll)
     {
-        $this->__eventHandlers['onSelectAll'] = $onSelectAll;
+        $this->__eventHandler__onSelectAll = $onSelectAll;
         return $this;
     }
 
@@ -2775,7 +3058,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getOnSelectRowEventHandler()
     {
-        return $this->__eventHandlers['onSelectRow'] ?? null;
+        return $this->__eventHandler__onSelectRow;
     }
 
     /**
@@ -2793,7 +3076,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setOnSelectRowEventHandler($onSelectRow)
     {
-        $this->__eventHandlers['onSelectRow'] = $onSelectRow;
+        $this->__eventHandler__onSelectRow = $onSelectRow;
         return $this;
     }
 
@@ -2813,7 +3096,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getOnSortColEventHandler()
     {
-        return $this->__eventHandlers['onSortCol'] ?? null;
+        return $this->__eventHandler__onSortCol;
     }
 
     /**
@@ -2833,7 +3116,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setOnSortColEventHandler($onSortCol)
     {
-        $this->__eventHandlers['onSortCol'] = $onSortCol;
+        $this->__eventHandler__onSortCol = $onSortCol;
         return $this;
     }
 
@@ -2857,7 +3140,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getRowAttrEventHandler()
     {
-        return $this->__eventHandlers['rowattr'] ?? null;
+        return $this->__eventHandler__rowattr;
     }
 
     /**
@@ -2881,7 +3164,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setRowAttrEventHandler($rowattr)
     {
-        $this->__eventHandlers['rowattr'] = $rowattr;
+        $this->__eventHandler__rowattr = $rowattr;
         return $this;
     }
 
@@ -2898,7 +3181,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getResizeStartEventHandler()
     {
-        return $this->__eventHandlers['resizeStart'] ?? null;
+        return $this->__eventHandler__resizeStart;
     }
 
     /**
@@ -2915,7 +3198,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setResizeStartEventHandler($resizeStart)
     {
-        $this->__eventHandlers['resizeStart'] = $resizeStart;
+        $this->__eventHandler__resizeStart = $resizeStart;
         return $this;
     }
 
@@ -2932,7 +3215,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getResizeStopEventHandler()
     {
-        return $this->__eventHandlers['resizeStop'] ?? null;
+        return $this->__eventHandler__resizeStop;
     }
 
     /**
@@ -2949,7 +3232,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setResizeStopEventHandler($resizeStart)
     {
-        $this->__eventHandlers['resizeStop'] = $resizeStart;
+        $this->__eventHandler__resizeStop = $resizeStart;
         return $this;
     }
 
@@ -2966,7 +3249,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function getSerializeGridDataEventHandler()
     {
-        return $this->__eventHandlers['serializeGridData'] ?? null;
+        return $this->__eventHandler__serializeGridData;
     }
 
     /**
@@ -2983,7 +3266,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     public function setSerializeGridDataEventHandler($serializeGridData)
     {
-        $this->__eventHandlers['serializeGridData'] = $serializeGridData;
+        $this->__eventHandler__serializeGridData = $serializeGridData;
         return $this;
     }
 

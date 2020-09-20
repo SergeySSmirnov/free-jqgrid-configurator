@@ -13,13 +13,23 @@ class AddButtonConfig implements ConfigurationDefinitionInterface
 {
 
     /**
+     * Initialize a new instance of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\AddButtonConfig} class.
+     *
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\AddButtonConfig
+     */
+    public static function createInstance()
+    {
+        return new AddButtonConfig();
+    }
+
+    /**
      * Set a icon to be displayed if the add action is enabled. Note that currently only icons from UI theme images can be added.
      *
-     * Default value: '' (from language file).
+     * Default value: 'ui-icon ui-icon-plus' (from language file).
      *
      * @var string
      */
-    private $addicon = '';
+    private $addicon = 'ui-icon ui-icon-plus';
 
     /**
      * The text than can be set in the add button.
@@ -33,11 +43,11 @@ class AddButtonConfig implements ConfigurationDefinitionInterface
     /**
      * The title that appear when we mouse over to the add button.
      *
-     * Default value: '' (from language file).
+     * Default value: 'Add new row' (from language file).
      *
      * @var string
      */
-    private $addtitle = '';
+    private $addtitle = 'Add new row';
 
     /**
      * If defined replaces the build in add function.
@@ -46,7 +56,7 @@ class AddButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $__addfunc = '';
+    private $__eventHandler__addfunc = '';
 
     /**
      * Determine if the alert dialog can be closed if the user pres ESC key.
@@ -61,7 +71,7 @@ class AddButtonConfig implements ConfigurationDefinitionInterface
      * {@inheritDoc}
      * @see \Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface::getConfig()
      */
-    public function getConfig($cfg) {
+    public function getConfig() {
         $_config = [];
 
         foreach ($this as $_key => $_val) {
@@ -77,13 +87,14 @@ class AddButtonConfig implements ConfigurationDefinitionInterface
             }
         }
 
-        unset($_config['addicon'], $_config['addtext'], $_config['addtitle']);
+        unset($_config['addicon'], $_config['addtext'], $_config['addtitle'], $_config['__eventHandler__addfunc']);
 
         return [
             'addicon' => $this->addicon,
             'addtext' => $this->addtext,
             'addtitle' => $this->addtitle,
-            '__addButtonConfig' => $_config
+            '__eventHandler__addfunc' => $this->__eventHandler__addfunc,
+            '__addButtonConfig' => (object)$_config
         ];
     }
 
@@ -174,7 +185,7 @@ class AddButtonConfig implements ConfigurationDefinitionInterface
      */
     public function getAddFunc()
     {
-        return $this->__addfunc;
+        return $this->__eventHandler__addfunc;
     }
 
     /**
@@ -187,7 +198,7 @@ class AddButtonConfig implements ConfigurationDefinitionInterface
      */
     public function setAddFunc($addFunc)
     {
-        $this->__addfunc = $addFunc;
+        $this->__eventHandler__addfunc = $addFunc;
         return $this;
     }
 

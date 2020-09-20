@@ -21,6 +21,16 @@ class NavigatorButtons implements ConfigurationDefinitionInterface
     // TODO: Add custom buttons.
 
     /**
+     * Returns a new instance of the {@see \Rusproj\FreeJqGridConfigurator\JqGrid\NavigatorButtons} class.
+     *
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\NavigatorButtons
+     */
+    public static function createInstance()
+    {
+        return new NavigatorButtons();
+    }
+
+    /**
      * Add "View selected row" button if true.
      *
      * Default value: false.
@@ -173,30 +183,30 @@ class NavigatorButtons implements ConfigurationDefinitionInterface
         $_config['view'] = $this->view;
 
         if ($this->add) {
-            $_config = array_merge($_config, $this->addConfig->getConfig());
+            $_config = array_merge_recursive($_config, $this->addConfig->getConfig());
         }
 
         if ($this->del) {
-            $_config = array_merge($_config, $this->delConfig->getConfig());
+            $_config = array_merge_recursive($_config, $this->delConfig->getConfig());
         }
 
         if ($this->edit) {
-            $_config = array_merge($_config, $this->editConfig->getConfig());
+            $_config = array_merge_recursive($_config, $this->editConfig->getConfig());
         }
 
         if ($this->refresh) {
-            $_config = array_merge($_config, $this->refreshConfig->getConfig());
+            $_config = array_merge_recursive($_config, $this->refreshConfig->getConfig());
         }
 
         if ($this->search) {
-            $_config = array_merge($_config, $this->searchConfig->getConfig());
+            $_config = array_merge_recursive($_config, $this->searchConfig->getConfig());
         }
 
         if ($this->view) {
-            $_config = array_merge($_config, $this->viewConfig->getConfig());
+            $_config = array_merge_recursive($_config, $this->viewConfig->getConfig());
         }
 
-        return $_config;
+        return (object)$_config;
     }
 
     /**
