@@ -107,7 +107,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
         }
 
         if (!$this->search) {
-            unset($_config['search'], $_config['stype'], $_config['searchoptions'], $_config['searchrules']);
+            unset($_config['stype'], $_config['searchoptions'], $_config['searchrules']);
         }
 
         return $_config;
@@ -1097,7 +1097,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      *
      * @return boolean
      */
-    public function getCanResizable()
+    public function getIsResizable()
     {
         return $this->resizable;
     }
@@ -1108,7 +1108,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      * @param boolean $canResizable
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
      */
-    public function setCanResizable($canResizable)
+    public function setIsResizable($canResizable)
     {
         $this->resizable = $canResizable;
         return $this;
@@ -1121,7 +1121,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      *
      * @return boolean
      */
-    public function getCanSearch()
+    public function getIsSearchable()
     {
         return $this->search;
     }
@@ -1132,7 +1132,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      * @param boolean $search
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
      */
-    public function setCanSearch($search)
+    public function setIsSearchable($search)
     {
         $this->search = $search;
         return $this;
