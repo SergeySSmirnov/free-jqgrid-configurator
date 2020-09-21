@@ -1,13 +1,15 @@
 <?php
 namespace Rusproj\FreeJqGridConfigurator\JqGrid\Buttons;
 
+use Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface;
+
 /**
  * Config of the "Refresh grid data" button.
  *
  * @author Sergei S. Smirnov
  * @copyright (c) 2010-20 RUSproj, Sergei S. Smirnov
  */
-class SearchButtonConfig
+class SearchButtonConfig implements ConfigurationDefinitionInterface
 {
 
     /**
@@ -307,13 +309,6 @@ class SearchButtonConfig
      * @var string
      */
     private $layer = '';
-
-    /**
-     * Default template.
-     *
-     * @var integer
-     */
-    private $tmplDefault = 0;
 
     /**
      * Defines the name of the templates used for easy user input - by example like this: ['Template1', 'Template2', …].

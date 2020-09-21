@@ -1887,49 +1887,6 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     }
 
 //     /**
-//      * Помощник формирует конфигурационный массив для столбца из списка значений с возможностью поиска.
-//      *
-//      * @param string $name Имя столбца.
-//      * @param string $label Заголовок столбца.
-//      * @param string $sval Адрес URL, откуда загружаются соответствующие данные. Если значение не задано, то будет использоваться текстовый поиск. Значение по умолчанию: NULL.
-//      * @param int $width Ширина столбца в пикселах. Значение по умолчанию: 250.
-//      * @param string $align Выравнивание текста в ячейке. Возможные значения: left, center, right. Значение по умолчанию: 'left'.
-//      * @param array $val Массив значений (где ключ - идентификатор). Если данный параметр не задан, то данные будут взяты из $sval. Значение по умолчанию: NULL.
-//      * @param bool $hidden Признак того, что данное поле будет скрыто в основной таблице, но будет доступно для отображения с помощью окна сортировки столбцов. Значение по умолчанию: false.
-//      * @return ColumnDefinition Конфигурационный массив для указанного столбца.
-//      */
-//     public static function columnSelectValWithSearch($name, $label, $sval = NULL, $width = 250, $align = 'left', $val = NULL, $hidden = false) {
-//         $e = ColumnDefinition::columnSelectVal($name, $label, $val, $width, $align);
-//         $e->editOptions = ColumnDefinition::editOptionsSelect($val);
-//         $e->search = true;
-//         if (!empty($sval)) {
-//             $e->stype = 'select';
-//             $e->searchOptions = ColumnDefinition::searchOptions($sval, ['eq', 'ne']);
-//         }
-//         $e->hidden = $hidden;
-//         return $e;
-//     }
-
-//     /**
-//      * Помощник формирует конфигурационный массив для столбца из флагов с возможностью поиска.
-//      *
-//      * @param string $name Имя столбца.
-//      * @param string $label Заголовок столбца.
-//      * @param string $sval Адрес URL, откуда загружается содержимое выпадающего списка для поиска.
-//      * @param int $width Ширина столбца в пикселах. Значение по умолчанию: 50.
-//      * @param string $align Выравнивание текста в ячейке. Возможные значения: left, center, right. Значение по умолчанию: 'center'.
-//      * @param bool $canEdit Признак того, что данное поле можно редактировать. Значение по умолчанию: true.
-//      * @return ColumnDefinition Конфигурационный массив для указанного столбца.
-//      */
-//     public static function columnCheckboxValWithSearch($name, $label, $sval, $width = 50, $align = 'center', $canEdit = true) {
-//         $e = ColumnDefinition::columnCheckboxVal($name, $label, $width, $align, $canEdit);
-//         $e->search = true;
-//         $e->stype = 'select';
-//         $e->searchOptions = ColumnDefinition::searchOptions($sval, ['eq', 'ne']);
-//         return $e;
-//     }
-
-//     /**
 //      * Помощник формирует конфигурационный массив для столбца из полей с автодополнением.
 //      *
 //      * @param string $name Имя столбца.
@@ -1946,27 +1903,6 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
 //         $e->width = $col_width;
 //         $e->editOptions = ['field' => $field_name, 'model' => $model_name];
 //         return $e;
-//     }
-
-//     /**
-//      * Функция формирует выпадающий список, представленный в виде HTML на основе заданного массива значений.
-//      *
-//      * @param array $vals Массив значений, на основе которого будет формироваться выпадающий список.
-//      * @param bool $addNull Признак необходимости добавить пустое значение (<option value="-1"> - </option>). Значение по умолчанию: true.
-//      * @param string $name Имя элемента. Значение по умолчанию: ''
-//      * @param string $id Идентификатор элемента. Значение по умолчанию: ''
-//      * @param string $class Название класса элемента. Значение по умолчанию: ''
-//      * @return string HTML код выпадающего списка.
-//      */
-//     public static function createSelect($vals, $addNull = true, $name = '', $id = '', $class = '') {
-//         $_ts = '';
-//         if ($addNull && !count(array_filter($vals, function ($val) {
-//             return trim($val) == '-';
-//         }))) // Если в массиве существует элемент '-', то его не добавляем
-//             $_ts = '<option value="-1"> - </option>';
-//         foreach ($vals as $i => $key)
-//             $_ts .= '<option value="' . $i . '">' . $key . '</option>';
-//         return '<select' . (!empty($name) ? ' name="' . $id . '"' : '') . (!empty($id) ? ' id="' . $id . '"' : '') . (!empty($class) ? ' class="' . $class . '"' : '') . '>' . $_ts . '</select>';
 //     }
 
 }

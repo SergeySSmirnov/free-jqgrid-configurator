@@ -29,7 +29,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $prop Property name.
      * @return mixed
      */
-    public function __eventHandler__get($prop)
+    public function __get($prop)
     {
         return isset($this->{$prop}) ? $this->{$prop} : null;
     }
@@ -40,7 +40,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $prop Property name.
      * @param mixed $value Property value.
      */
-    public function __eventHandler__set($prop, $value)
+    public function __set($prop, $value)
     {
         $this->{$prop} = $value;
     }
@@ -51,7 +51,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param string $prop Property name.
      * @return boolean
      */
-    public function __eventHandler__isset($prop)
+    public function __isset($prop)
     {
         return isset($this->{$prop});
     }
@@ -768,19 +768,19 @@ class JqGrid implements ConfigurationDefinitionInterface
 //      */
 //     private $shrinkToFit = true;
 
-//     /**
-//      * When set to true, this option allows reordering columns by dragging and dropping them with the mouse.
-//      * Since this option uses the jQuery UI sortable widget, be sure to load this widget and its related
-//      * files in the HTML head tag of the page. Also, be sure to select the jQuery UI Addons option under
-//      * the jQuery UI Addon Methods section while downloading jqGrid if you want to use this facility.
-//      * Note: The colModel object also has a property called sortable, which specifies if the grid
-//      * data can be sorted on a particular column or not.
-//      *
-//      * Default value: false.
-//      *
-//      * @var boolean
-//      */
-//     private $sortable = false;
+    /**
+     * When set to true, this option allows reordering columns by dragging and dropping them with the mouse.
+     * Since this option uses the jQuery UI sortable widget, be sure to load this widget and its related
+     * files in the HTML head tag of the page. Also, be sure to select the jQuery UI Addons option under
+     * the jQuery UI Addon Methods section while downloading jqGrid if you want to use this facility.
+     * Note: The colModel object also has a property called sortable, which specifies if the grid
+     * data can be sorted on a particular column or not.
+     *
+     * Default value: false.
+     *
+     * @var boolean
+     */
+    private $sortable = false;
 
     /**
      * Show sort icons before the table header text.
@@ -1666,6 +1666,43 @@ class JqGrid implements ConfigurationDefinitionInterface
     }
 
     /**
+     * When set to true, this option allows reordering columns by dragging and dropping them with the mouse.
+     * Since this option uses the jQuery UI sortable widget, be sure to load this widget and its related
+     * files in the HTML head tag of the page. Also, be sure to select the jQuery UI Addons option under
+     * the jQuery UI Addon Methods section while downloading jqGrid if you want to use this facility.
+     * Note: The colModel object also has a property called sortable, which specifies if the grid
+     * data can be sorted on a particular column or not.
+     *
+     * Default value: false.
+     *
+     * @return boolean
+     */
+    public function isSortable()
+    {
+        return $this->sortable;
+    }
+
+    /**
+     * When set to true, this option allows reordering columns by dragging and dropping them with the mouse.
+     * Since this option uses the jQuery UI sortable widget, be sure to load this widget and its related
+     * files in the HTML head tag of the page. Also, be sure to select the jQuery UI Addons option under
+     * the jQuery UI Addon Methods section while downloading jqGrid if you want to use this facility.
+     * Note: The colModel object also has a property called sortable, which specifies if the grid
+     * data can be sorted on a particular column or not.
+     *
+     * Default value: false.
+     *
+     * @param boolean $sortable
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setSortable($sortable)
+    {
+        $this->sortable = $sortable;
+        return $this;
+    }
+
+
+    /**
      * Show the status of the page in the right part of the pager navigation bar.
      * Default value: true.
      *
@@ -1922,105 +1959,6 @@ class JqGrid implements ConfigurationDefinitionInterface
     }
 
 
-//     /**
-//      * URL, по которому доступен JqGrid. Значение по умолчанию: /js/jqGrid/.
-//      *
-//      * @var string
-//      */
-//     public $jqGridURL = '/js/jqGrid/';
-
-//     /**
-//      *  Массив js-скриптов, которые необходимо загрузить до загрузки jqGrid. Значение по умолчанию: [] (не определено).
-//      *
-//      * @var array
-//      */
-//     public $addonJS = [];
-
-//     /**
-//      * Массив css-стилей, которые необходимо загрузить до загрузки jqGrid. Значение по умолчанию: [] (не определено).
-//      *
-//      * @var array
-//      */
-//     public $addonCSS = [];
-
-//     /**
-//      * Признак необходимости загрузить плагин ...
-//      *
-//      * @var bool
-//      */
-//     public $plugin_addons = false;
-
-//     /**
-//      * Признак необходимости загрузить плагин ...
-//      *
-//      * @var bool
-//      */
-//     public $plugin_postext = false;
-
-//     /**
-//      * Признак необходимости загрузить плагин ...
-//      *
-//      * @var bool
-//      */
-//     public $plugin_setcolumns = false;
-
-//     /**
-//      * Признак необходимости загрузить плагин предназначенный для формирования меню.
-//      *
-//      * @var bool
-//      */
-//     public $plugin_contextmenu = false;
-
-//     /**
-//      * Признак необходимости загрузить плагин ...
-//      *
-//      * @var bool
-//      */
-//     public $plugin_searchFilter = false;
-
-//     /**
-//      * Признак необходимости загрузить плагин ...
-//      *
-//      * @var bool
-//      */
-//     public $plugin_tablednd = false;
-
-//     /**
-//      * Признак необходимости загрузить плагин предназначенный для управления сортировкой и удалением столбцов.
-//      *
-//      * @var bool
-//      */
-//     public $plugin_multiselect = true;
-
-//     /**
-//      * Массив пользовательских кнопок, добавляемых на панель управления. Значение по умолчанию: [].
-//      *
-//      * @var \Rusproj\FreeJqGridConfigurator\JqGrid\CustomButton[]
-//      */
-//     public $customButtons = [];
-
-//     /**
-//      * Признак необходимости добавить кнопку копирования выбранной записи. Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $addCopyButton = false;
-
-//     /**
-//      * Признак необходимости добавить кнопку заморозки столбцов. Значение по умолчанию: false.
-//      *
-//      * @var bool
-//      */
-//     public $addButtonFreze = false;
-
-//     /**
-//      * Признак необходимости добавить кнопку сортировки столбцов. Значение по умолчанию: true.
-//      *
-//      * @var bool
-//      */
-//     public $addButtonSortColumns = true;
-
-
     /**
      * Returns configuration as an array of key-value pairs.
      *
@@ -2172,47 +2110,6 @@ class JqGrid implements ConfigurationDefinitionInterface
 //                 $_config['custom_buttons'][] = $button->getConfig();
 //             }
 //         }
-
-//         // Формируем массив подключаемых плагинов
-//         $_config['plugins'] = [];
-//         $_config['plugins']['js'] = $this->addonJS;
-//         $_config['plugins']['css'] = $this->addonCSS;
-//         if ($this->plugin_addons) {
-//             $_config['plugins']['js'][] = $this->jqGridURL . 'plugins/grid.addons.js';
-//         }
-//         if ($this->plugin_postext) {
-//             $_config['plugins']['js'][] = $this->jqGridURL . 'plugins/grid.postext.js';
-//         }
-//         if ($this->plugin_setcolumns) {
-//             $_config['plugins']['js'][] = $this->jqGridURL . 'plugins/grid.setcolumns.js';
-//         }
-//         if ($this->plugin_contextmenu) {
-//             $_config['plugins']['js'][] = $this->jqGridURL . 'plugins/jquery.contextmenu.js';
-//         }
-//         if ($this->plugin_searchFilter) {
-//             $_config['plugins']['js'][] = $this->jqGridURL . 'plugins/jquery.searchFilter.js';
-//             $_config['plugins']['css'][] = $this->jqGridURL . 'plugins/jquery.searchFilter.css';
-//         }
-//         if ($this->plugin_tablednd) {
-//             $_config['plugins']['js'][] = $this->jqGridURL . 'plugins/jquery.tablednd.js';
-//         }
-//         if ($this->plugin_multiselect || $this->addButtonSortColumns) {
-//             $_config['plugins']['js'][] = $this->jqGridURL . 'plugins/ui.multiselect.js';
-//             $_config['plugins']['css'][] = $this->jqGridURL . 'plugins/ui.multiselect.css';
-//         }
-//         $_config['plugins']['js'][] = $this->jqGridURL . 'jqGrid.min.js';
-//         $_config['plugins']['css'][] = $this->jqGridURL . 'jqGrid.min.css';
-//         $_config['plugins']['js'][] = $this->jqGridURL . 'jqGrid.locale-ru.js';
-
-//         if ($this->sortable) {
-//             $_config['sortable'] = true;
-//             if (!in_array('multiselect', $_config['plugins'])) {
-//                 $_config['plugins'][] = 'multiselect';
-//             }
-//         }
-
-//         // Добавляем конфигурационные данные, формируемые другими классами
-//         $_config = array_merge($_config, $this->recButtonsConfig->getConfig());
 
         return $_config;
     }

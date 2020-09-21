@@ -18,8 +18,6 @@ use Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface;
 class NavigatorButtons implements ConfigurationDefinitionInterface
 {
 
-    // TODO: Add custom buttons.
-
     /**
      * Returns a new instance of the {@see \Rusproj\FreeJqGridConfigurator\JqGrid\NavigatorButtons} class.
      *
@@ -154,6 +152,35 @@ class NavigatorButtons implements ConfigurationDefinitionInterface
      * @var string
      */
     private $position = 'left';
+
+    /**
+     * A list of the custom buttons configs.
+     *
+     * @var \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\CustomButtonConfig[]|\Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\SeparatorConfig[]
+     */
+    private $customButtons = [];
+
+    /**
+     * Признак необходимости добавить кнопку копирования выбранной записи. Значение по умолчанию: false.
+     *
+     * @var bool
+     */
+    public $addCopyButton = false;
+
+    /**
+     * Признак необходимости добавить кнопку заморозки столбцов. Значение по умолчанию: false.
+     *
+     * @var bool
+     */
+    public $addButtonFreze = false;
+
+    /**
+     * Признак необходимости добавить кнопку сортировки столбцов. Значение по умолчанию: true.
+     *
+     * @var bool
+     */
+    public $addButtonSortColumns = true;
+
 
     /**
      * Initialize a new instance of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\NavigatorButtons} class.
@@ -644,6 +671,40 @@ class NavigatorButtons implements ConfigurationDefinitionInterface
     public function setPosition($position)
     {
         $this->position = $position;
+        return $this;
+    }
+
+    /**
+     * A list of the custom buttons configs.
+     *
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\CustomButtonConfig[]|\Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\SeparatorConfig[]
+     */
+    public function getCustomButtons()
+    {
+        return $this->customButtons;
+    }
+
+    /**
+     * Add custom button config to the CustomButtons list.
+     *
+     * @param \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\CustomButtonConfig|\Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\SeparatorConfig $customButton
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\NavigatorButtons
+     */
+    public function addCustomButton($customButton)
+    {
+        $this->customButtons[] = $customButton;
+        return $this;
+    }
+
+    /**
+     * A list of the custom buttons configs.
+     *
+     * @param \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\CustomButtonConfig[]|\Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\SeparatorConfig[] $customButtons
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\NavigatorButtons
+     */
+    public function setCustomButtons($customButtons)
+    {
+        $this->customButtons = $customButtons;
         return $this;
     }
 
