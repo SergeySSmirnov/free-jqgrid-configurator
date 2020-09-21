@@ -113,7 +113,6 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
         return $_config;
     }
 
-
     /**
      * Type of text alignment within a column.
      *
@@ -124,6 +123,15 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      * @var string
      */
     private $align = 'left';
+
+    /**
+     * Auto resize column width on double click on the space between columns.
+     *
+     * Default value: true.
+     *
+     * @var boolean
+     */
+    private $autoResizable = true;
 
 //     /**
 //      * This function add attributes to the cell during the creation of the data - i.e dynamically.
@@ -536,6 +544,32 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     public function setAlign($align)
     {
         $this->align = $align;
+        return $this;
+    }
+
+    /**
+     * Auto resize column width on double click on the space between columns.
+     *
+     * Default value: true.
+     *
+     * @return boolean
+     */
+    public function getAutoResizable()
+    {
+        return $this->autoResizable;
+    }
+
+    /**
+     * Auto resize column width on double click on the space between columns.
+     *
+     * Default value: true.
+     *
+     * @param boolean $autoResizable
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setAutoResizable($autoResizable)
+    {
+        $this->autoResizable = $autoResizable;
         return $this;
     }
 

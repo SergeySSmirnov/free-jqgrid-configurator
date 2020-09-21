@@ -29,7 +29,7 @@ class SearchButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $searchicon = 'ui-icon ui-icon-search';
+    private $searchicon = '';
 
     /**
      * The text than can be set in the search button.

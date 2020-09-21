@@ -158,7 +158,7 @@ class NavigatorButtons implements ConfigurationDefinitionInterface
      *
      * @var \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\CustomButtonConfig[]|\Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\SeparatorConfig[]
      */
-    private $customButtons = [];
+    private $__customButtons = [];
 
     /**
      * Признак необходимости добавить кнопку копирования выбранной записи. Значение по умолчанию: false.
@@ -231,6 +231,12 @@ class NavigatorButtons implements ConfigurationDefinitionInterface
 
         if ($this->view) {
             $_config = array_merge_recursive($_config, $this->viewConfig->getConfig());
+        }
+
+        if (count($this->__customButtons)) {
+            foreach ($this->__customButtons as $_btnConfig) {
+                $_config['__customButtons'][] = $_btnConfig->getConfig();
+            }
         }
 
         return (object)$_config;
@@ -681,7 +687,7 @@ class NavigatorButtons implements ConfigurationDefinitionInterface
      */
     public function getCustomButtons()
     {
-        return $this->customButtons;
+        return $this->__customButtons;
     }
 
     /**
@@ -692,7 +698,7 @@ class NavigatorButtons implements ConfigurationDefinitionInterface
      */
     public function addCustomButton($customButton)
     {
-        $this->customButtons[] = $customButton;
+        $this->__customButtons[] = $customButton;
         return $this;
     }
 
@@ -704,7 +710,7 @@ class NavigatorButtons implements ConfigurationDefinitionInterface
      */
     public function setCustomButtons($customButtons)
     {
-        $this->customButtons = $customButtons;
+        $this->__customButtons = $customButtons;
         return $this;
     }
 

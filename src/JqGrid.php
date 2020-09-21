@@ -496,53 +496,53 @@ class JqGrid implements ConfigurationDefinitionInterface
 //      */
 //     private $mtype = 'GET';
 
-//     /**
-//      * This parameter makes sense only when the multiselect option is set to true.
-//      * Defines the key which should be pressed when we make multiselection.
-//      *
-//      * Allowed values:
-//      *  <ul>
-//      *   <li>shiftKey - the user should press Shift Key;</li>
-//      *   <li>altKey - the user should press Alt Key;</li>
-//      *   <li>ctrlKey - the user should press Ctrl Key.</li>
-//      *  <ul>
-//      *
-//      * Default value: ''.
-//      *
-//      * @var string
-//      */
-//     private $multikey = '';
+    /**
+     * This parameter makes sense only when the multiselect option is set to true.
+     * Defines the key which should be pressed when we make multiselection.
+     *
+     * Allowed values:
+     *  <ul>
+     *   <li>shiftKey - the user should press Shift Key;</li>
+     *   <li>altKey - the user should press Alt Key;</li>
+     *   <li>ctrlKey - the user should press Ctrl Key.</li>
+     *  <ul>
+     *
+     * Default value: ''.
+     *
+     * @var string
+     */
+    private $multikey = '';
 
-//     /**
-//      * This option works only when the multiselect option is set to true.
-//      * When multiselect is set to true, clicking anywhere on a row selects that row;
-//      * when multiboxonly is also set to true, the multiselection is done only when the checkbox is clicked (Yahoo style).
-//      * Clicking in any other row (suppose the checkbox is not clicked) deselects all rows and selects the current row.
-//      *
-//      * Default value: false.
-//      *
-//      * @var boolean
-//      */
-//     private $multiboxonly = false;
+    /**
+     * This option works only when the multiselect option is set to true.
+     * When multiselect is set to true, clicking anywhere on a row selects that row;
+     * when multiboxonly is also set to true, the multiselection is done only when the checkbox is clicked (Yahoo style).
+     * Clicking in any other row (suppose the checkbox is not clicked) deselects all rows and selects the current row.
+     *
+     * Default value: false.
+     *
+     * @var boolean
+     */
+    private $multiboxonly = false;
 
-//     /**
-//      * If this flag is set to true a multi selection of rows is enabled.
-//      * A new column at left side containing checkboxes is added. Can be used with any datatype option.
-//      *
-//      * Default value: false.
-//      *
-//      * @var boolean
-//      */
-//     private $multiselect = false;
+    /**
+     * If this flag is set to true a multi selection of rows is enabled.
+     * A new column at left side containing checkboxes is added. Can be used with any datatype option.
+     *
+     * Default value: false.
+     *
+     * @var boolean
+     */
+    private $multiselect = false;
 
-//     /**
-//      * Determines the width of the checkbox column created when the multiselect option is enabled.
-//      *
-//      * Default value: 20.
-//      *
-//      * @var integer
-//      */
-//     private $multiselectWidth = 20;
+    /**
+     * Determines the width of the checkbox column created when the multiselect option is enabled.
+     *
+     * Default value: 20.
+     *
+     * @var integer
+     */
+    private $multiselectWidth = 20;
 
     /**
      * If set to true enables the multisorting. The options work if the datatype is local.
@@ -1061,6 +1061,134 @@ class JqGrid implements ConfigurationDefinitionInterface
 //      */
 //     private $xmlReader = [];
 
+    /**
+     * Returns configuration as an array of key-value pairs.
+     *
+     * @return array
+     */
+    public function getConfig() {
+        $_config = [];
+
+        foreach ($this as $_key => $_val) {
+            if (is_array($_val)) {
+                foreach ($_val as $_subKey => $_subVal) {
+                    if ($_subVal instanceof ConfigurationDefinitionInterface) {
+                        $_config[$_key][] = $_subVal->getConfig();
+                    } else {
+                        $_config[$_key][$_subKey] = $_subVal;
+                    }
+                }
+            } elseif ($_val instanceof ConfigurationDefinitionInterface) {
+                $_config[$_key] = $_val->getConfig();
+            } else {
+                if (is_string($_val)) {
+                    $_val = trim($_val);
+                    if (!empty($_val)) {
+                        $_config[$_key] = $_val;
+                    }
+                } elseif (is_null($_val)) {
+                    continue;
+                } else {
+                    $_config[$_key] = $_val;
+                }
+            }
+        }
+
+        if (!$this->altRows) {
+            unset($_config['altRows'], $_config['altclass']);
+        }
+
+        if (empty($this->caption)) {
+            unset($_config['caption'], $_config['hiddengrid'], $_config['hidegrid']);
+        }
+
+        if (!$this->cellEdit) {
+            unset($_config['cellEdit'], $_config['cellLayout'], $_config['cellsubmit'], $_config['cellurl'], $_config['ajaxCellOptions']);
+        }
+
+        if (count($this->colNames) !== count($this->colModel)) {
+            unset($_config['colNames']);
+        }
+
+        switch ($this->dataType) {
+            case 'xml':
+                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['jsonReader']);
+                break;
+            case 'xmlstring':
+                unset($_config['deselectAfterSort'], $_config['jsonReader']);
+                break;
+            case 'json':
+                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['xmlReader']);
+                break;
+            case 'jsonstring':
+                unset($_config['deselectAfterSort'], $_config['xmlReader']);
+                break;
+            case 'local':
+                unset($_config['datastr'], $_config['jsonReader'], $_config['xmlReader']);
+                break;
+            case 'javascript':
+                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['jsonReader'], $_config['xmlReader']);
+                break;
+            case 'function':
+                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['jsonReader'], $_config['xmlReader']);
+                break;
+            case 'clientSide':
+                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['jsonReader'], $_config['xmlReader']);
+                break;
+        }
+
+        if (count($this->data) > 0) {
+            $_config['data'] = $this->data;
+        }
+
+//         if (!$this->hidegrid) {
+//             unset($_config['hiddengrid']);
+//         }
+
+        if (!$this->multiselect) {
+            unset($_config['multiselect'], $_config['multikey'], $_config['multiboxonly'], $_config['multiselectWidth']);
+        }
+
+        if (empty($this->pager) || $this->pager === false) {
+            unset($_config['pager'], $_config['pagerpos'], $_config['pgbuttons'], $_config['pginput'],
+                    $_config['rowList'], $_config['rowNum'], $_config['recordpos'], $_config['viewrecords'], $_config['__eventHandler__navigatorButtons']);
+        }
+
+        if (!$this->rownumbers) {
+            unset($_config['rownumbers'], $_config['rownumWidth']);
+        }
+
+//         if ($this->scroll === false) {
+//             unset($_config['scroll'], $_config['scrollOffset'], $_config['scrollTimeout'], $_config['scrollrows']);
+//         }
+
+//         if (!$this->sortable) {
+//             unset($_config['sortable']);
+//         }
+
+//         if (!$this->subGrid) {
+//             unset($_config['subGrid'], $_config['subGridOptions'], $_config['subGridModel'], $_config['subGridType'],
+//                     $_config['subGridUrl'], $_config['subGridWidth']);
+//         }
+
+//         if (!$this->toolbar[0]) {
+//             unset($_config['toolbar']);
+//         }
+
+//         if (!$this->treeGrid) {
+//             unset($_config['treeGrid'], $_config['ExpandColumn'], $_config['treedatatype'], $_config['treeIcons'], $_config['treeReader'], $_config['tree_root_level']);
+//         }
+
+        if (!$this->viewrecords) {
+            unset($_config['viewrecords'], $_config['recordpos']);
+        }
+
+//         if (!$this->userDataOnFooter) {
+//             unset($_config['userDataOnFooter'], $_config['userData']);
+//         }
+
+        return $_config;
+    }
 
     /**
      * The string of data when datatype parameter is set to xmlstring or jsonstring.
@@ -1762,6 +1890,134 @@ class JqGrid implements ConfigurationDefinitionInterface
     }
 
     /**
+     * This parameter makes sense only when the multiselect option is set to true.
+     * Defines the key which should be pressed when we make multiselection.
+     *
+     * Allowed values:
+     *  <ul>
+     *   <li>shiftKey - the user should press Shift Key;</li>
+     *   <li>altKey - the user should press Alt Key;</li>
+     *   <li>ctrlKey - the user should press Ctrl Key.</li>
+     *  <ul>
+     *
+     * Default value: ''.
+     *
+     * @return string
+     */
+    public function getMultikey()
+    {
+        return $this->multikey;
+    }
+
+    /**
+     * This parameter makes sense only when the multiselect option is set to true.
+     * Defines the key which should be pressed when we make multiselection.
+     *
+     * Allowed values:
+     *  <ul>
+     *   <li>shiftKey - the user should press Shift Key;</li>
+     *   <li>altKey - the user should press Alt Key;</li>
+     *   <li>ctrlKey - the user should press Ctrl Key.</li>
+     *  <ul>
+     *
+     * Default value: ''.
+     *
+     * @param string $multikey
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setMultikey($multikey)
+    {
+        $this->multikey = $multikey;
+        return $this;
+    }
+
+    /**
+     * This option works only when the multiselect option is set to true.
+     * When multiselect is set to true, clicking anywhere on a row selects that row;
+     * when multiboxonly is also set to true, the multiselection is done only when the checkbox is clicked (Yahoo style).
+     * Clicking in any other row (suppose the checkbox is not clicked) deselects all rows and selects the current row.
+     *
+     * Default value: false.
+     *
+     * @return boolean
+     */
+    public function getMultiboxOnly()
+    {
+        return $this->multiboxonly;
+    }
+
+    /**
+     * This option works only when the multiselect option is set to true.
+     * When multiselect is set to true, clicking anywhere on a row selects that row;
+     * when multiboxonly is also set to true, the multiselection is done only when the checkbox is clicked (Yahoo style).
+     * Clicking in any other row (suppose the checkbox is not clicked) deselects all rows and selects the current row.
+     *
+     * Default value: false.
+     *
+     * @param boolean $multiboxonly
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setMultiboxOnly($multiboxOnly)
+    {
+        $this->multiboxonly = $multiboxOnly;
+        return $this;
+    }
+
+    /**
+     * If this flag is set to true a multi selection of rows is enabled.
+     * A new column at left side containing checkboxes is added. Can be used with any datatype option.
+     *
+     * Default value: false.
+     *
+     * @return boolean
+     */
+    public function getMultiselect()
+    {
+        return $this->multiselect;
+    }
+
+    /**
+     * If this flag is set to true a multi selection of rows is enabled.
+     * A new column at left side containing checkboxes is added. Can be used with any datatype option.
+     *
+     * Default value: false.
+     *
+     * @param boolean $multiselect
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setMultiselect($multiselect)
+    {
+        $this->multiselect = $multiselect;
+        return $this;
+    }
+
+    /**
+     * Determines the width of the checkbox column created when the multiselect option is enabled.
+     *
+     * Default value: 20.
+     *
+     * @return number
+     */
+    public function getMultiselectWidth()
+    {
+        return $this->multiselectWidth;
+    }
+
+    /**
+     * Determines the width of the checkbox column created when the multiselect option is enabled.
+     *
+     * Default value: 20.
+     *
+     * @param number $multiselectWidth
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setMultiselectWidth($multiselectWidth)
+    {
+        $this->multiselectWidth = $multiselectWidth;
+        return $this;
+    }
+
+    /**
      * Allow three state sorting (asc, desc, none).
      * Default value: true.
      *
@@ -1956,162 +2212,6 @@ class JqGrid implements ConfigurationDefinitionInterface
     {
         $this->rowList = $rowList;
         return $this;
-    }
-
-
-    /**
-     * Returns configuration as an array of key-value pairs.
-     *
-     * @return array
-     */
-    public function getConfig() {
-        $_config = [];
-
-        foreach ($this as $_key => $_val) {
-            if (is_array($_val)) {
-                foreach ($_val as $_subKey => $_subVal) {
-                    if ($_subVal instanceof ConfigurationDefinitionInterface) {
-                        $_config[$_key][] = $_subVal->getConfig();
-                    } else {
-                        $_config[$_key][$_subKey] = $_subVal;
-                    }
-                }
-            } elseif ($_val instanceof ConfigurationDefinitionInterface) {
-                $_config[$_key] = $_val->getConfig();
-            } else {
-                if (is_string($_val)) {
-                    $_val = trim($_val);
-                    if (!empty($_val)) {
-                        $_config[$_key] = $_val;
-                    }
-                } elseif (is_null($_val)) {
-                    continue;
-                } else {
-                    $_config[$_key] = $_val;
-                }
-            }
-        }
-
-        if (!$this->altRows) {
-            unset($_config['altRows'], $_config['altclass']);
-        }
-
-        if (empty($this->caption)) {
-            unset($_config['caption'], $_config['hiddengrid'], $_config['hidegrid']);
-        }
-
-        if (!$this->cellEdit) {
-            unset($_config['cellEdit'], $_config['cellLayout'], $_config['cellsubmit'], $_config['cellurl'], $_config['ajaxCellOptions']);
-        }
-
-        if (count($this->colNames) !== count($this->colModel)) {
-            unset($_config['colNames']);
-        }
-
-        switch ($this->dataType) {
-            case 'xml':
-                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['jsonReader']);
-                break;
-            case 'xmlstring':
-                unset($_config['deselectAfterSort'], $_config['jsonReader']);
-                break;
-            case 'json':
-                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['xmlReader']);
-                break;
-            case 'jsonstring':
-                unset($_config['deselectAfterSort'], $_config['xmlReader']);
-                break;
-            case 'local':
-                unset($_config['datastr'], $_config['jsonReader'], $_config['xmlReader']);
-                break;
-            case 'javascript':
-                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['jsonReader'], $_config['xmlReader']);
-                break;
-            case 'function':
-                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['jsonReader'], $_config['xmlReader']);
-                break;
-            case 'clientSide':
-                unset($_config['deselectAfterSort'], $_config['datastr'], $_config['jsonReader'], $_config['xmlReader']);
-                break;
-        }
-
-        if (count($this->data) > 0) {
-            $_config['data'] = $this->data;
-        }
-
-//         if (!$this->hidegrid) {
-//             unset($_config['hiddengrid']);
-//         }
-
-//         if (!$this->multiselect) {
-//             unset($_config['multiselect'], $_config['multikey'], $_config['multiboxonly'], $_config['multiselectWidth']);
-//         }
-
-        if (empty($this->pager) || $this->pager === false) {
-            unset($_config['pager'], $_config['pagerpos'], $_config['pgbuttons'], $_config['pginput'],
-                    $_config['rowList'], $_config['rowNum'], $_config['recordpos'], $_config['viewrecords'], $_config['__eventHandler__navigatorButtons']);
-        }
-
-        if (!$this->rownumbers) {
-            unset($_config['rownumbers'], $_config['rownumWidth']);
-        }
-
-//         if ($this->scroll === false) {
-//             unset($_config['scroll'], $_config['scrollOffset'], $_config['scrollTimeout'], $_config['scrollrows']);
-//         }
-
-//         if (!$this->sortable) {
-//             unset($_config['sortable']);
-//         }
-
-//         if (!$this->subGrid) {
-//             unset($_config['subGrid'], $_config['subGridOptions'], $_config['subGridModel'], $_config['subGridType'],
-//                     $_config['subGridUrl'], $_config['subGridWidth']);
-//         }
-
-//         if (!$this->toolbar[0]) {
-//             unset($_config['toolbar']);
-//         }
-
-//         if (!$this->treeGrid) {
-//             unset($_config['treeGrid'], $_config['ExpandColumn'], $_config['treedatatype'], $_config['treeIcons'], $_config['treeReader'], $_config['tree_root_level']);
-//         }
-
-        if (!$this->viewrecords) {
-            unset($_config['viewrecords'], $_config['recordpos']);
-        }
-
-//         if (!$this->userDataOnFooter) {
-//             unset($_config['userDataOnFooter'], $_config['userData']);
-//         }
-
-
-
-
-
-
-
-//         // Формируем заданные пользовательские кнопки
-//         if ($this->addCopyButton || $this->addButtonFreze || $this->addButtonSortColumns) {
-//             if ($this->addCopyButton) {
-//                 $this->customButtons[] = CustomButton::addButton('editForm_Copy', '', 'ui-icon-copy', 'Копировать выделенную запись', 'first');
-//             }
-//             $this->customButtons[] = CustomButton::addSeparator();
-//             if ($this->addButtonSortColumns) {
-//                 $this->customButtons[] = CustomButton::addButton('columnChooser', '', 'ui-icon-shuffle', 'Переупорядочивание и скрытие колонок');
-//             }
-//             if ($this->addButtonFreze) {
-//                 $this->customButtons[] = CustomButton::addButton('columnFreze', '', 'ui-icon-unlocked', 'Заморозить/разморозить фиксированные столбцы');
-//             }
-//         }
-//         if (count($this->customButtons) > 0) {
-//             $_config['custom_buttons'] = [];
-//             foreach ($this->customButtons as $button) {
-//                 $_config['custom_buttons'][] = $button->getConfig();
-//             }
-//         }
-
-        return $_config;
     }
 
     /**

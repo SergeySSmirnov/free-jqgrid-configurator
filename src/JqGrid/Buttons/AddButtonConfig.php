@@ -29,7 +29,7 @@ class AddButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $addicon = 'ui-icon ui-icon-plus';
+    private $addicon = '';
 
     /**
      * The text than can be set in the add button.

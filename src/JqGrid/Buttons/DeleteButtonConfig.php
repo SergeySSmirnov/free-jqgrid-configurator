@@ -29,7 +29,7 @@ class DeleteButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $delicon = 'ui-icon ui-icon-trash';
+    private $delicon = '';
 
     /**
      * The text than can be set in the delete button.

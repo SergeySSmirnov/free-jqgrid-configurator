@@ -29,7 +29,7 @@ class RefreshButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $refreshicon = 'ui-icon ui-icon-refresh';
+    private $refreshicon = '';
 
     /**
      * The text than can be set in the refresh button.

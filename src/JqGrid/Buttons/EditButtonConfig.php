@@ -29,7 +29,7 @@ class EditButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $editicon = 'ui-icon ui-icon-pencil';
+    private $editicon = '';
 
     /**
      * The text than can be set in the edit button.

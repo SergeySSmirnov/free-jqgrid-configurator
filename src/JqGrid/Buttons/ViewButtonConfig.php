@@ -29,7 +29,7 @@ class ViewButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $viewicon = 'ui-icon ui-icon-document';
+    private $viewicon = '';
 
     /**
      * The text that can be set in the view button.
