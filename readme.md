@@ -1,4 +1,4 @@
-# Free JqGrid Configurator v. 2.0.0
+# Free JqGrid Configurator v. 2.0.1
 Is a simple configurator utility that allows creating a FreeJqGrid config in a simple way.  
 All capabilities are commented on.  
 
