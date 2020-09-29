@@ -247,14 +247,14 @@ class JqGrid implements ConfigurationDefinitionInterface
 //      */
 //     private $direction = 'ltr';
 
-//     /**
-//      * Defines the url for inline and form editing.
-//      * May be set to clientArray to manually post data to server.
-//      * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:inline_editing_s_clientarray
-//      *
-//      * @var string
-//      */
-//     private $editurl = '';
+    /**
+     * Defines the url for inline and form editing.
+     * May be set to clientArray to manually post data to server.
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:inline_editing_s_clientarray
+     *
+     * @var string
+     */
+    private $editurl = '';
 
 //     /**
 //      * The string to display when the returned (or the current) number of records in the grid is zero.
@@ -2183,6 +2183,32 @@ class JqGrid implements ConfigurationDefinitionInterface
     public function setData($data)
     {
         $this->data = $data;
+        return $this;
+    }
+
+    /**
+     * Defines the url for inline and form editing.
+     * May be set to clientArray to manually post data to server.
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:inline_editing_s_clientarray
+     *
+     * @return string
+     */
+    public function getEditUrl()
+    {
+        return $this->editurl;
+    }
+
+    /**
+     * Defines the url for inline and form editing.
+     * May be set to clientArray to manually post data to server.
+     * @see http://www.trirand.com/jqgridwiki/doku.php?id=wiki:inline_editing_s_clientarray
+     *
+     * @param string $editurl
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setEditUrl($editurl)
+    {
+        $this->editurl = $editurl;
         return $this;
     }
 
