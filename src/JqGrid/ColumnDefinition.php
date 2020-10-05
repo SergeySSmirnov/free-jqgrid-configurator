@@ -289,6 +289,20 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     private $formatter = '';
 
     /**
+     * The function name used instead of predefined formatters.
+     *
+     * @var string
+     */
+    private $__eventHandler__formatter = '';
+
+    /**
+     * The function name used instead of predefined unformatter.
+     *
+     * @var string
+     */
+    private $__eventHandler__unformat = '';
+
+    /**
      * If set to true determines that this column will be frozen after calling the setFrozenColumns method.
      *
      * Default value: false.
@@ -926,6 +940,50 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     public function setFormatter($formatter)
     {
         $this->formatter = $formatter;
+        return $this;
+    }
+
+    /**
+     * The function name used instead of predefined formatters.
+     *
+     * @return string
+     */
+    public function getFormatterFunction()
+    {
+        return $this->__eventHandler__formatter;
+    }
+
+    /**
+     * The function name used instead of predefined formatters.
+     *
+     * @param string $formatterFunctionName
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setFormatterFunction($formatterFunctionName)
+    {
+        $this->__eventHandler__formatter = $formatterFunctionName;
+        return $this;
+    }
+
+    /**
+     * The function name used instead of predefined unformatter.
+     *
+     * @return string
+     */
+    public function getUnformatFunction()
+    {
+        return $this->__eventHandler__unformat;
+    }
+
+    /**
+     * The function name used instead of predefined unformatter.
+     *
+     * @param string $unformatFunctionName
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     */
+    public function setUnformatFunction($unformatFunctionName)
+    {
+        $this->__eventHandler__unformat = $unformatFunctionName;
         return $this;
     }
 
