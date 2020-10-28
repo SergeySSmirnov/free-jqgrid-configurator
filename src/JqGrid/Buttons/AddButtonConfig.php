@@ -47,7 +47,7 @@ class AddButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $addtitle = 'Add new row';
+    private $addtitle = '';
 
     /**
      * If defined replaces the build in add function.
@@ -72,30 +72,28 @@ class AddButtonConfig implements ConfigurationDefinitionInterface
      * @see \Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface::getConfig()
      */
     public function getConfig() {
-        $_config = [];
+        $_configFieldsExcept = ['addicon', 'addtext', 'addtitle', '__eventHandler__addfunc'];
+        $_btnConfigFieldName = '__addButtonConfig';
+        $_config = [$_btnConfigFieldName => []];
 
         foreach ($this as $_key => $_val) {
             if (is_string($_val)) {
                 $_val = trim($_val);
-                if (!empty($_val)) {
-                    $_config[$_key] = $_val;
+                if (empty($_val)) {
+                    continue;
                 }
             } elseif (is_null($_val)) {
                 continue;
-            } else {
+            }
+
+            if (in_array($_key, $_configFieldsExcept)) {
                 $_config[$_key] = $_val;
+            } else {
+                $_config[$_btnConfigFieldName][$_key] = $_val;
             }
         }
 
-        unset($_config['addicon'], $_config['addtext'], $_config['addtitle'], $_config['__eventHandler__addfunc']);
-
-        return [
-            'addicon' => $this->addicon,
-            'addtext' => $this->addtext,
-            'addtitle' => $this->addtitle,
-            '__eventHandler__addfunc' => $this->__eventHandler__addfunc,
-            '__addButtonConfig' => (object)$_config
-        ];
+        return $_config;
     }
 
     /**

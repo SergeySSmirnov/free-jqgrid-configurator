@@ -47,7 +47,7 @@ class ViewButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $viewtitle = 'View selected row';
+    private $viewtitle = '';
 
     /**
      * Determine if the alert dialog can be closed if the user pres ESC key.
@@ -63,29 +63,28 @@ class ViewButtonConfig implements ConfigurationDefinitionInterface
      * @see \Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface::getConfig()
      */
     public function getConfig() {
-        $_config = [];
+        $_configFieldsExcept = ['viewicon', 'viewtext', 'viewtitle'];
+        $_btnConfigFieldName = '__viewButtonConfig';
+        $_config = [$_btnConfigFieldName => []];
 
         foreach ($this as $_key => $_val) {
             if (is_string($_val)) {
                 $_val = trim($_val);
-                if (!empty($_val)) {
-                    $_config[$_key] = $_val;
+                if (empty($_val)) {
+                    continue;
                 }
             } elseif (is_null($_val)) {
                 continue;
-            } else {
+            }
+
+            if (in_array($_key, $_configFieldsExcept)) {
                 $_config[$_key] = $_val;
+            } else {
+                $_config[$_btnConfigFieldName][$_key] = $_val;
             }
         }
 
-        unset($_config['viewicon'], $_config['viewtext'], $_config['viewtitle']);
-
-        return [
-            'viewicon' => $this->viewicon,
-            'viewtext' => $this->viewtext,
-            'viewtitle' => $this->viewtitle,
-            '__viewButtonConfig' => (object)[]
-        ];
+        return $_config;
     }
 
     /**

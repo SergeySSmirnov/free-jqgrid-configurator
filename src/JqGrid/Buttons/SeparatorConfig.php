@@ -17,7 +17,7 @@ class SeparatorConfig implements ConfigurationDefinitionInterface
      *
      * @param string $class Represent the separator class defined in ui-jqgrid.
      * @param string $content The content that can be put in the separator element.
-     * @return unknown
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\Buttons\SeparatorConfig
      */
     public static function createInstance($class = '', $content = '')
     {

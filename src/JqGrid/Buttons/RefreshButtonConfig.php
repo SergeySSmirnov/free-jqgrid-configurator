@@ -47,7 +47,7 @@ class RefreshButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $refreshtitle = 'Reload Grid';
+    private $refreshtitle = '';
 
     /**
      * Determines how the grid should be reloaded.
@@ -87,32 +87,28 @@ class RefreshButtonConfig implements ConfigurationDefinitionInterface
      * @see \Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface::getConfig()
      */
     public function getConfig() {
-        $_config = [];
+        $_configFieldsExcept = ['refreshicon', 'refreshstate', 'refreshtext', 'refreshtitle', '__eventHandler__afterRefresh', '__eventHandler__beforeRefresh'];
+        $_btnConfigFieldName = '__refreshButtonConfig';
+        $_config = [$_btnConfigFieldName => []];
 
         foreach ($this as $_key => $_val) {
             if (is_string($_val)) {
                 $_val = trim($_val);
-                if (!empty($_val)) {
-                    $_config[$_key] = $_val;
+                if (empty($_val)) {
+                    continue;
                 }
             } elseif (is_null($_val)) {
                 continue;
-            } else {
+            }
+
+            if (in_array($_key, $_configFieldsExcept)) {
                 $_config[$_key] = $_val;
+            } else {
+                $_config[$_btnConfigFieldName][$_key] = $_val;
             }
         }
 
-        unset($_config['__eventHandler__afterRefresh'], $_config['__eventHandler__beforeRefresh'], $_config['refreshicon'], $_config['refreshstate'], $_config['refreshtext'], $_config['refreshtitle']);
-
-        return [
-            '__eventHandler__afterRefresh' => $this->__eventHandler__afterRefresh,
-            '__eventHandler__beforeRefresh' => $this->__eventHandler__beforeRefresh,
-            'refreshicon' => $this->refreshicon,
-            'refreshstate' => $this->refreshstate,
-            'refreshtext' => $this->refreshtext,
-            'refreshtitle' => $this->refreshtitle,
-            '__refreshButtonConfig' => (object)[]
-        ];
+        return $_config;
     }
 
     /**

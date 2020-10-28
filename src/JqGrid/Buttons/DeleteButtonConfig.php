@@ -47,7 +47,7 @@ class DeleteButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $deltitle = 'Delete selected row';
+    private $deltitle = '';
 
     /**
      * If defined replaces the build in del function. Parameter passed to this function is the id of the edited row.
@@ -72,30 +72,28 @@ class DeleteButtonConfig implements ConfigurationDefinitionInterface
      * @see \Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface::getConfig()
      */
     public function getConfig() {
-        $_config = [];
+        $_configFieldsExcept = ['delicon', 'deltext', 'deltitle', '__eventHandler__delfunc'];
+        $_btnConfigFieldName = '__delButtonConfig';
+        $_config = [$_btnConfigFieldName => []];
 
         foreach ($this as $_key => $_val) {
             if (is_string($_val)) {
                 $_val = trim($_val);
-                if (!empty($_val)) {
-                    $_config[$_key] = $_val;
+                if (empty($_val)) {
+                    continue;
                 }
             } elseif (is_null($_val)) {
                 continue;
-            } else {
+            }
+
+            if (in_array($_key, $_configFieldsExcept)) {
                 $_config[$_key] = $_val;
+            } else {
+                $_config[$_btnConfigFieldName][$_key] = $_val;
             }
         }
 
-        unset($_config['delicon'], $_config['deltext'], $_config['deltitle'], $_config['__eventHandler__delfunc']);
-
-        return [
-            'delicon' => $this->delicon,
-            'deltext' => $this->deltext,
-            'deltitle' => $this->deltitle,
-            '__eventHandler__delfunc' => $this->__eventHandler__delfunc,
-            '__delButtonConfig' => (object)$_config
-        ];
+        return $_config;
     }
 
     /**

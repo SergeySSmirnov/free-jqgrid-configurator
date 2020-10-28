@@ -410,13 +410,13 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Specify to use another font that used by default at the table.
      *
-     * Allowed values: '', 'fontAwesome', 'glyph', 'jQueryUI'.
+     * Allowed values: '', 'fontAwesome', 'fontAwesome5', 'fontAwesomeSolid', 'fontAwesomeBrands', 'fontAwesomeLight', 'fontAwesomeRegular', 'glyph', 'jQueryUI'.
      *
-     * Default value: 'fontAwesome'.
+     * Default value: 'fontAwesomeSolid'.
      *
      * @var string
      */
-    private $iconSet = 'fontAwesome';
+    private $iconSet = 'fontAwesomeSolid';
 
     /**
      * The prefix of the row identifier (id attribute of the tr-element).
@@ -1619,7 +1619,7 @@ class JqGrid implements ConfigurationDefinitionInterface
 
     /**
      * Specify to use another font that used by default at the table.
-     * Allowed values: '', 'fontAwesome', 'glyph', 'jQueryUI'.
+     * Allowed values: '', 'fontAwesome', 'fontAwesome5', 'fontAwesomeSolid', 'fontAwesomeBrands', 'fontAwesomeLight', 'fontAwesomeRegular', 'glyph', 'jQueryUI'.
      * Default value: 'fontAwesome'.
      *
      * @return string
@@ -1631,7 +1631,7 @@ class JqGrid implements ConfigurationDefinitionInterface
 
     /**
      * Specify to use another font that used by default at the table.
-     * Allowed values: '', 'fontAwesome', 'glyph', 'jQueryUI'.
+     * Allowed values: '', 'fontAwesome', 'fontAwesome5', 'fontAwesomeSolid', 'fontAwesomeBrands', 'fontAwesomeLight', 'fontAwesomeRegular', 'glyph', 'jQueryUI'.
      * Default value: 'fontAwesome'.
      *
      * @param string $iconSet
@@ -1656,7 +1656,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * The prefix of the row identifier (id attribute of the tr-element.
      *
-     * @param unknown $idPrefix
+     * @param string $idPrefix
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
     public function setIdPrefix($idPrefix)
@@ -1702,7 +1702,7 @@ class JqGrid implements ConfigurationDefinitionInterface
     /**
      * Table caption.
      *
-     * @param unknown $caption
+     * @param string $caption
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
     public function setCaption($caption)
@@ -1726,7 +1726,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * Show the pager navigation bar on top of the grid.
      * Default value: false.
      *
-     * @param unknown $topPager
+     * @param boolean $topPager
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
     public function setShowTopPager($topPager)
@@ -2045,7 +2045,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      * Show sort icons before the table header text.
      * Default value: false.
      *
-     * @param unknown $showSortIconsBeforeText
+     * @param boolean $showSortIconsBeforeText
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
     public function setShowSortIconsBeforeText($showSortIconsBeforeText)

@@ -47,7 +47,7 @@ class SearchButtonConfig implements ConfigurationDefinitionInterface
      *
      * @var string
      */
-    private $searchtitle = 'Find records';
+    private $searchtitle = '';
 
     /**
      * Determine if the alert dialog can be closed if the user pres ESC key.
@@ -351,29 +351,28 @@ class SearchButtonConfig implements ConfigurationDefinitionInterface
      * @see \Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface::getConfig()
      */
     public function getConfig() {
-        $_config = [];
+        $_configFieldsExcept = ['searchicon', 'searchtext', 'searchtitle', '__eventHandler__afterRefresh'];
+        $_btnConfigFieldName = '__searchButtonConfig';
+        $_config = [$_btnConfigFieldName => []];
 
         foreach ($this as $_key => $_val) {
             if (is_string($_val)) {
                 $_val = trim($_val);
-                if (!empty($_val)) {
-                    $_config[$_key] = $_val;
+                if (empty($_val)) {
+                    continue;
                 }
             } elseif (is_null($_val)) {
                 continue;
-            } else {
+            }
+
+            if (in_array($_key, $_configFieldsExcept)) {
                 $_config[$_key] = $_val;
+            } else {
+                $_config[$_btnConfigFieldName][$_key] = $_val;
             }
         }
 
-        unset($_config['searchicon'], $_config['searchtext'], $_config['searchtitle']);
-
-        return [
-                'searchicon' => $this->searchicon,
-                'searchtext' => $this->searchtext,
-                'searchtitle' => $this->searchtitle,
-                '__searchButtonConfig' => (object)$_config
-        ];
+        return $_config;
     }
 
     /**
