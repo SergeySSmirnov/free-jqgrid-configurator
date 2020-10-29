@@ -310,7 +310,7 @@ class ToolbarSearch implements ConfigurationDefinitionInterface
      * @param string $afterClearEventHandler
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ToolbarSearch
      */
-    public function setAfterClear($afterClearEventHandler)
+    public function setAfterClearEventHandler($afterClearEventHandler)
     {
         $this->__eventHandler__afterClear = $afterClearEventHandler;
 
