@@ -161,28 +161,6 @@ class NavigatorButtons implements ConfigurationDefinitionInterface
     private $__customButtons = [];
 
     /**
-     * Признак необходимости добавить кнопку копирования выбранной записи. Значение по умолчанию: false.
-     *
-     * @var bool
-     */
-    public $addCopyButton = false;
-
-    /**
-     * Признак необходимости добавить кнопку заморозки столбцов. Значение по умолчанию: false.
-     *
-     * @var bool
-     */
-    public $addButtonFreze = false;
-
-    /**
-     * Признак необходимости добавить кнопку сортировки столбцов. Значение по умолчанию: true.
-     *
-     * @var bool
-     */
-    public $addButtonSortColumns = true;
-
-
-    /**
      * Initialize a new instance of the {@link \Rusproj\FreeJqGridConfigurator\JqGrid\NavigatorButtons} class.
      */
     function __construct() {
