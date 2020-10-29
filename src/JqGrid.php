@@ -63,6 +63,12 @@ class JqGrid implements ConfigurationDefinitionInterface
      */
     private $__navigatorButtons = null;
 
+    /**
+     * Config of the toolbar search.
+     *
+     * @var \Rusproj\FreeJqGridConfigurator\JqGrid\ToolbarSearch
+     */
+    private $__toolbarSearch = null;
 
     /**
      * The class that is used for applying different styles to alternate (zebra) rows in the grid.
@@ -2245,7 +2251,7 @@ class JqGrid implements ConfigurationDefinitionInterface
      *
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid\NavigatorButtons
      */
-    public function getNavigatorButtons()
+    public function getNavigatorButtonsConfig()
     {
         if (is_null($this->__navigatorButtons)) {
             $this->__navigatorButtons = new NavigatorButtons();
@@ -2260,11 +2266,35 @@ class JqGrid implements ConfigurationDefinitionInterface
      * @param \Rusproj\FreeJqGridConfigurator\JqGrid\NavigatorButtons $navigatorButtons
      * @return \Rusproj\FreeJqGridConfigurator\JqGrid
      */
-    public function setNavigatorButtons($navigatorButtons)
+    public function setNavigatorButtonsConfig($navigatorButtons)
     {
         $this->__navigatorButtons = $navigatorButtons;
         return $this;
     }
+
+    /**
+     * Config of the toolbar search.
+     *
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ToolbarSearch
+     */
+    public function getToolbarSearchConfig()
+    {
+        return $this->__toolbarSearch;
+    }
+
+    /**
+     * Config of the toolbar search.
+     *
+     * @param \Rusproj\FreeJqGridConfigurator\JqGrid\ToolbarSearch $toolbarSearchConfig
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid
+     */
+    public function setToolbarSearchConfig($toolbarSearchConfig)
+    {
+        $this->__toolbarSearch = $toolbarSearchConfig;
+
+        return $this;
+    }
+
 
     /**
      * This event fires after every inserted row.
