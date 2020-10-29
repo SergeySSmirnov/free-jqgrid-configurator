@@ -1668,7 +1668,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      * @param string $title Title of the field label.
      * @return array
      */
-    public static function generateSearchOptions($dataUrl = '', $sopt = ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en', 'cn', 'nc', 'nu', 'nn'], $defaultValue = '', $value = [], $searchHidden = false, $title = '')
+    public static function generateSearchOptions($dataUrl = '', $sopt = ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en', 'cn', 'nc', 'nu', 'nn'], $defaultValue = null, $value = [], $searchHidden = false, $title = '')
     {
         $_config = [];
 
@@ -1680,7 +1680,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
             $_config['sopt'] = $sopt;
         }
 
-        if (!empty($defaultValue)) {
+        if (!is_null($defaultValue)) {
             $_config['defaultValue'] = $defaultValue;
         }
 
@@ -1860,7 +1860,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
             }
         }
 
-        if (!empty($defaultValue)) {
+        if (!is_null($defaultValue)) {
             $_config['defaultValue'] = $defaultValue;
         }
 
