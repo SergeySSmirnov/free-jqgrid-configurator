@@ -110,7 +110,10 @@ class CustomButtonConfig implements ConfigurationDefinitionInterface
 
         foreach ($this as $_key => $_val) {
             if (is_string($_val)) {
-                $_config[$_key] = trim($_val);
+
+                if (!empty($_val)) {
+                    $_config[$_key] = trim($_val);
+                }
             } elseif (is_null($_val)) {
                 continue;
             } else {
