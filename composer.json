@@ -12,11 +12,11 @@
 	"description" : "Backend helper to apply free jqGrid capabilities on your site.",
 	"license" : "MIT",
 	"support" : {
-		"email" : "sergeyssmirnov@mail.ru"
+		"email" : "sss.rusproj@gmail.com"
 	},
 	"authors" : [{
 			"name" : "Sergei S. Smirnov",
-			"email" : "sergeissmirnov@mail.ru",
+			"email" : "sss.rusproj@gmail.com",
 			"homepage" : "https://rusproj.space"
 		}
 	],

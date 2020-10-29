@@ -2,7 +2,6 @@
 namespace Rusproj\FreeJqGridConfigurator\JqGrid;
 
 use Rusproj\FreeJqGridConfigurator\ConfigurationDefinitionInterface;
-use Rusproj\Uniteller\Exception\NotImplementedException;
 
 /**
  * Represent JqGrid column configuration capabilities.

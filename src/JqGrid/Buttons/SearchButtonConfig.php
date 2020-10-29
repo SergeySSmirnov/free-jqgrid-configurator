@@ -132,13 +132,13 @@ class SearchButtonConfig implements ConfigurationDefinitionInterface
     private $modal = false;
 
     /**
-     * Defines the width os the search dialog.
+     * Defines the width of the search dialog.
      *
      * Default value: 450.
      *
      * @var integer
      */
-    private $width = 450;
+    private $width = 500;
 
     /**
      * Defines the height of the search dialog.
@@ -690,7 +690,7 @@ class SearchButtonConfig implements ConfigurationDefinitionInterface
     }
 
     /**
-     * Defines the width os the search dialog.
+     * Defines the width of the search dialog.
      *
      * Default value: 450.
      *
@@ -702,7 +702,7 @@ class SearchButtonConfig implements ConfigurationDefinitionInterface
     }
 
     /**
-     * Defines the width os the search dialog.
+     * Defines the width of the search dialog.
      *
      * Default value: 450.
      *
