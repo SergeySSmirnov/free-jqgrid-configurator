@@ -1880,6 +1880,52 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     }
 
     /**
+     * Helper generates column config which contains ID text data.
+     *
+     * @param string $name Column name.
+     * @param string $label Column label.
+     * @param integer $width Column width in pixels.
+     * @param string $align Text align. Allowed values: 'left', 'center', 'right'.
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     * @throws \Exception Thrown when {@link $name} is empty.
+     */
+    public static function columnID($name, $label, $width = 150, $align = 'left')
+    {
+        return self::createInstance($name)
+        ->setLabel($label)
+        ->setWidth($width)
+        ->setAlign($align)
+        ->setSortType('text')
+        ->setSearchType('text')
+        ->setSearchOptions(self::generateSearchOptions('', ['eq', 'ne', 'lt', 'le', 'gt', 'ge']))
+        ->setIsEditable(true)
+        ->setEditType('text');
+    }
+
+    /**
+     * Helper generates column config which contains number data.
+     *
+     * @param string $name Column name.
+     * @param string $label Column label.
+     * @param integer $width Column width in pixels.
+     * @param string $align Text align. Allowed values: 'left', 'center', 'right'.
+     * @return \Rusproj\FreeJqGridConfigurator\JqGrid\ColumnDefinition
+     * @throws \Exception Thrown when {@link $name} is empty.
+     */
+    public static function columnNumber($name, $label, $width = 150, $align = 'left')
+    {
+        return self::createInstance($name)
+        ->setLabel($label)
+        ->setWidth($width)
+        ->setAlign($align)
+        ->setSortType('text')
+        ->setSearchType('text')
+        ->setSearchOptions(self::generateSearchOptions('', ['eq', 'ne', 'lt', 'le', 'gt', 'ge']))
+        ->setIsEditable(true)
+        ->setEditType('text');
+    }
+
+    /**
      * Helper generates column config which contains text data.
      *
      * @param string $name Column name.
@@ -1897,7 +1943,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
             ->setAlign($align)
             ->setSortType('text')
             ->setSearchType('text')
-            ->setSearchOptions(self::generateSearchOptions('', ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'ew', 'en', 'cn', 'nc']))
+            ->setSearchOptions(self::generateSearchOptions('', ['cn', 'nc', 'eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'ew', 'en']))
             ->setIsEditable(true)
             ->setEditType('text');
     }
@@ -1978,24 +2024,5 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
 //             ->editOptions = ColumnDefinition::editOptionsCheckbox('1', '0');
 
     }
-
-//     /**
-//      * Помощник формирует конфигурационный массив для столбца из полей с автодополнением.
-//      *
-//      * @param string $name Имя столбца.
-//      * @param string $label Заголовок столбца.
-//      * @param string $field_name Имя поля в БД.
-//      * @param string $model_name Модель в которой нужно искать значение поля.
-//      * @return ColumnDefinition Конфигурационный массив для указанного столбца.
-//      */
-//     public static function columnAutocomplete($name, $label, $field_name, $model_name, $col_width) {
-//         $e = new ColumnDefinition();
-//         $e->name = $name;
-//         $e->label = $label;
-//         $e->editType = 'ac';
-//         $e->width = $col_width;
-//         $e->editOptions = ['field' => $field_name, 'model' => $model_name];
-//         return $e;
-//     }
 
 }
