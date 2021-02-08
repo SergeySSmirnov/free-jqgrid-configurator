@@ -1496,159 +1496,177 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
     // Helpers
 
 
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров editOptions для типа редактирования editType = 'text' или editType = 'password'.
-//      *
-//      * @param number $size Размер отображаемой части поля в символах (если используется моноширинный шрифт, то размер будет фиксирован, в противном случае будет плавающим). Значение по умолчанию: 20.
-//      * @param number $maxLength Максимальное число символов, которое можно ввести. Если задано значение 0 - ввод не ограничен. Значение по умолчанию: 0.
-//      * @param string $placeholder Текст подсказки, отображаемой в пустом поле.  Значение по умолчанию: ''.
-//      * @param string $pattern Регулярное выражение, устанавливающее шаблон ввода.  Значение по умолчанию: ''.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения editOptions.
-//      */
-//     public static function editOptionsText($size = 20, $maxLength = 0, $placeholder = '', $pattern = '') {
-//         $cfg = [];
-//         $cfg['size'] = $size;
-//         if ($maxLength > 0) {
-//             $cfg['maxlength'] = $maxLength;
-//         }
-//         if (!empty($placeholder)) {
-//             $cfg['placeholder'] = $placeholder;
-//         }
-//         if (!empty($pattern)) {
-//             $cfg['pattern'] = $pattern;
-//         }
-//         return $cfg;
-//     }
+    /**
+     * Helper that provides the ability to generate the value of the additional editOptions
+     * parameters for the edit type editType = 'text' or editType = 'password'.
+     *
+     * @param number $size The size of the displayed part of the field in characters
+     *          (if a monospaced font is used, the size will be fixed, otherwise it will be floating).
+     * @param number $maxLength The maximum number of characters that can be entered.
+     *          If the value is set to 0, the input is not limited.
+     * @param string $placeholder The text of the tooltip displayed if field is empty.
+     * @param string $pattern A regular expression that sets the input pattern.
+     * @return array
+     */
+    public static function editOptionsText($size = 20, $maxLength = 0, $placeholder = '', $pattern = '') {
+        $_config = [];
+        $_config['size'] = $size;
+        if ($maxLength > 0) {
+            $_config['maxlength'] = $maxLength;
+        }
+        if (!empty($placeholder)) {
+            $_config['placeholder'] = $placeholder;
+        }
+        if (!empty($pattern)) {
+            $_config['pattern'] = $pattern;
+        }
+        return $_config;
+    }
 
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров editOptions для типа редактирования editType = 'textarea'.
-//      *
-//      * @param number $rows Высота отображаемой части поля в строках. Значение по умолчанию: 2.
-//      * @param number $cols Ширина отображаемой части поля в символах (если используется моноширинный шрифт, то размер будет фиксирован, в противном случае будет плавающим). Значение по умолчанию: 20.
-//      * @param number $maxLength Максимальное число символов, которое можно ввести. Если задано значение 0 - ввод не ограничен. Значение по умолчанию: 0.
-//      * @param string $placeholder Текст подсказки, отображаемой в пустом поле.  Значение по умолчанию: ''.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения editOptions.
-//      */
-//     public static function editOptionsTextarea($rows = 2, $cols = 20, $maxLength = 0, $placeholder = '') {
-//         $cfg = [];
-//         $cfg['rows'] = $rows;
-//         $cfg['cols'] = $cols;
-//         if ($maxLength > 0) {
-//             $cfg['maxlength'] = $maxLength;
-//         }
-//         if (!empty($placeholder)) {
-//             $cfg['placeholder'] = $placeholder;
-//         }
-//         return $cfg;
-//     }
+    /**
+     * A helper that provides the ability to generate the value of the editOptions additional
+     * parameters for the editType = 'textarea' edit type.
+     *
+     * @param number $rows The height of the displayed portion of the field, in lines.
+     * @param number $cols The width of the displayed part of the field in characters
+     *          (if a monospaced font is used, the size will be fixed, otherwise it will be floating).
+     * @param number $maxLength The maximum number of characters that can be entered.
+     *          If the value is set to 0, the input is not limited.
+     * @param string $placeholder The text of the tooltip displayed in an empty field.
+     * @return array
+     */
+    public static function editOptionsTextarea($rows = 2, $cols = 20, $maxLength = 0, $placeholder = '') {
+        $_config = [];
+        $_config['rows'] = $rows;
+        $_config['cols'] = $cols;
+        if ($maxLength > 0) {
+            $_config['maxlength'] = $maxLength;
+        }
+        if (!empty($placeholder)) {
+            $_config['placeholder'] = $placeholder;
+        }
+        return $_config;
+    }
 
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров editOptions для типа редактирования editType = 'checkbox'.
-//      *
-//      * @param string $true Значение, возвращаемое, если пользователь установил флажок.  Значение по умолчанию: 'yes'.
-//      * @param string $false Значение, возвращаемое, если пользователь снял флажок.  Значение по умолчанию: 'no'.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения editOptions.
-//      */
-//     public static function editOptionsCheckbox($true = 'yes', $false = 'no') {
-//         return ['value' => $true . ':' . $false];
-//     }
+    /**
+     * A helper that provides the ability to generate the value of the editOptions
+     * additional parameters for the editType = 'checkbox' edit type.
+     *
+     * @param string $true The value returned if the user checked the checkbox.
+     * @param string $false The value returned if the user cleared the checkbox.
+     * @return array
+     */
+    public static function editOptionsCheckbox($true = 'yes', $false = 'no') {
+        return ['value' => $true . ':' . $false];
+    }
 
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров editOptions для типа редактирования editType = 'select'.
-//      *
-//      * @param array/string $values Массив допустимых значений списка или адрес по которому можно получить данный список. В случае указания адреса, должна формироваться страница с содержимым вида: "<select><option value='1'>One</option><option value='2'>Two</option></select>"
-//      * @param bool $multiselect Признак необходимости сформировать список с поддержкой множественного выбора. Значение по умолчанию: false.
-//      * @param number $size Высота отображаемой части поля в строках. Значение по умолчанию: 5.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения editOptions.
-//      */
-//     public static function editOptionsSelect($values, $multiselect = false, $size = 5) {
-//         $cfg = [];
-//         $cfg['value'] = $values;
-//         if ($multiselect) {
-//             $cfg['multiple'] = $multiselect;
-//             $cfg['size'] = $size;
-//         }
-//         return $cfg;
-//     }
+    /**
+     * A helper that provides the ability to form the value of the editOptions
+     * additional parameters for the editType = 'select' type.
+     *
+     * @param array/string $values An array of valid values ​​for the list or
+     *          the address at which this list can be obtained.
+     *          If an address is specified, a page with the following content should be generated:
+     *          "<select> <option value = '1'> One </option> <option value = '2'> Two </option> </select>".
+     * @param bool $multiselect Indicates the need to create a list with multiple choice support.
+     * @param number $size The height of the displayed portion of the field, in lines.
+     * @return array
+     */
+    public static function editOptionsSelect($values, $multiselect = false, $size = 5) {
+        $_config = [];
+        $_config['value'] = $values;
+        if ($multiselect) {
+            $_config['multiple'] = $multiselect;
+            $_config['size'] = $size;
+        }
+        return $_config;
+    }
 
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров editOptions
-//      * для типа редактирования editType = 'select', где данные будут запрашиваться по указанному URL.
-//      *
-//      * @param array/string $values Массив допустимых значений списка или адрес по которому можно получить данный список. В случае указания адреса, должна формироваться страница с содержимым вида: "<select><option value='1'>One</option><option value='2'>Two</option></select>"
-//      * @param bool $multiselect Признак необходимости сформировать список с поддержкой множественного выбора. Значение по умолчанию: false.
-//      * @param number $size Высота отображаемой части поля в строках. Значение по умолчанию: 5.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения editOptions.
-//      */
-//     public static function editOptionsSelectUrl($values, $multiselect = false, $size = 5) {
-//         $cfg = [];
-//         $cfg['dataUrl'] = $values;
-//         if ($multiselect) {
-//             $cfg['multiple'] = $multiselect;
-//             $cfg['size'] = $size;
-//         }
-//         return $cfg;
-//     }
+    /**
+     * A helper that provides the ability to generate the value of the editOptions
+     * additional parameters for the editType = 'select' type, where data will be
+     * requested at the specified URL.
+     *
+     * @param array/string $values An array of valid values ​​for the list or the address
+     *          at which this list can be obtained. If an address is specified, a page
+     *          with the following content should be generated:
+     *          "<select> <option value = '1'> One </option> <option value = '2'> Two </option> </select>".
+     * @param bool $multiselect Indicates the need to create a list with multiple choice support.
+     * @param number $size The height of the displayed portion of the field, in lines.
+     * @return array
+     */
+    public static function editOptionsSelectUrl($values, $multiselect = false, $size = 5) {
+        $_config = [];
+        $_config['dataUrl'] = $values;
+        if ($multiselect) {
+            $_config['multiple'] = $multiselect;
+            $_config['size'] = $size;
+        }
+        return $_config;
+    }
 
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров editOptions для типа редактирования editType = 'button'.
-//      *
-//      * @param string $value Значение, возвращаемое при нажатии кнопки.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения editOptions.
-//      */
-//     public static function editOptionsButton($value) {
-//         return ['value' => $value];
-//     }
+    /**
+     * Helper that provides the ability to generate the value of the editOptions
+     * additional parameters for the edit type editType = 'button'.
+     *
+     * @param string $value The value returned when the button is pressed.
+     * @return array
+     */
+    public static function editOptionsButton($value) {
+        return ['value' => $value];
+    }
 
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров editOptions для типа редактирования editType = 'image'.
-//      *
-//      * @param string $src Путь к файлу картинки.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения editOptions.
-//      */
-//     public static function editOptionsImage($src) {
-//         return ['src' => $src];
-//     }
+    /**
+     * Helper that provides the ability to generate the value of the editOptions
+     * additional parameters for the editType = 'image' type.
+     *
+     * @param string $src The path to the image file.
+     * @return array
+     */
+    public static function editOptionsImage($src) {
+        return ['src' => $src];
+    }
 
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров editOptions для типа редактирования editType = 'file'.
-//      *
-//      * @param string $alt Значение, выводимое вместо '...'.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения editOptions.
-//      */
-//     public static function editOptionsFile($alt) {
-//         return ['alt' => $alt];
-//     }
+    /**
+     * A helper that provides the ability to generate the value of the editOptions
+     * additional parameters for the editType = 'file' edit type.
+     *
+     * @param string $alt Значение, выводимое вместо '...'.
+     * @return array
+     */
+    public static function editOptionsFile($alt) {
+        return ['alt' => $alt];
+    }
 
-//     /**
-//      * Помощник, представляющий возможность сформировать значение дополнительных параметров formOptions.
-//      *
-//      * @param number $rowpos Если больше 0, то определяет позицию элемента в соответствующей строке таблицы формы.
-//      * @param number $colpos Если больше 0, то определяет позицию элемента в соответствующем столбце таблицы формы.
-//      * @param string $label Если задано, то меняет содержимое надписи в поле описания (в label).
-//      * @param string $elmprefix Если задано, то формирует дополнительный префикс, выводимый перед полем редактирования.
-//      * @param string $elmsuffix Если задано, то формирует дополнительный постфикс, выводимый после поля редактирования.
-//      * @return array Массив дополнительных параметров, который может применяться для задания значения formOptions.
-//      */
-//     public static function formOptions($rowpos = 0, $colpos = 0, $label = '', $elmprefix = '', $elmsuffix = '') {
-//         $cfg = [];
-//         if ($rowpos > 0) {
-//             $cfg['rowpos'] = $rowpos;
-//         }
-//         if ($colpos > 0) {
-//             $cfg['colpos'] = $colpos;
-//         }
-//         if (!empty($label)) {
-//             $cfg['label'] = $label;
-//         }
-//         if (!empty($elmprefix)) {
-//             $cfg['elmprefix'] = $elmprefix;
-//         }
-//         if (!empty($elmsuffix)) {
-//             $cfg['elmsuffix'] = $elmsuffix;
-//         }
-//         return $cfg;
-//     }
+    /**
+     * Helper that provides the ability to form the value of additional parameters formOptions.
+     *
+     * @param number $rowpos If greater than 0, it determines the position of the element in the corresponding row of the form table.
+     * @param number $colpos If it is greater than 0, then it determines the position of the element in the corresponding column of the form table.
+     * @param string $label If set, changes the content of the label in the description field (in the label).
+     * @param string $elmprefix If set, then forms an additional prefix displayed before the edit field.
+     * @param string $elmsuffix If set, forms an additional postfix displayed after the edit field.
+     * @return array
+     */
+    public static function formOptions($rowpos = 0, $colpos = 0, $label = '', $elmprefix = '', $elmsuffix = '') {
+        $cfg = [];
+        if ($rowpos > 0) {
+            $cfg['rowpos'] = $rowpos;
+        }
+        if ($colpos > 0) {
+            $cfg['colpos'] = $colpos;
+        }
+        if (!empty($label)) {
+            $cfg['label'] = $label;
+        }
+        if (!empty($elmprefix)) {
+            $cfg['elmprefix'] = $elmprefix;
+        }
+        if (!empty($elmsuffix)) {
+            $cfg['elmsuffix'] = $elmsuffix;
+        }
+        return $cfg;
+    }
 
     /**
      * Helper wich return array of search options.
