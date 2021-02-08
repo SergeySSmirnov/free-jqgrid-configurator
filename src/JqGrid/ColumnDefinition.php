@@ -1574,7 +1574,7 @@ class ColumnDefinition implements ConfigurationDefinitionInterface
      */
     public static function editOptionsSelect($values, $multiselect = false, $size = 5) {
         $_config = [];
-        $_config['value'] = $values;
+        $_config['value'] = self::formatOptionsSelect($values);
         if ($multiselect) {
             $_config['multiple'] = $multiselect;
             $_config['size'] = $size;
